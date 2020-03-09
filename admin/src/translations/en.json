@@ -1,0 +1,18 @@
+{
+  "Button.Save": "Save",
+  "Button.Cancel": "Cancel",
+  "Button.Add": "Add",
+  
+  "Header.Title": "Sitemap",
+  "Header.Description": "Settings for the sitemap.xml",
+  "Header.Button.Generate": "Generate sitemap",
+
+  "Settings.Title": "Entries",
+  "Settings.Description": "Add the content types whose pages you want to include in the sitemap",
+  "Settings.Field.Hostname.Label": "Hostname",
+  "Settings.Field.Hostname.Description": "The URL of your application",
+
+  "Modal.Title": "Configurations",
+  "Modal.HeaderTitle": "Sitemap entries",
+  "Modal.Description": "To add a content type to the sitemap it must have a at least one field of type UID. If no content type has a UID field, you should add those first and then come back."
+}

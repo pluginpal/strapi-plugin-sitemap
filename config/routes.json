@@ -1,0 +1,28 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/",
+      "handler": "Sitemap.buildSitemap",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/settings/",
+      "handler": "Sitemap.getSettings",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/settings/",
+      "handler": "Sitemap.updateSettings",
+      "config": {
+        "policies": []
+      }
+    }
+  ]
+}

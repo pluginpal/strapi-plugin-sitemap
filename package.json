@@ -1,0 +1,32 @@
+{
+  "name": "strapi-plugin-sitemap",
+  "version": "1.0.0",
+  "description": "A plugin for Strapi to create a customizable sitemap.",
+  "strapi": {
+    "name": "Sitemap",
+    "icon": "plug",
+    "description": "A plugin for Strapi to create a customizable sitemap."
+  },
+  "dependencies": {
+    "@buffetjs/core": "^2.0.0",
+    "@buffetjs/styles": "^2.0.0",
+    "sitemap": "^5.1.0"
+  },
+  "author": {
+    "name": "Boaz Poolman",
+    "email": "info@boazpoolman.nl",
+    "url": "https://github.com/boazpoolman"
+  },
+  "maintainers": [
+    {
+      "name": "Boaz Poolman",
+    "email": "info@boazpoolman.nl",
+    "url": "https://github.com/boazpoolman"
+    }
+  ],
+  "engines": {
+    "node": ">=10.0.0",
+    "npm": ">=6.0.0"
+  },
+  "license": "MIT"
+}
