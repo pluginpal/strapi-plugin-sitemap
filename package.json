@@ -20,10 +20,14 @@
   "maintainers": [
     {
       "name": "Boaz Poolman",
-    "email": "info@boazpoolman.nl",
-    "url": "https://github.com/boazpoolman"
+      "email": "info@boazpoolman.nl",
+      "url": "https://github.com/boazpoolman"
     }
   ],
+  "bugs": {
+    "url": "https://github.com/boazpoolman/strapi-plugin-sitemap/issues"
+  },
+  "homepage": "https://github.com/boazpoolman/strapi-plugin-sitemap#readme",
   "engines": {
     "node": ">=10.0.0",
     "npm": ">=6.0.0"
