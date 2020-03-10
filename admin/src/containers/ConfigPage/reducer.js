@@ -16,6 +16,7 @@ import {
   DISCARD_MODIFIED_CONTENT_TYPES,
   ON_SUBMIT_SUCCEEDED,
   ON_CHANGE_SETTINGS,
+  UPDATE_SETTINGS,
 } from './constants';
 
 const initialState = fromJS({
@@ -33,6 +34,10 @@ function configPageReducer(state = initialState, action) {
         .update('initialData', () => fromJS(action.settings))
         .update('modifiedContentTypes', () => fromJS(action.settings.get('contentTypes')))
         .updateIn(['settings', 'contentTypes'], () => fromJS(action.settings.get('contentTypes')));
+    case UPDATE_SETTINGS:
+        return state
+          .update('modifiedContentTypes', () => fromJS(action.settings.get('contentTypes')))
+          .updateIn(['settings', 'contentTypes'], () => fromJS(action.settings.get('contentTypes')));
     case ON_CHANGE_CONTENT_TYPES:
       return state
         .updateIn(action.keys, () => action.value);

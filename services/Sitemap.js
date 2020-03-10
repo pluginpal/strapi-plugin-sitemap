@@ -50,6 +50,33 @@ module.exports = {
     return config;
   },
 
+  getPopulatedConfig: async () => {
+    let contentTypes = {};
+
+    Object.values(strapi.contentTypes).map(contentType => {
+      let uidFieldName = false;
+
+      Object.entries(contentType.__schema__.attributes).map(([i, e]) => {
+        if (e.type === "uid") {
+          uidFieldName = i;
+        }
+      })
+      
+      if (uidFieldName) {
+        contentTypes[contentType.info.name] = {
+          uidField: uidFieldName,
+          priority: 0.5,
+          changefreq: 'monthly',
+        };
+      }
+    })
+
+    return {
+      hostname: '',
+      contentTypes,
+    };
+  },
+
   getUrls: (contentType, pages, config) => {
     let urls = [];
       

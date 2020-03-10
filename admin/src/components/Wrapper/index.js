@@ -5,6 +5,8 @@ const Wrapper = styled.div`
   background: #ffffff;
   box-shadow: 0 2px 4px #E3E9F3;
   margin-bottom: 3px;
+  position: relative;
+  z-index: 1;
   > div {
     margin-right: 0;
     margin-left: 0;
