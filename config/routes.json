@@ -17,6 +17,14 @@
       }
     },
     {
+      "method": "GET",
+      "path": "/settings/populate",
+      "handler": "Sitemap.populateSettings",
+      "config": {
+        "policies": []
+      }
+    },
+    {
       "method": "PUT",
       "path": "/settings/",
       "handler": "Sitemap.updateSettings",

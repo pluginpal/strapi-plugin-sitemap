@@ -1,6 +1,7 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { useGlobalContext } from 'strapi-helper-plugin';
+import { isEmpty } from 'lodash';
 
 import CustomRow from './Row';
 import { List } from '@buffetjs/custom';
@@ -37,6 +38,7 @@ const ListComponent = (props) => {
       label: globalContext.formatMessage({ id: 'sitemap.Button.Add' }),
       onClick: handleClick,
       type: 'button',
+      hidden: isEmpty(settings.contentTypes)
     },
   };
 

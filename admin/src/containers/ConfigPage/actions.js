@@ -18,7 +18,9 @@ import {
   ON_SUBMIT_SUCCEEDED,
   DELETE_CONTENT_TYPE,
   DISCARD_ALL_CHANGES,
-  DISCARD_MODIFIED_CONTENT_TYPES
+  DISCARD_MODIFIED_CONTENT_TYPES,
+  POPULATE_SETTINGS,
+  UPDATE_SETTINGS,
 } from './constants';
 
 export function getSettings() {
@@ -53,6 +55,19 @@ export function onChangeSettings({ target }, key) {
 export function discardAllChanges() {
   return {
     type: DISCARD_ALL_CHANGES,
+  };
+}
+
+export function updateSettings(settings) {
+  return {
+    type: UPDATE_SETTINGS,
+    settings,
+  };
+}
+
+export function populateSettings() {
+  return {
+    type: POPULATE_SETTINGS,
   };
 }
 

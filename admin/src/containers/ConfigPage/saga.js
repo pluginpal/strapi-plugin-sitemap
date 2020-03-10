@@ -7,8 +7,8 @@
 import { call, fork, put, select, takeLatest } from 'redux-saga/effects';
 import { Map } from 'immutable';
 import { request } from 'strapi-helper-plugin';
-import { getSettingsSucceeded, getContentTypesSucceeded, onSubmitSucceeded } from './actions';
-import { SUBMIT, GET_SETTINGS, GET_CONTENT_TYPES, GENERATE_SITEMAP } from './constants';
+import { getSettingsSucceeded, getContentTypesSucceeded, onSubmitSucceeded, updateSettings } from './actions';
+import { SUBMIT, GET_SETTINGS, GET_CONTENT_TYPES, GENERATE_SITEMAP, POPULATE_SETTINGS } from './constants';
 import { makeSelectSettings } from './selectors';
 
 export function* settingsGet() {
@@ -59,11 +59,22 @@ export function* submit() {
   }
 }
 
+export function* populateSettings() {
+  try {
+    const requestURL = '/sitemap/settings/populate';
+    const response = yield call(request, requestURL, { method: 'GET' });
+    yield put(updateSettings(Map(response)));
+  } catch (err) {
+    strapi.notification.error('notification.error');
+  }
+}
+
 function* defaultSaga() {
   yield fork(takeLatest, GET_SETTINGS, settingsGet);
   yield fork(takeLatest, GET_CONTENT_TYPES, getContentTypes);
   yield fork(takeLatest, GENERATE_SITEMAP, generateSitemap);
   yield fork(takeLatest, SUBMIT, submit);
+  yield fork(takeLatest, POPULATE_SETTINGS, populateSettings);
 }
 
 export default defaultSaga;
