@@ -57,6 +57,7 @@ function configPageReducer(state = initialState, action) {
     case DELETE_CONTENT_TYPE:
       return state
         .deleteIn(['settings', 'contentTypes', action.contentType])
+        .deleteIn(['modifiedContentTypes', action.contentType])
     case GET_CONTENT_TYPES_SUCCEEDED:
       return state
         .update('contentTypes', () => action.contentTypes);
