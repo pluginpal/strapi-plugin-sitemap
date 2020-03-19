@@ -2,6 +2,7 @@
 
 const { Map } = require('immutable');
 const { SitemapStream, streamToPromise } = require('sitemap');
+const { isEmpty } = require('lodash');
 const fs = require('fs');
 
 /**
@@ -107,6 +108,17 @@ module.exports = {
         })
       })
     }));
+
+    // Add a homepage when none is present
+    const hasHomePage = !isEmpty(sitemapEntries.filter(entry => entry.url === ''));
+
+    if (!hasHomePage) {
+      sitemapEntries.push({
+        url: '/',
+        changefreq: 'monthly',
+        priority: '1',
+      })
+    }
 
     return sitemapEntries;
   },
