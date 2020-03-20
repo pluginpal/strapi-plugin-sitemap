@@ -17,7 +17,8 @@ const App = () => {
   return (
     <div>
       <Switch>
-        <Route path={`/plugins/${pluginId}`} component={ConfigPage} exact />
+        <Route path={`/plugins/${pluginId}/collection-entries`} component={ConfigPage} exact />
+        <Route path={`/plugins/${pluginId}/custom-entries`} component={ConfigPage} exact />
         <Route component={NotFound} />
       </Switch>
     </div>

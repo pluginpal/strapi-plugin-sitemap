@@ -28,6 +28,8 @@ export default strapi => {
     mainComponent: Comp,
     name: pluginPkg.strapi.name,
     preventComponentRendering: false,
+    suffixUrl: () => '/collection-entries',
+    suffixUrlToReplaceForLeftMenuHighlight: '/collection-entries',
     trads,
   };
 

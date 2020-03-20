@@ -8,7 +8,7 @@ import React, { Component } from 'react';
 import pluginId from '../../pluginId';
 import { isEmpty } from 'lodash';
 
-import { ContainerFluid } from 'strapi-helper-plugin';
+import { ContainerFluid, HeaderNav } from 'strapi-helper-plugin';
 import Header from '../../components/Header';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -30,13 +30,29 @@ import { GlobalContext } from 'strapi-helper-plugin'
 class ConfigPage extends Component {
   static contextType = GlobalContext;
 
+  headerNavLinks = [
+    {
+      name: 'Collection entries',
+      to: `/plugins/${pluginId}/collection-entries`,
+    },
+    {
+      name: 'Custom entries',
+      to: `/plugins/${pluginId}/custom-entries`,
+    },
+  ];
+
   constructor(props) {
     super(props);
+
+    this.state = {
+      settingsType: ''
+    }
   }
   
   componentDidMount() {
     this.props.getSettings();
     this.props.getContentTypes();
+    this.setState({ 'settingsType': this.getSettingsType()});
   }
 
   componentDidUpdate(prevProps) {
@@ -44,6 +60,19 @@ class ConfigPage extends Component {
     if (prevProps.match.params.env !== this.props.match.params.env) {
       this.props.getSettings();
     }
+
+    if (prevProps.match.path !== this.props.match.path) {
+      this.setState({ 'settingsType': this.getSettingsType()});
+    }
+  }
+
+  getSettingsType() {
+    const settingsUrl = this.props.match.path.split("/").pop();
+    const settingsType =
+      settingsUrl === 'collection-entries' ? 'Collection' :
+      settingsUrl === 'custom-entries' && 'Custom';
+
+    return settingsType;
   }
 
   handleModalSubmit(e) {
@@ -71,7 +100,12 @@ class ConfigPage extends Component {
             initialData={this.props.initialData}
             generateSitemap={this.props.generateSitemap}
           />
+          <HeaderNav
+            links={this.headerNavLinks}
+            style={{ marginTop: '4.6rem' }}
+          />
           <List 
+            settingsType={this.state.settingsType}
             settings={this.props.settings}
             onDelete={this.props.deleteContentType}
           />

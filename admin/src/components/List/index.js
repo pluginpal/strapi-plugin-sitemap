@@ -9,7 +9,7 @@ import { List } from '@buffetjs/custom';
 const ListComponent = (props) => {
   const { push } = useHistory();
   const globalContext = useGlobalContext();
-  const { settings } = props;
+  const { settings, settingsType } = props;
   const items = [];
 
   if (settings.contentTypes) {
@@ -30,8 +30,8 @@ const ListComponent = (props) => {
   }
 
   const listProps = {
-    title: globalContext.formatMessage({ id: 'sitemap.Settings.Title' }),
-    subtitle: globalContext.formatMessage({ id: 'sitemap.Settings.Description' }),
+    title: globalContext.formatMessage({ id: `sitemap.Settings.${settingsType}Title` }),
+    subtitle: globalContext.formatMessage({ id: `sitemap.Settings.${settingsType}Description` }),
     button: {
       color: 'secondary',
       icon: true,
@@ -43,7 +43,7 @@ const ListComponent = (props) => {
   };
 
   return (
-    <div>
+    <div style={{ paddingTop: 20, backgroundColor: 'white' }}>
       <List 
         {...listProps} 
         items={items}  

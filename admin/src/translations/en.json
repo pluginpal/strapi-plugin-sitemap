@@ -9,8 +9,10 @@
   "Header.Description": "Settings for the sitemap.xml",
   "Header.Button.Generate": "Generate sitemap",
 
-  "Settings.Title": "Entries",
-  "Settings.Description": "Add the content types whose pages you want to include in the sitemap",
+  "Settings.CollectionTitle": "Collection entries",
+  "Settings.CustomTitle": "Custom entries",
+  "Settings.CollectionDescription": "Add the content types whose pages you want to include in the sitemap",
+  "Settings.CustomDescription": "Add the content types whose pages you want to include in the sitemap",
   "Settings.Field.Hostname.Label": "Hostname",
   "Settings.Field.Hostname.Description": "The URL of your application",
 
