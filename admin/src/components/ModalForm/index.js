@@ -108,7 +108,7 @@ const ModalForm = (props) => {
         <section style={{ marginTop: 20 }}>
           <h2><strong>{globalContext.formatMessage({ id: 'sitemap.Modal.Title' })}</strong></h2>
           { isEmpty(edit) &&
-            <p style={{ maxWidth: 500 }}>{globalContext.formatMessage({ id: `sitemap.Modal.${settingsType}Description` })}</p>
+            <p style={{ maxWidth: 500 }}>{settingsType && globalContext.formatMessage({ id: `sitemap.Modal.${settingsType}Description` })}</p>
           }
           <form className="row" style={{ borderTop: '1px solid #f5f5f6', paddingTop: 30, marginTop: 10 }}>
             <div className="col-md-6">

@@ -39,8 +39,8 @@ const ListComponent = (props) => {
   }
 
   const listProps = {
-    title: globalContext.formatMessage({ id: `sitemap.Settings.${settingsType}Title` }),
-    subtitle: globalContext.formatMessage({ id: `sitemap.Settings.${settingsType}Description` }),
+    title: settingsType && globalContext.formatMessage({ id: `sitemap.Settings.${settingsType}Title` }),
+    subtitle: settingsType && globalContext.formatMessage({ id: `sitemap.Settings.${settingsType}Description` }),
     button: {
       color: 'secondary',
       icon: true,
