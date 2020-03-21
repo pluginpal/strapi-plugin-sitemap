@@ -153,6 +153,7 @@ const ModalForm = (props) => {
             color="cancel"
             onClick={() => {
               onCancel();
+              push({search: ''});
               setState(prevState => ({ ...prevState, contentType: '' }));
             }}
           >
