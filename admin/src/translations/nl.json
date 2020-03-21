@@ -1,18 +1,1 @@
-{
-  "Button.Save": "Opslaan",
-  "Button.Cancel": "Annuleren",
-  "Button.Add": "Voeg toe",
-  
-  "Header.Title": "Sitemap",
-  "Header.Description": "Instellingen voor de sitemap.xml",
-  "Header.Button.Generate": "Genereer sitemap",
-
-  "Settings.Title": "Entries",
-  "Settings.Description": "Voeg de content types toe die je wilt tonen in de sitemap",
-  "Settings.Field.Hostname.Label": "Hostname",
-  "Settings.Field.Hostname.Description": "De URL van je applicatie",
-
-  "Modal.Title": "Configuraties",
-  "Modal.HeaderTitle": "Sitemap entries",
-  "Modal.Description": "Om een content type aan de sitemap toe te voegen moet deze minimaal 1 veld van het type UID hebben. Als geen enkel content type een UID veld bevat, moeten deze eerst worden toegevoegd."
-}
+{}

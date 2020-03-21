@@ -12,6 +12,7 @@ import {
   SUBMIT_MODAL,
   GET_CONTENT_TYPES_SUCCEEDED,
   DELETE_CONTENT_TYPE,
+  DELETE_CUSTOM_ENTRY,
   DISCARD_ALL_CHANGES,
   DISCARD_MODIFIED_CONTENT_TYPES,
   ON_SUBMIT_SUCCEEDED,
@@ -24,6 +25,7 @@ const initialState = fromJS({
   contentTypes: {},
   initialData: Map({}),
   modifiedContentTypes: Map({}),
+  modifiedCustomEntries: Map({}),
 });
 
 function configPageReducer(state = initialState, action) {
@@ -33,11 +35,13 @@ function configPageReducer(state = initialState, action) {
         .update('settings', () => fromJS(action.settings))
         .update('initialData', () => fromJS(action.settings))
         .update('modifiedContentTypes', () => fromJS(action.settings.get('contentTypes')))
-        .updateIn(['settings', 'contentTypes'], () => fromJS(action.settings.get('contentTypes')));
+        .update('modifiedCustomEntries', () => fromJS(action.settings.get('customEntries')))
+        .updateIn(['settings', 'contentTypes'], () => fromJS(action.settings.get('contentTypes')))
+        .updateIn(['settings', 'customEntries'], () => fromJS(action.settings.get('customEntries')));
     case UPDATE_SETTINGS:
         return state
           .update('modifiedContentTypes', () => fromJS(action.settings.get('contentTypes')))
-          .updateIn(['settings', 'contentTypes'], () => fromJS(action.settings.get('contentTypes')));
+          .updateIn(['settings', 'contentTypes'], () => fromJS(action.settings.get('contentTypes')))
     case ON_CHANGE_CONTENT_TYPES:
       return state
         .updateIn(action.keys, () => action.value);
@@ -47,17 +51,22 @@ function configPageReducer(state = initialState, action) {
     case DISCARD_ALL_CHANGES:
       return state
         .update('settings', () => state.get('initialData'))
-        .update('modifiedContentTypes', () => state.getIn(['initialData', 'contentTypes']))
     case DISCARD_MODIFIED_CONTENT_TYPES:
       return state
         .update('modifiedContentTypes', () => state.getIn(['settings', 'contentTypes']))
+        .update('modifiedCustomEntries', () => state.getIn(['settings', 'customEntries']))
     case SUBMIT_MODAL:
       return state
-        .updateIn(['settings', 'contentTypes'], () => state.get('modifiedContentTypes'));
+        .updateIn(['settings', 'contentTypes'], () => state.get('modifiedContentTypes'))
+        .updateIn(['settings', 'customEntries'], () => state.get('modifiedCustomEntries'));
     case DELETE_CONTENT_TYPE:
       return state
         .deleteIn(['settings', 'contentTypes', action.contentType])
         .deleteIn(['modifiedContentTypes', action.contentType])
+    case DELETE_CUSTOM_ENTRY:
+      return state
+        .deleteIn(['settings', 'customEntries', action.contentType])
+        .deleteIn(['modifiedCustomEntries', action.contentType])
     case GET_CONTENT_TYPES_SUCCEEDED:
       return state
         .update('contentTypes', () => action.contentTypes);

@@ -90,6 +90,8 @@ class ConfigPage extends Component {
       return (<div />);
     }
 
+    console.log('settings: ', this.props.settings);
+
     return (
       <div>
         <ContainerFluid>
@@ -115,7 +117,14 @@ class ConfigPage extends Component {
               icon={<FontAwesomeIcon icon={faPlus} />} 
               label={this.context.formatMessage({ id: 'sitemap.Button.AddAll' })}
               onClick={() => this.props.populateSettings()}
-              hidden={!isEmpty(this.props.settings.contentTypes)}
+              hidden={this.state.settingsType === 'Custom' || !isEmpty(this.props.settings.contentTypes)}
+            />
+            <Button 
+              color="primary" 
+              icon={<FontAwesomeIcon icon={faPlus} />} 
+              label={this.context.formatMessage({ id: 'sitemap.Button.AddURL' })}
+              onClick={() => this.props.history.push({ search: 'addNew' })}
+              hidden={this.state.settingsType === 'Collection' || !isEmpty(this.props.settings.customEntries)}
             />
             <Button 
               color="secondary"
@@ -123,13 +132,15 @@ class ConfigPage extends Component {
               icon={<FontAwesomeIcon icon={faPlus} />} 
               label={this.context.formatMessage({ id: 'sitemap.Button.Add1by1' })}
               onClick={() => this.props.history.push({ search: 'addNew' })}
-              hidden={!isEmpty(this.props.settings.contentTypes)}
+              hidden={this.state.settingsType === 'Custom' || !isEmpty(this.props.settings.contentTypes)}
             />
           </Wrapper>
           <ModalForm 
             contentTypes={this.props.contentTypes}
             modifiedContentTypes={this.props.modifiedContentTypes}
+            modifiedCustomEntries={this.props.modifiedCustomEntries}
             settings={this.props.settings}
+            settingsType={this.state.settingsType}
             onSubmit={(e) => this.handleModalSubmit(e)}
             onCancel={this.props.discardModifiedContentTypes}
             onChange={this.props.onChangeContentTypes}

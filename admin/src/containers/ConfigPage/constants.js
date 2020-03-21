@@ -8,6 +8,7 @@ export const SUBMIT = 'Sitemap/ConfigPage/SUBMIT';
 export const ON_SUBMIT_SUCCEEDED = 'Sitemap/ConfigPage/ON_SUBMIT_SUCCEEDED';
 export const SUBMIT_MODAL = 'Sitemap/ConfigPage/SUBMIT_MODAL';
 export const DELETE_CONTENT_TYPE = 'Sitemap/ConfigPage/DELETE_CONTENT_TYPE';
+export const DELETE_CUSTOM_ENTRY = 'Sitemap/ConfigPage/DELETE_CUSTOM_ENTRY';
 export const ON_CHANGE_CONTENT_TYPES = 'Sitemap/ConfigPage/ON_CHANGE_CONTENT_TYPES';
 export const GENERATE_SITEMAP = 'Sitemap/ConfigPage/GENERATE_SITEMAP';
 export const UPDATE_SETTINGS = 'Sitemap/ConfigPage/UPDATE_SETTINGS';

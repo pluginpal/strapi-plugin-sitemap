@@ -3,6 +3,7 @@ import { useHistory, useLocation } from 'react-router-dom';
 import { get, has, isEmpty } from 'lodash';
 
 import { Inputs } from '@buffetjs/custom';
+import { InputText, Label } from '@buffetjs/core';
 import { Button, AttributeIcon } from '@buffetjs/core';
 import { useGlobalContext } from 'strapi-helper-plugin';
 import Select from '../SelectContentTypes';
@@ -16,6 +17,7 @@ import {
 } from 'strapi-helper-plugin';
 
 import form from './mapper';
+import InputUID from '../inputUID';
 
 const ModalForm = (props) => {
   const { search, edit } = useLocation();
@@ -28,7 +30,8 @@ const ModalForm = (props) => {
     onSubmit,
     contentTypes,
     onChange,
-    onCancel
+    onCancel,
+    settingsType
   } = props;
 
   useEffect(() => {
@@ -43,14 +46,32 @@ const ModalForm = (props) => {
     // Set initial values
     onCancel();
     Object.keys(form).map(input => {
-      onChange({target: form[input]}, contentType)
+      onChange({target: form[input]}, contentType, settingsType)
     });
-    onChange({target: { name: 'uidField', value: uidField}}, contentType)
+    onChange({target: { name: 'uidField', value: uidField}}, contentType, settingsType)
+  }
+
+  const handleCustomChange = (e) => {
+    let contentType = e.target.value; 
+
+    if (contentType.match(/^[A-Za-z0-9-_.~]*$/)) {
+      setState(prevState => ({ ...prevState, contentType }));
+    } else {
+      contentType = state.contentType;
+    }
+
+    // Set initial values
+    onCancel();
+    Object.keys(form).map(input => {
+      onChange({target: form[input]}, contentType, settingsType)
+    });
   }
 
   const getValue = (input) => {
-    if (has(props.modifiedContentTypes, [contentType, input], '')) {
-      return get(props.modifiedContentTypes, [contentType, input], '');
+    const subKey = settingsType === 'Collection' ? 'modifiedContentTypes' : 'modifiedCustomEntries';
+
+    if (has(props[subKey], [contentType, input], '')) {
+      return get(props[subKey], [contentType, input], '');
     } else {
       return form[input].value;
     }
@@ -79,7 +100,7 @@ const ModalForm = (props) => {
       <HeaderModal>
         <section style={{ alignItems: 'center' }}>
           <AttributeIcon type='enum' />
-          <HeaderModalTitle style={{ marginLeft: 15 }}>{globalContext.formatMessage({ id: 'sitemap.Modal.HeaderTitle' })}</HeaderModalTitle>
+          <HeaderModalTitle style={{ marginLeft: 15 }}>{globalContext.formatMessage({ id: 'sitemap.Modal.HeaderTitle' })} - {settingsType}</HeaderModalTitle>
         </section>
       </HeaderModal>
       <ModalBody style={modalBodyStyle}>
@@ -87,19 +108,26 @@ const ModalForm = (props) => {
         <section style={{ marginTop: 20 }}>
           <h2><strong>{globalContext.formatMessage({ id: 'sitemap.Modal.Title' })}</strong></h2>
           { isEmpty(edit) &&
-            <p style={{ maxWidth: 500 }}>{globalContext.formatMessage({ id: 'sitemap.Modal.Description' })}</p>
+            <p style={{ maxWidth: 500 }}>{globalContext.formatMessage({ id: `sitemap.Modal.${settingsType}Description` })}</p>
           }
           <form className="row" style={{ borderTop: '1px solid #f5f5f6', paddingTop: 30, marginTop: 10 }}>
-            <div class="col-md-6">
-              <Select 
-                contentTypes={contentTypes} 
-                onChange={(e, uidField) => handleSelectChange(e, uidField)}
-                value={contentType}
-                disabled={!isEmpty(edit)}
-                modifiedContentTypes={props.modifiedContentTypes}
-              />
+            <div className="col-md-6">
+              { settingsType === 'Collection' ?
+                <Select 
+                  contentTypes={contentTypes} 
+                  onChange={(e, uidField) => handleSelectChange(e, uidField)}
+                  value={contentType}
+                  disabled={!isEmpty(edit)}
+                  modifiedContentTypes={props.modifiedContentTypes}
+                /> :
+                <InputUID
+                  onChange={(e) => handleCustomChange(e)}
+                  value={contentType}
+                  disabled={!isEmpty(edit)}
+                />
+              }
             </div>
-            <div class="col-md-6">
+            <div className="col-md-6">
               <div className="row">
                 {Object.keys(form).map(input => {
                   return (
@@ -108,7 +136,7 @@ const ModalForm = (props) => {
                       name={input}
                       disabled={state.contentType === '- Choose Content Type -' || !state.contentType && isEmpty(edit)}
                       {...form[input]}
-                      onChange={(e) => onChange(e, contentType)}
+                      onChange={(e) => onChange(e, contentType, settingsType)}
                       value={getValue(input)}
                     />
                   </div>

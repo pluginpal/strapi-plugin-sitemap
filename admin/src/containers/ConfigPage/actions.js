@@ -17,6 +17,7 @@ import {
   GET_CONTENT_TYPES_SUCCEEDED,
   ON_SUBMIT_SUCCEEDED,
   DELETE_CONTENT_TYPE,
+  DELETE_CUSTOM_ENTRY,
   DISCARD_ALL_CHANGES,
   DISCARD_MODIFIED_CONTENT_TYPES,
   POPULATE_SETTINGS,
@@ -29,8 +30,11 @@ export function getSettings() {
   };
 }
 
-export function onChangeContentTypes({ target }, contentType) {
-  const keys = ['modifiedContentTypes']
+export function onChangeContentTypes({ target }, contentType, settingsType) {
+  const subKeys =
+    settingsType === 'Collection' ? ['modifiedContentTypes'] : ['modifiedCustomEntries']
+
+  const keys = subKeys
     .concat(contentType)
     .concat(target.name.split('.'));
   const value = target.value;
@@ -121,9 +125,11 @@ export function submitModal() {
   };
 }
 
-export function deleteContentType(contentType) {
+export function deleteContentType(contentType, settingsType) {
+  const type = settingsType === 'Collection' ? DELETE_CONTENT_TYPE : DELETE_CUSTOM_ENTRY;
+     
   return {
-    type: DELETE_CONTENT_TYPE,
+    type,
     contentType
   };
 }

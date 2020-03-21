@@ -12,13 +12,22 @@ const ListComponent = (props) => {
   const { settings, settingsType } = props;
   const items = [];
 
-  if (settings.contentTypes) {
+  if (settings.contentTypes && settingsType === 'Collection') {
     Object.keys(settings.contentTypes).map((i) => {
       let item = {};
       item.name = i;
       item.priority = settings.contentTypes[i].priority
       item.changefreq = settings.contentTypes[i].changefreq
-      item.onClick = () => alert('Ratatouille');
+      item.onDelete = props.onDelete;
+
+      items.push(item);
+    });
+  } else if (settings.customEntries && settingsType === 'Custom') {
+    Object.keys(settings.customEntries).map((i) => {
+      let item = {};
+      item.name = i;
+      item.priority = settings.customEntries[i].priority
+      item.changefreq = settings.customEntries[i].changefreq
       item.onDelete = props.onDelete;
 
       items.push(item);
@@ -38,7 +47,7 @@ const ListComponent = (props) => {
       label: globalContext.formatMessage({ id: 'sitemap.Button.Add' }),
       onClick: handleClick,
       type: 'button',
-      hidden: isEmpty(settings.contentTypes)
+      hidden: settingsType === 'Collection' ? isEmpty(settings.contentTypes) : isEmpty(settings.customEntries)
     },
   };
 
@@ -47,7 +56,7 @@ const ListComponent = (props) => {
       <List 
         {...listProps} 
         items={items}  
-        customRowComponent={listProps => <CustomRow {...listProps} />}
+        customRowComponent={listProps => <CustomRow {...listProps} settingsType={settingsType} />}
       />
     </div>
   );

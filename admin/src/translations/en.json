@@ -4,6 +4,7 @@
   "Button.Add": "Add",
   "Button.AddAll": "Add all",
   "Button.Add1by1": "Add 1 by 1",
+  "Button.AddURL": "Add URL",
   
   "Header.Title": "Sitemap",
   "Header.Description": "Settings for the sitemap.xml",
@@ -11,12 +12,15 @@
 
   "Settings.CollectionTitle": "Collection entries",
   "Settings.CustomTitle": "Custom entries",
-  "Settings.CollectionDescription": "Add the content types whose pages you want to include in the sitemap",
-  "Settings.CustomDescription": "Add the content types whose pages you want to include in the sitemap",
+  "Settings.CollectionDescription": "Here you can add collection & single types which have at least 1 UID field. Once added, all the instances of this type will be checked for its UID field, which will be added to the sitemap.",
+  "Settings.CustomDescription": "Here you can add URLs which are not managed by Strapi.",
   "Settings.Field.Hostname.Label": "Hostname",
   "Settings.Field.Hostname.Description": "The URL of your application",
+  "Settings.Field.InputUID.Label": "URL",
+  "Settings.Field.InputUID.Description": "This field forces the UID type regex",
 
   "Modal.Title": "Configurations",
   "Modal.HeaderTitle": "Sitemap entries",
-  "Modal.Description": "To add a content type to the sitemap it must have a at least one field of type UID. If no content type has a UID field, you should add those first and then come back."
+  "Modal.CollectionDescription": "Make sure that your collection or single type has at least 1 UID field.",
+  "Modal.CustomDescription": "Specify the relative path of the page you want to add to the sitemap."
 }

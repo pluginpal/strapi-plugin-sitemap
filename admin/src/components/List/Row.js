@@ -9,11 +9,11 @@ import {
   faCube,
 } from '@fortawesome/free-solid-svg-icons';
 
-const CustomRow = ({ changefreq, priority, name, onDelete, onClickEdit, onClickDelete }) => {
+const CustomRow = ({ changefreq, priority, name, onDelete, settingsType }) => {
   const { push } = useHistory();
   const styles = {
     name: {
-      textTransform: 'capitalize',
+      textTransform: settingsType === 'Collection' ? 'capitalize' : 'none',
     },
   };
 
@@ -23,14 +23,14 @@ const CustomRow = ({ changefreq, priority, name, onDelete, onClickEdit, onClickD
   };
 
   const handleDeleteClick = (e) => {
-    onDelete(name);
+    onDelete(name, settingsType);
     e.stopPropagation();
   };
 
   return (
     <tr>
       <td>
-        <p style={styles.name}>{name}</p>
+        <p style={styles.name}>{settingsType === 'Custom' && '/'}{name}</p>
       </td>
       <td>
         <p>{changefreq}</p>

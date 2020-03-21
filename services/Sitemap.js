@@ -21,6 +21,7 @@ const createDefaultConfig = async () => {
   const value = {
     hostname: '',
     contentTypes: Map({}),
+    customEntries: Map({}),
   }
 
   await pluginStore.set({ key: 'settings', value });
@@ -47,11 +48,16 @@ module.exports = {
     if (!config) {
       config = await createDefaultConfig('');
     }
-  
+
+    if (!config.customEntries) {
+      config.customEntries = Map({});
+    }
+
     return config;
   },
 
   getPopulatedConfig: async () => {
+    const config = await module.exports.getConfig();
     let contentTypes = {};
 
     Object.values(strapi.contentTypes).map(contentType => {
@@ -74,6 +80,7 @@ module.exports = {
 
     return {
       hostname: '',
+      customEntries: config.customEntries,
       contentTypes,
     };
   },
@@ -106,6 +113,14 @@ module.exports = {
           changefreq: config.contentTypes[contentType].changefreq,
           priority: config.contentTypes[contentType].priority,
         })
+      })
+    }));
+
+    await Promise.all(Object.keys(config.customEntries).map(async (customEntry) => {
+      sitemapEntries.push({
+        url: customEntry,
+        changefreq: config.customEntries[customEntry].changefreq,
+        priority: config.customEntries[customEntry].priority,
       })
     }));
 
