@@ -33,11 +33,13 @@ function configPageReducer(state = initialState, action) {
     case GET_SETTINGS_SUCCEEDED:
       return state
         .update('settings', () => fromJS(action.settings))
+        .updateIn(['settings', 'contentTypes'], () => fromJS(action.settings.get('contentTypes')))
+        .updateIn(['settings', 'customEntries'], () => fromJS(action.settings.get('customEntries')))
         .update('initialData', () => fromJS(action.settings))
+        .updateIn(['initialData', 'contentTypes'], () => fromJS(action.settings.get('contentTypes')))
+        .updateIn(['initialData', 'customEntries'], () => fromJS(action.settings.get('customEntries')))
         .update('modifiedContentTypes', () => fromJS(action.settings.get('contentTypes')))
         .update('modifiedCustomEntries', () => fromJS(action.settings.get('customEntries')))
-        .updateIn(['settings', 'contentTypes'], () => fromJS(action.settings.get('contentTypes')))
-        .updateIn(['settings', 'customEntries'], () => fromJS(action.settings.get('customEntries')));
     case UPDATE_SETTINGS:
         return state
           .update('modifiedContentTypes', () => fromJS(action.settings.get('contentTypes')))
@@ -51,6 +53,8 @@ function configPageReducer(state = initialState, action) {
     case DISCARD_ALL_CHANGES:
       return state
         .update('settings', () => state.get('initialData'))
+        .update('modifiedContentTypes', () => state.getIn(['initialData', 'contentTypes']))
+        .update('modifiedCustomEntries', () => state.getIn(['initialData', 'customEntries']))
     case DISCARD_MODIFIED_CONTENT_TYPES:
       return state
         .update('modifiedContentTypes', () => state.getIn(['settings', 'contentTypes']))

@@ -90,8 +90,6 @@ class ConfigPage extends Component {
       return (<div />);
     }
 
-    console.log('settings: ', this.props.settings);
-
     return (
       <div>
         <ContainerFluid>
