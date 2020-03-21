@@ -50,7 +50,7 @@ module.exports = {
     }
 
     if (!config.customEntries) {
-      config.customEntries = Map({});
+      config.customEntries = {};
     }
 
     return config;
@@ -116,13 +116,17 @@ module.exports = {
       })
     }));
 
-    await Promise.all(Object.keys(config.customEntries).map(async (customEntry) => {
-      sitemapEntries.push({
-        url: customEntry,
-        changefreq: config.customEntries[customEntry].changefreq,
-        priority: config.customEntries[customEntry].priority,
-      })
-    }));
+    console.log(config.contentTypes);
+
+    if (config.customEntries) {
+      await Promise.all(Object.keys(config.customEntries).map(async (customEntry) => {
+        sitemapEntries.push({
+          url: customEntry,
+          changefreq: config.customEntries[customEntry].changefreq,
+          priority: config.customEntries[customEntry].priority,
+        })
+      }));
+    }
 
     // Add a homepage when none is present
     const hasHomePage = !isEmpty(sitemapEntries.filter(entry => entry.url === ''));
