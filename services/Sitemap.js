@@ -20,6 +20,7 @@ const createDefaultConfig = async () => {
 
   const value = {
     hostname: '',
+    includeHomepage: true,
     contentTypes: Map({}),
     customEntries: Map({}),
   }
@@ -138,14 +139,16 @@ module.exports = {
     }
 
     // Add a homepage when none is present
-    const hasHomePage = !isEmpty(sitemapEntries.filter(entry => entry.url === ''));
-
-    if (!hasHomePage) {
-      sitemapEntries.push({
-        url: '/',
-        changefreq: 'monthly',
-        priority: '1',
-      })
+    if (config.includeHomepage) {
+      const hasHomePage = !isEmpty(sitemapEntries.filter(entry => entry.url === ''));
+  
+      if (!hasHomePage) {
+        sitemapEntries.push({
+          url: '/',
+          changefreq: 'monthly',
+          priority: '1',
+        })
+      }
     }
 
     return sitemapEntries;
