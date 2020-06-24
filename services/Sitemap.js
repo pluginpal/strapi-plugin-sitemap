@@ -70,7 +70,7 @@ module.exports = {
       })
       
       if (uidFieldName) {
-        contentTypes[contentType.info.name] = {
+        contentTypes[contentType.modelName] = {
           uidField: uidFieldName,
           priority: 0.5,
           changefreq: 'monthly',
@@ -104,7 +104,18 @@ module.exports = {
     const sitemapEntries = [];
 
     await Promise.all(Object.keys(config.contentTypes).map(async (contentType) => {
-      const pages = await strapi.query(contentType).find();
+      let modelName;
+      const contentTypeByName = Object.values(strapi.contentTypes)
+        .find(strapiContentType => strapiContentType.info.name === contentType);
+      
+      // Backward compatibility for issue https://github.com/boazpoolman/strapi-plugin-sitemap/issues/4
+      if (contentTypeByName) {
+        modelName = contentTypeByName.modelName;
+      } else {
+        modelName = contentType;
+      }
+
+      const pages = await strapi.query(modelName).find();
       const urls = await module.exports.getUrls(contentType, pages, config);
 
       urls.map((url) => {
@@ -115,8 +126,6 @@ module.exports = {
         })
       })
     }));
-
-    console.log(config.contentTypes);
 
     if (config.customEntries) {
       await Promise.all(Object.keys(config.customEntries).map(async (customEntry) => {
