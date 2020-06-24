@@ -10,6 +10,14 @@
     },
     {
       "method": "GET",
+      "path": "/presence",
+      "handler": "Sitemap.hasSitemap",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
       "path": "/settings/",
       "handler": "Sitemap.getSettings",
       "config": {

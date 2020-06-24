@@ -18,9 +18,11 @@ import {
   ON_SUBMIT_SUCCEEDED,
   ON_CHANGE_SETTINGS,
   UPDATE_SETTINGS,
+  HAS_SITEMAP_SUCCEEDED,
 } from './constants';
 
 const initialState = fromJS({
+  sitemapPresence: false,
   settings: Map({}),
   contentTypes: {},
   initialData: Map({}),
@@ -77,6 +79,9 @@ function configPageReducer(state = initialState, action) {
     case ON_SUBMIT_SUCCEEDED:
       return state
         .update('initialData', () => state.get('settings'))
+    case HAS_SITEMAP_SUCCEEDED:
+      return state
+        .update('sitemapPresence', () => action.hasSitemap)
     default:
       return state;
   }

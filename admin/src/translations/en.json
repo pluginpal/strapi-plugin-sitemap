@@ -9,6 +9,7 @@
   "Header.Title": "Sitemap",
   "Header.Description": "Settings for the sitemap.xml",
   "Header.Button.Generate": "Generate sitemap",
+  "Header.Button.SitemapLink": "Go to sitemap",
 
   "Settings.CollectionTitle": "Collection entries",
   "Settings.CustomTitle": "Custom entries",

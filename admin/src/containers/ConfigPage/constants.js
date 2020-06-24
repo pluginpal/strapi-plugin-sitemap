@@ -20,3 +20,5 @@ export const POPULATE_SETTINGS = 'Sitemap/ConfigPage/POPULATE_SETTINGS';
 export const GET_SETTINGS_SUCCEEDED = 'Sitemap/ConfigPage/GET_SETTINGS_SUCCEEDED';
 export const GET_CONTENT_TYPES = 'Sitemap/ConfigPage/GET_CONTENT_TYPES';
 export const GET_CONTENT_TYPES_SUCCEEDED = 'Sitemap/ConfigPage/GET_CONTENT_TYPES_SUCCEEDED';
+export const HAS_SITEMAP = 'Sitemap/ConfigPage/HAS_SITEMAP';
+export const HAS_SITEMAP_SUCCEEDED = 'Sitemap/ConfigPage/HAS_SITEMAP_SUCCEEDED';

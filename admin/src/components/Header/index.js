@@ -8,6 +8,7 @@ import React, { memo } from 'react';
 import { isEmpty } from 'lodash';
 import { Header } from '@buffetjs/custom';
 import { useGlobalContext } from 'strapi-helper-plugin';
+import openWithNewTab from '../../utils/openWithNewTab';
 
 const HeaderComponent = (props) => {
   const disabled = 
@@ -32,6 +33,15 @@ const HeaderComponent = (props) => {
       color: 'success',
       type: 'submit',
       hidden: disabled
+    },
+    {
+      color: 'none',
+      label: globalContext.formatMessage({ id: 'sitemap.Header.Button.SitemapLink' }),
+      className: 'buttonOutline',
+      onClick: () => openWithNewTab('/sitemap.xml'),
+      type: 'button',
+      key: 'button-open',
+      hidden: !disabled || !props.sitemapPresence
     },
     {
       label: globalContext.formatMessage({ id: 'sitemap.Header.Button.Generate' }),

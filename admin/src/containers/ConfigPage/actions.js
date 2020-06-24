@@ -22,6 +22,8 @@ import {
   DISCARD_MODIFIED_CONTENT_TYPES,
   POPULATE_SETTINGS,
   UPDATE_SETTINGS,
+  HAS_SITEMAP,
+  HAS_SITEMAP_SUCCEEDED,
 } from './constants';
 
 export function getSettings() {
@@ -131,5 +133,18 @@ export function deleteContentType(contentType, settingsType) {
   return {
     type,
     contentType
+  };
+}
+
+export function hasSitemap() {
+  return {
+    type: HAS_SITEMAP,
+  };
+}
+
+export function hasSitemapSucceeded(hasSitemap) {
+  return {
+    type: HAS_SITEMAP_SUCCEEDED,
+    hasSitemap
   };
 }
