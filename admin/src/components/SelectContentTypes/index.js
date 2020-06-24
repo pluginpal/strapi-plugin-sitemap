@@ -43,7 +43,7 @@ const SelectContentTypes = (props) => {
       })
       
       if (uidFieldName) {
-        options[contentType.name] = uidFieldName;
+        options[contentType.apiID] = uidFieldName;
       }
     })
 
