@@ -9,7 +9,7 @@ import {
   faCube,
 } from '@fortawesome/free-solid-svg-icons';
 
-const CustomRow = ({ changefreq, priority, name, onDelete, settingsType }) => {
+const CustomRow = ({ changefreq, priority, name, area, onDelete, settingsType }) => {
   const { push } = useHistory();
   const styles = {
     name: {
@@ -31,6 +31,9 @@ const CustomRow = ({ changefreq, priority, name, onDelete, settingsType }) => {
     <tr>
       <td>
         <p style={styles.name}>{settingsType === 'Custom' && '/'}{name}</p>
+      </td>
+      <td>
+        <p>{area}</p>
       </td>
       <td>
         <p>{changefreq}</p>

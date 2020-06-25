@@ -17,4 +17,16 @@ export default {
     options: ['always', 'hourly', 'daily', 'weekly', 'monthly', 'yearly', 'never'],
     value: 'monthly',
   },
+  area: {
+    styleName: 'col-12',
+    label: 'Area',
+    name: 'area',
+    type: 'text',
+    description: "The path under which the pages are located.",
+    value: "/",
+    validations: {
+      required: true,
+      regex: /^\/[\/.a-zA-Z0-9-]*$/
+    }
+  },
 };

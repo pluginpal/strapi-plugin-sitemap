@@ -19,7 +19,7 @@
   "Settings.Field.Hostname.Description": "The URL of your application",
   "Settings.Field.IncludeHomepage.Label": "Include home page",
   "Settings.Field.IncludeHomepage.Description": "Include a '/' entry when none is present.",
-  "Settings.Field.InputUID.Label": "URL",
+  "Settings.Field.InputUID.Label": "Slug",
   "Settings.Field.InputUID.Description": "This field forces the UID type regex",
 
   "Modal.Title": "Configurations",
