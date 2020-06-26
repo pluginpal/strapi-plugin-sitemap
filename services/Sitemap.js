@@ -75,7 +75,7 @@ module.exports = {
           uidField: uidFieldName,
           priority: 0.5,
           changefreq: 'monthly',
-          area: '/'
+          area: ''
         };
       }
     })

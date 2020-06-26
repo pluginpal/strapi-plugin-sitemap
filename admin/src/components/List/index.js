@@ -18,7 +18,6 @@ const ListComponent = (props) => {
       item.name = i;
       item.priority = settings.contentTypes[i].priority
       item.changefreq = settings.contentTypes[i].changefreq
-      item.area = settings.contentTypes[i].area
       item.onDelete = props.onDelete;
 
       items.push(item);
@@ -29,7 +28,6 @@ const ListComponent = (props) => {
       item.name = i;
       item.priority = settings.customEntries[i].priority
       item.changefreq = settings.customEntries[i].changefreq
-      item.area = settings.customEntries[i].area
       item.onDelete = props.onDelete;
 
       items.push(item);

@@ -35,7 +35,7 @@ const ModalForm = (props) => {
   } = props;
 
   useEffect(() => {
-    setState(prevState => ({ ...prevState, contentType: '' }));
+    setState(prevState => ({ ...prevState, contentType: '', area: '' }));
   }, [])
 
 
@@ -49,12 +49,13 @@ const ModalForm = (props) => {
       onChange({target: form[input]}, contentType, settingsType)
     });
     onChange({target: { name: 'uidField', value: uidField}}, contentType, settingsType)
+    onChange({target: { name: 'area', value: ''}}, contentType, settingsType)
   }
 
   const handleCustomChange = (e) => {
     let contentType = e.target.value; 
 
-    if (contentType.match(/^[A-Za-z0-9-_.~]*$/)) {
+    if (contentType.match(/^[A-Za-z0-9-_.~/]*$/)) {
       setState(prevState => ({ ...prevState, contentType }));
     } else {
       contentType = state.contentType;
@@ -83,8 +84,11 @@ const ModalForm = (props) => {
     paddingBottom: '3rem'
   };
 
-  let { contentType } = state;
-  if (!isEmpty(edit)) { contentType = edit };
+  let { contentType, area } = state;
+  if (!isEmpty(edit)) { 
+    contentType = edit;
+    if (settingsType === 'collection') area = getValue('area');
+  };
 
   return (
     <Modal
@@ -123,6 +127,9 @@ const ModalForm = (props) => {
                 <InputUID
                   onChange={(e) => handleCustomChange(e)}
                   value={contentType}
+                  label={globalContext.formatMessage({ id: 'sitemap.Settings.Field.URL.Label' })}
+                  description={globalContext.formatMessage({ id: 'sitemap.Settings.Field.URL.Description' })}
+                  name="url"
                   disabled={!isEmpty(edit)}
                 />
               }
@@ -141,6 +148,24 @@ const ModalForm = (props) => {
                     />
                   </div>
                 )})}
+                { settingsType === 'Collection' &&
+                  <div className="col-12">
+                    <InputUID
+                      onChange={(e) => {
+                        const { value } = e.target;
+                        if (e.target.value.match(/^[A-Za-z0-9-_.~/]*$/)) {
+                          setState(prevState => ({ ...prevState, area: value }));
+                          onChange(e, contentType, settingsType);
+                        }
+                      }}
+                      label={globalContext.formatMessage({ id: 'sitemap.Settings.Field.Area.Label' })}
+                      description={globalContext.formatMessage({ id: 'sitemap.Settings.Field.Area.Description' })}
+                      name="area"
+                      value={area}
+                      disabled={state.contentType === '- Choose Content Type -' || !state.contentType && isEmpty(edit)}
+                    />
+                  </div>
+                }
               </div>
             </div>
           </form>
