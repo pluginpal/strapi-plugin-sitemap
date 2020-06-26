@@ -45,7 +45,7 @@ module.exports = {
         name: 'sitemap',
       })
       .get({ key: 'settings' });
-  
+
     if (!config) {
       config = await createDefaultConfig('');
     }
@@ -69,7 +69,7 @@ module.exports = {
           uidFieldName = i;
         }
       })
-      
+
       if (uidFieldName) {
         contentTypes[contentType.modelName] = {
           uidField: uidFieldName,
@@ -89,7 +89,7 @@ module.exports = {
 
   getUrls: (contentType, pages, config) => {
     let urls = [];
-      
+
     pages.map((e) => {
       Object.entries(e).map(([i, e]) => {
         if (i === config.contentTypes[contentType].uidField) {
@@ -111,7 +111,7 @@ module.exports = {
       let modelName;
       const contentTypeByName = Object.values(strapi.contentTypes)
         .find(strapiContentType => strapiContentType.info.name === contentType);
-      
+
       // Backward compatibility for issue https://github.com/boazpoolman/strapi-plugin-sitemap/issues/4
       if (contentTypeByName) {
         modelName = contentTypeByName.modelName;
@@ -119,7 +119,7 @@ module.exports = {
         modelName = contentType;
       }
 
-      const pages = await strapi.query(modelName).find();
+      const pages = await strapi.query(modelName).find({_limit: -1});
       const urls = await module.exports.getUrls(contentType, pages, config);
 
       urls.map((url) => {
@@ -144,7 +144,7 @@ module.exports = {
     // Add a homepage when none is present
     if (config.includeHomepage) {
       const hasHomePage = !isEmpty(sitemapEntries.filter(entry => entry.url === ''));
-  
+
       if (!hasHomePage) {
         sitemapEntries.push({
           url: '/',
