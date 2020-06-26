@@ -2,7 +2,7 @@
 
 const { Map } = require('immutable');
 const { SitemapStream, streamToPromise } = require('sitemap');
-const { isEmpty } = require('lodash');
+const { isEmpty, trim } = require('lodash');
 const fs = require('fs');
 
 /**
@@ -75,6 +75,7 @@ module.exports = {
           uidField: uidFieldName,
           priority: 0.5,
           changefreq: 'monthly',
+          area: ''
         };
       }
     })
@@ -92,7 +93,9 @@ module.exports = {
     pages.map((e) => {
       Object.entries(e).map(([i, e]) => {
         if (i === config.contentTypes[contentType].uidField) {
-          urls.push(e);
+          const area = trim(config.contentTypes[contentType].area, '/');
+          const url = [area, e].filter(Boolean).join('/')
+          urls.push(url);
         }
       })
     })

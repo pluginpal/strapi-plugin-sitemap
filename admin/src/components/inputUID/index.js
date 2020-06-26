@@ -3,22 +3,22 @@ import React from 'react';
 import { InputText, Label } from '@buffetjs/core';
 import { useGlobalContext } from 'strapi-helper-plugin';
 
-const inputUID = (props) => {
+const inputUID = ({ name, label, description, ...props }) => {
   const globalContext = useGlobalContext();
 
   return (
     <div>
       <Label 
-        htmlFor="url" 
-        message={globalContext.formatMessage({ id: 'sitemap.Settings.Field.InputUID.Label' })}
+        htmlFor={name}
+        message={label}
       />
       <InputText 
         type="text"
-        name="url"
+        name={name}
         {...props}
       />
       <p style={{ color: '#9ea7b8', fontSize: 12, marginTop: 5 }}>
-        {globalContext.formatMessage({ id: 'sitemap.Settings.Field.InputUID.Description' })}
+        { description }
       </p>
     </div>
   );
