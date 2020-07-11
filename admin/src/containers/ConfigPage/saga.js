@@ -10,6 +10,7 @@ import { request } from 'strapi-helper-plugin';
 import { getSettingsSucceeded, getContentTypesSucceeded, onSubmitSucceeded, updateSettings, hasSitemapSucceeded } from './actions';
 import { SUBMIT, GET_SETTINGS, GET_CONTENT_TYPES, GENERATE_SITEMAP, POPULATE_SETTINGS, HAS_SITEMAP } from './constants';
 import { makeSelectSettings } from './selectors';
+import getTrad from '../../utils/getTrad';
 
 export function* settingsGet() {
   try {
@@ -53,7 +54,7 @@ export function* submit() {
 
     yield put(onSubmitSucceeded());
 
-    strapi.notification.success('email.notification.config.success');
+    strapi.notification.success(getTrad('notification.success.submit'));
   } catch (err) {
     strapi.notification.error('notification.error');
   }

@@ -27,5 +27,8 @@
   "Modal.Title": "Configurations",
   "Modal.HeaderTitle": "Sitemap entries",
   "Modal.CollectionDescription": "Make sure that your collection or single type has at least 1 UID field.",
-  "Modal.CustomDescription": "Specify the relative path of the page you want to add to the sitemap."
+  "Modal.CustomDescription": "Specify the relative path of the page you want to add to the sitemap.",
+
+  "notification.success.submit": "Settings have been updated",
+  "notification.success.generate": "Sitemap has been generated"
 }
