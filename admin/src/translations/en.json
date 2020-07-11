@@ -9,6 +9,7 @@
   "Header.Title": "Sitemap",
   "Header.Description": "Settings for the sitemap.xml",
   "Header.Button.Generate": "Generate sitemap",
+  "Header.Button.SitemapLink": "Go to sitemap",
 
   "Settings.CollectionTitle": "Collection entries",
   "Settings.CustomTitle": "Custom entries",
@@ -16,11 +17,18 @@
   "Settings.CustomDescription": "Here you can add URLs which are not managed by Strapi.",
   "Settings.Field.Hostname.Label": "Hostname",
   "Settings.Field.Hostname.Description": "The URL of your application",
-  "Settings.Field.InputUID.Label": "URL",
-  "Settings.Field.InputUID.Description": "This field forces the UID type regex",
+  "Settings.Field.IncludeHomepage.Label": "Include home page",
+  "Settings.Field.IncludeHomepage.Description": "Include a '/' entry when none is present.",
+  "Settings.Field.URL.Label": "Slug",
+  "Settings.Field.URL.Description": "This field forces the UID type regex",
+  "Settings.Field.Area.Label": "Area",
+  "Settings.Field.Area.Description": "The path under which the pages are located.",
 
   "Modal.Title": "Configurations",
   "Modal.HeaderTitle": "Sitemap entries",
   "Modal.CollectionDescription": "Make sure that your collection or single type has at least 1 UID field.",
-  "Modal.CustomDescription": "Specify the relative path of the page you want to add to the sitemap."
+  "Modal.CustomDescription": "Specify the relative path of the page you want to add to the sitemap.",
+
+  "notification.success.submit": "Settings have been updated",
+  "notification.success.generate": "Sitemap has been generated"
 }

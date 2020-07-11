@@ -30,7 +30,7 @@ const CustomRow = ({ changefreq, priority, name, onDelete, settingsType }) => {
   return (
     <tr>
       <td>
-        <p style={styles.name}>{settingsType === 'Custom' && '/'}{name}</p>
+        <p style={styles.name}>{name}</p>
       </td>
       <td>
         <p>{changefreq}</p>

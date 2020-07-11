@@ -1,5 +1,7 @@
 'use strict';
 
+const fs = require('fs');
+
 /**
  * Sitemap.js controller
  *
@@ -14,6 +16,11 @@ module.exports = {
     ctx.send({
       message: 'The sitemap has been generated.'
     });
+  },
+
+  hasSitemap: async (ctx) => {
+    const hasSitemap = fs.existsSync('public/sitemap.xml');
+    ctx.send({ main: hasSitemap });
   },
 
   getSettings: async ctx => {

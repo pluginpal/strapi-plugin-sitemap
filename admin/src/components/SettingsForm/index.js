@@ -1,6 +1,6 @@
 import React from 'react';
 import Wrapper from '../Wrapper';
-import { InputText, Label } from '@buffetjs/core';
+import { InputText, Label, Toggle } from '@buffetjs/core';
 import { get } from 'lodash';
 import { useGlobalContext } from 'strapi-helper-plugin';
 
@@ -27,7 +27,21 @@ const SettingsForm = (props) => {
             {globalContext.formatMessage({ id: 'sitemap.Settings.Field.Hostname.Description' })}
           </p>
         </div>
-      </div>
+        <div style={{ marginTop: 20 }}>
+          <Label 
+            htmlFor="includeHomepage" 
+            message={globalContext.formatMessage({ id: 'sitemap.Settings.Field.IncludeHomepage.Label' })}
+          />
+          <Toggle
+            name="toggle"
+            onChange={(e) => onChange(e, 'includeHomepage')}
+            value={get(props.settings, 'includeHomepage', false)}
+          />
+          <p style={{ color: '#9ea7b8', fontSize: 12, marginTop: 5 }}>
+            {globalContext.formatMessage({ id: 'sitemap.Settings.Field.IncludeHomepage.Description' })}
+          </p>
+        </div>
+        </div>
     </Wrapper>
   );
 }

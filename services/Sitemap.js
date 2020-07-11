@@ -2,7 +2,7 @@
 
 const { Map } = require('immutable');
 const { SitemapStream, streamToPromise } = require('sitemap');
-const { isEmpty } = require('lodash');
+const { isEmpty, trim } = require('lodash');
 const fs = require('fs');
 
 /**
@@ -20,6 +20,7 @@ const createDefaultConfig = async () => {
 
   const value = {
     hostname: '',
+    includeHomepage: true,
     contentTypes: Map({}),
     customEntries: Map({}),
   }
@@ -44,7 +45,7 @@ module.exports = {
         name: 'sitemap',
       })
       .get({ key: 'settings' });
-  
+
     if (!config) {
       config = await createDefaultConfig('');
     }
@@ -68,12 +69,13 @@ module.exports = {
           uidFieldName = i;
         }
       })
-      
+
       if (uidFieldName) {
         contentTypes[contentType.modelName] = {
           uidField: uidFieldName,
           priority: 0.5,
           changefreq: 'monthly',
+          area: ''
         };
       }
     })
@@ -85,18 +87,24 @@ module.exports = {
     };
   },
 
-  getUrls: (contentType, pages, config) => {
-    let urls = [];
-      
+  getSitemapPageData: (contentType, pages, config) => {
+    let pageData = {};
+
     pages.map((e) => {
+      const id = e.id;
+      pageData[id] = {};
+      pageData[id].lastmod = e.updated_at;
+
       Object.entries(e).map(([i, e]) => {
         if (i === config.contentTypes[contentType].uidField) {
-          urls.push(e);
+          const area = trim(config.contentTypes[contentType].area, '/');
+          const url = [area, e].filter(Boolean).join('/')
+          pageData[id].url = url;
         }
       })
     })
 
-    return urls;
+    return pageData;
   },
 
   createSitemapEntries: async () => {
@@ -107,7 +115,7 @@ module.exports = {
       let modelName;
       const contentTypeByName = Object.values(strapi.contentTypes)
         .find(strapiContentType => strapiContentType.info.name === contentType);
-      
+
       // Backward compatibility for issue https://github.com/boazpoolman/strapi-plugin-sitemap/issues/4
       if (contentTypeByName) {
         modelName = contentTypeByName.modelName;
@@ -115,12 +123,13 @@ module.exports = {
         modelName = contentType;
       }
 
-      const pages = await strapi.query(modelName).find();
-      const urls = await module.exports.getUrls(contentType, pages, config);
+      const pages = await strapi.query(modelName).find({_limit: -1});
+      const pageData = await module.exports.getSitemapPageData(contentType, pages, config);
 
-      urls.map((url) => {
+      Object.values(pageData).map(({ url, lastmod }) => {
         sitemapEntries.push({
-          url: url,
+          url,
+          lastmod,
           changefreq: config.contentTypes[contentType].changefreq,
           priority: config.contentTypes[contentType].priority,
         })
@@ -138,14 +147,16 @@ module.exports = {
     }
 
     // Add a homepage when none is present
-    const hasHomePage = !isEmpty(sitemapEntries.filter(entry => entry.url === ''));
+    if (config.includeHomepage) {
+      const hasHomePage = !isEmpty(sitemapEntries.filter(entry => entry.url === ''));
 
-    if (!hasHomePage) {
-      sitemapEntries.push({
-        url: '/',
-        changefreq: 'monthly',
-        priority: '1',
-      })
+      if (!hasHomePage) {
+        sitemapEntries.push({
+          url: '/',
+          changefreq: 'monthly',
+          priority: '1',
+        })
+      }
     }
 
     return sitemapEntries;

@@ -24,15 +24,15 @@ After saving the settings and generating the sitemap, it will be written in the 
 
 1. Add the `sitemap.xml` to the `.gitignore` of your project.
 
-2. As of writing this the Strapi lifecycle methods are not stable and can't be used to regenerate the sitemap after a change of a URL. So to make sure your sitemap is up-to-date you can add a cron job where you run the `createSitemap()` service periodically.
+2. Make sure the sitemap is always up-to-date. You can either add a cron job, or create a lifecycle method to run the `createSitemap()` service.
 
-## Cron job
+## Cron job example
 
 	// Generate the sitemap every 12 hours
 	'0 */12 * * *': () => {
 	    strapi.plugins.sitemap.services.sitemap.createSitemap();
 	},
-	
+
 ## Resources
 
 - [MIT License](LICENSE.md)

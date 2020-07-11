@@ -8,13 +8,15 @@ import React, { memo } from 'react';
 import { isEmpty } from 'lodash';
 import { Header } from '@buffetjs/custom';
 import { useGlobalContext } from 'strapi-helper-plugin';
+import openWithNewTab from '../../utils/openWithNewTab';
 
 const HeaderComponent = (props) => {
   const disabled = 
     JSON.stringify(props.settings) === JSON.stringify(props.initialData);
-  const settingsIncomplete = 
-    isEmpty(props.settings.hostname) ||
-    isEmpty(props.settings.contentTypes);
+  const settingsComplete = 
+    props.settings.hostname && !isEmpty(props.settings.contentTypes) ||
+    props.settings.hostname && !isEmpty(props.settings.customEntries) ||
+    props.settings.hostname && props.settings.includeHomepage;
 
   const globalContext = useGlobalContext();
 
@@ -34,11 +36,20 @@ const HeaderComponent = (props) => {
       hidden: disabled
     },
     {
+      color: 'none',
+      label: globalContext.formatMessage({ id: 'sitemap.Header.Button.SitemapLink' }),
+      className: 'buttonOutline',
+      onClick: () => openWithNewTab('/sitemap.xml'),
+      type: 'button',
+      key: 'button-open',
+      hidden: !disabled || !settingsComplete || !props.sitemapPresence
+    },
+    {
       label: globalContext.formatMessage({ id: 'sitemap.Header.Button.Generate' }),
       onClick: props.generateSitemap,
       color: 'primary',
       type: 'button',
-      hidden: !disabled || settingsIncomplete
+      hidden: !disabled || !settingsComplete
     },
   ];
 

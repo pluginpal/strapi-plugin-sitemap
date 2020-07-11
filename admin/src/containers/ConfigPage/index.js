@@ -8,7 +8,7 @@ import React, { Component } from 'react';
 import pluginId from '../../pluginId';
 import { isEmpty } from 'lodash';
 
-import { ContainerFluid, HeaderNav } from 'strapi-helper-plugin';
+import { HeaderNav } from 'strapi-helper-plugin';
 import Header from '../../components/Header';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -17,7 +17,7 @@ import {
 import List from '../../components/List';
 import { Button } from '@buffetjs/core';
 import ModalForm from '../../components/ModalForm';
-import { submit, getSettings, populateSettings, getContentTypes, onChangeContentTypes, submitModal, onChangeSettings, deleteContentType, generateSitemap, discardAllChanges, discardModifiedContentTypes } from './actions';
+import { submit, getSettings, populateSettings, getContentTypes, onChangeContentTypes, submitModal, onChangeSettings, deleteContentType, generateSitemap, discardAllChanges, discardModifiedContentTypes, hasSitemap } from './actions';
 import { bindActionCreators, compose } from 'redux';
 import { connect } from 'react-redux';
 import selectConfigPage from './selectors';
@@ -26,6 +26,7 @@ import saga from './saga';
 import SettingsForm from '../../components/SettingsForm';
 import Wrapper from '../../components/Wrapper';
 import { GlobalContext } from 'strapi-helper-plugin'
+import { ContainerFluid } from './components';
 
 class ConfigPage extends Component {
   static contextType = GlobalContext;
@@ -51,6 +52,7 @@ class ConfigPage extends Component {
   
   componentDidMount() {
     this.props.getSettings();
+    this.props.hasSitemap();
     this.props.getContentTypes();
     this.setState({ 'settingsType': this.getSettingsType()});
   }
@@ -98,7 +100,12 @@ class ConfigPage extends Component {
             onCancel={(e) => this.props.discardAllChanges()}
             settings={this.props.settings}
             initialData={this.props.initialData}
-            generateSitemap={this.props.generateSitemap}
+            generateSitemap={async () => {
+              await this.props.generateSitemap();
+              this.props.hasSitemap();
+            }}
+            sitemapPresence={this.props.sitemapPresence}
+            hasSitemap={this.props.hasSitemap}
           />
           <HeaderNav
             links={this.headerNavLinks}
@@ -166,7 +173,8 @@ function mapDispatchToProps(dispatch) {
       submit,
       populateSettings,
       submitModal,
-      generateSitemap
+      generateSitemap,
+      hasSitemap
     },
     dispatch
   );
