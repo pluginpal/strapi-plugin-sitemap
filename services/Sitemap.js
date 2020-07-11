@@ -87,20 +87,24 @@ module.exports = {
     };
   },
 
-  getUrls: (contentType, pages, config) => {
-    let urls = [];
+  getSitemapPageData: (contentType, pages, config) => {
+    let pageData = {};
 
     pages.map((e) => {
+      const id = e.id;
+      pageData[id] = {};
+      pageData[id].lastmod = e.updated_at;
+
       Object.entries(e).map(([i, e]) => {
         if (i === config.contentTypes[contentType].uidField) {
           const area = trim(config.contentTypes[contentType].area, '/');
           const url = [area, e].filter(Boolean).join('/')
-          urls.push(url);
+          pageData[id].url = url;
         }
       })
     })
 
-    return urls;
+    return pageData;
   },
 
   createSitemapEntries: async () => {
@@ -120,11 +124,12 @@ module.exports = {
       }
 
       const pages = await strapi.query(modelName).find({_limit: -1});
-      const urls = await module.exports.getUrls(contentType, pages, config);
+      const pageData = await module.exports.getSitemapPageData(contentType, pages, config);
 
-      urls.map((url) => {
+      Object.values(pageData).map(({ url, lastmod }) => {
         sitemapEntries.push({
-          url: url,
+          url,
+          lastmod,
           changefreq: config.contentTypes[contentType].changefreq,
           priority: config.contentTypes[contentType].priority,
         })
