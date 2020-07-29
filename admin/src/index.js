@@ -13,7 +13,13 @@ export default strapi => {
   const pluginDescription =
     pluginPkg.strapi.description || pluginPkg.description;
 
+  const icon = pluginPkg.strapi.icon;
+  const name = pluginPkg.strapi.name;
+
   const plugin = {
+    icon,
+    name,
+    destination: `/plugins/${pluginId}`,
     blockerComponent: null,
     blockerComponentProps: {},
     description: pluginDescription,
@@ -28,9 +34,20 @@ export default strapi => {
     mainComponent: Comp,
     name: pluginPkg.strapi.name,
     preventComponentRendering: false,
-    suffixUrl: () => '/collection-entries',
-    suffixUrlToReplaceForLeftMenuHighlight: '/collection-entries',
     trads,
+    menu: {
+      pluginsSectionLinks: [
+        {
+          destination: `/plugins/${pluginId}/collection-entries`, // Endpoint of the link
+          icon,
+          name,
+          label: {
+            id: `${pluginId}.plugin.name`, // Refers to a i18n
+            defaultMessage: 'Sitemap',
+          },
+        },
+      ],
+    },
   };
 
   return strapi.registerPlugin(plugin);
