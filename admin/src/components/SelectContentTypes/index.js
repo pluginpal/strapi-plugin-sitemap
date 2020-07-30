@@ -34,16 +34,16 @@ const SelectContentTypes = (props) => {
     options['- Choose Content Type -'] = false;
 
     contentTypes.map(contentType => {
-      let uidFieldName = false;
+      let uidFieldNames = [];
 
       Object.entries(contentType.schema.attributes).map(([i, e]) => {
         if (e.type === "uid") {
-          uidFieldName = i;
+          uidFieldNames.push(i);
         }
       })
       
-      if (uidFieldName) {
-        options[contentType.apiID] = uidFieldName;
+      if (!isEmpty(uidFieldNames)) {
+        options[contentType.apiID] = uidFieldNames;
       }
     })
 
