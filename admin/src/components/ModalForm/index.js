@@ -161,7 +161,7 @@ const ModalForm = (props) => {
                       label={globalContext.formatMessage({ id: 'sitemap.Settings.Field.Area.Label' })}
                       description={globalContext.formatMessage({ id: 'sitemap.Settings.Field.Area.Description' })}
                       name="area"
-                      value={area}
+                      value={!isEmpty(edit) ? getValue('area') : ''}
                       disabled={state.contentType === '- Choose Content Type -' || !state.contentType && isEmpty(edit)}
                     />
                   </div>
