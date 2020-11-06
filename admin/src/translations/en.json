@@ -19,6 +19,8 @@
   "Settings.Field.Hostname.Description": "The URL of your application",
   "Settings.Field.IncludeHomepage.Label": "Include home page",
   "Settings.Field.IncludeHomepage.Description": "Include a '/' entry when none is present.",
+  "Settings.Field.ExcludeDrafts.Label": "Exclude drafts",
+  "Settings.Field.ExcludeDrafts.Description": "Remove all draft entries from the sitemap.",
   "Settings.Field.URL.Label": "Slug",
   "Settings.Field.URL.Description": "This field forces the UID type regex",
   "Settings.Field.Area.Label": "Area",
