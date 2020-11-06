@@ -56,13 +56,11 @@ const ModalForm = (props) => {
       onChange({target: form[input]}, contentType, settingsType)
     });
 
+    setState(prevState => ({ ...prevState, uidFields }));
+
     if (uidFields.length === 1) {
-      setState(prevState => ({ ...prevState, uidFields: [], selectedUidField: '' }));
+      setState(prevState => ({ ...prevState, selectedUidField: uidFields[0] }));
       onChange({target: { name: 'uidField', value: uidFields[0]}}, contentType, settingsType)
-    }
-    if (uidFields.length > 1) {
-      setState(prevState => ({ ...prevState, uidFields }));
-      // onChange({target: { name: 'uidField', value: uidFields[0]}}, contentType, settingsType)
     }
 
     onChange({target: { name: 'area', value: ''}}, contentType, settingsType)
@@ -104,7 +102,6 @@ const ModalForm = (props) => {
   if (!isEmpty(edit)) { 
     contentType = edit;
     uidFields = getUidFieldsByContentType(contentTypes.filter((mappedContentType) => mappedContentType.apiID === edit)[0]);
-    if (uidFields.length <= 1) uidFields = [];
     if (settingsType === 'collection') area = getValue('area');
   };
 
@@ -158,12 +155,14 @@ const ModalForm = (props) => {
                     name="uidField"
                     options={uidFields}
                     onChange={(e) => {
+                      const value = e.target.value;
                       onChange(e, contentType, settingsType);
-                      setState((prevState) => ({ ...prevState, selectedUidField: e.target.value }))
+                      setState((prevState) => ({ ...prevState, selectedUidField: value }))
                     }}
+                    disabled={uidFields.length <= 1}
                     value={state.selectedUidField}
                   />
-                  <p style={{ color: '#9ea7b8', fontSize: 12, marginTop: 5, marginBottom: 20 }}>Select the preferred UID field to use for URLs.</p>
+                  <p style={{ color: '#9ea7b8', fontSize: 12, marginTop: 5, marginBottom: 20 }}>The preferred UID field to use for URLs.</p>
                 </React.Fragment>
               }
             </div>
@@ -197,10 +196,9 @@ const ModalForm = (props) => {
                       label={globalContext.formatMessage({ id: 'sitemap.Settings.Field.Area.Label' })}
                       description={globalContext.formatMessage({ id: 'sitemap.Settings.Field.Area.Description' })}
                       name="area"
-                      value={!isEmpty(edit) ? getValue('area') : ''}
+                      value={!isEmpty(edit) ? getValue('area') : state.area}
                       disabled={
                         state.contentType === '- Choose Content Type -'
-                        || isEmpty(edit) && !isEmpty(uidFields) && isEmpty(state.selectedUidField) 
                         || !state.contentType && isEmpty(edit)
                       }
                     />
@@ -234,7 +232,7 @@ const ModalForm = (props) => {
             }
             onClick={(e) => {
               onSubmit(e);
-              setState(prevState => ({ ...prevState, contentType: '' }));
+              setState(prevState => ({ ...prevState, contentType: '', area: '' }));
               push({search: ''});
             }}
           >
