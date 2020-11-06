@@ -3,7 +3,7 @@ import { useHistory, useLocation } from 'react-router-dom';
 import { get, has, isEmpty } from 'lodash';
 
 import { Inputs } from '@buffetjs/custom';
-import { Select } from '@buffetjs/core';
+import { Select, Label } from '@buffetjs/core';
 import { Button, AttributeIcon } from '@buffetjs/core';
 import { useGlobalContext } from 'strapi-helper-plugin';
 import SelectContentTypes from '../SelectContentTypes';
@@ -18,6 +18,7 @@ import {
 
 import form from './mapper';
 import InputUID from '../inputUID';
+import { getUidFieldsByContentType } from '../../utils/getUidfields';
 
 const ModalForm = (props) => {
   const { search, edit } = useLocation();
@@ -54,8 +55,6 @@ const ModalForm = (props) => {
     Object.keys(form).map(input => {
       onChange({target: form[input]}, contentType, settingsType)
     });
-
-    console.log(uidFields.length);
 
     if (uidFields.length === 1) {
       setState(prevState => ({ ...prevState, uidFields: [], selectedUidField: '' }));
@@ -101,9 +100,11 @@ const ModalForm = (props) => {
     paddingBottom: '3rem'
   };
 
-  let { contentType, area } = state;
+  let { contentType, area, uidFields } = state;
   if (!isEmpty(edit)) { 
     contentType = edit;
+    uidFields = getUidFieldsByContentType(contentTypes.filter((mappedContentType) => mappedContentType.apiID === edit)[0]);
+    if (uidFields.length <= 1) uidFields = [];
     if (settingsType === 'collection') area = getValue('area');
   };
 
@@ -113,7 +114,7 @@ const ModalForm = (props) => {
       onOpened={() => {}}
       onClosed={() => {
         onCancel();
-        setState(prevState => ({ ...prevState, contentType: '' }));
+        setState(prevState => ({ ...prevState, contentType: '' , uidFields: [] }));
       }}
       onToggle={() => push({search: ''})}
       withoverflow={'displayName'}
@@ -150,13 +151,18 @@ const ModalForm = (props) => {
                   disabled={!isEmpty(edit)}
                 />
               }
-              { !isEmpty(state.uidFields) && 
-                <Select 
-                  name="uidField"
-                  options={state.uidFields}
-                  onChange={({ target: { value } }) => setState((prevState) => ({ ...prevState, selectedUidField: value }))}
-                  value={state.selectedUidField}
-                />
+              { !isEmpty(uidFields) && 
+                <React.Fragment>
+                  <Label htmlFor="uidField" message="UID field" />
+                  <Select 
+                    name="uidField"
+                    options={uidFields}
+                    onChange={({ target: { value } }) => setState((prevState) => ({ ...prevState, selectedUidField: value }))}
+                    // disabled={!isEmpty(edit)}
+                    value={state.selectedUidField}
+                  />
+                  <p style={{ color: '#9ea7b8', fontSize: 12, marginTop: 5, marginBottom: 20 }}>Select the preferred UID field to use for URLs.</p>
+                </React.Fragment>
               }
             </div>
             <div className="col-md-6">
@@ -192,7 +198,7 @@ const ModalForm = (props) => {
                       value={!isEmpty(edit) ? getValue('area') : ''}
                       disabled={
                         state.contentType === '- Choose Content Type -'
-                        || !isEmpty(state.uidFields) && isEmpty(state.selectedUidField) 
+                        || isEmpty(edit) && !isEmpty(uidFields) && isEmpty(state.selectedUidField) 
                         || !state.contentType && isEmpty(edit)
                       }
                     />
@@ -221,7 +227,7 @@ const ModalForm = (props) => {
             style={{ marginLeft: 'auto' }}
             disabled={
               state.contentType === '- Choose Content Type -'
-              || !isEmpty(state.uidFields) && isEmpty(state.selectedUidField) 
+              || !isEmpty(uidFields) && isEmpty(state.selectedUidField) 
               || !state.contentType && isEmpty(edit)
             }
             onClick={(e) => {

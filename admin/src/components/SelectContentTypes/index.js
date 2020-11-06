@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Select, Label } from '@buffetjs/core';
 import { isEmpty } from 'lodash';
+import { getUidFieldsByContentType } from '../../utils/getUidfields';
 
 const SelectContentTypes = (props) => {
   const { edit } = useLocation();
@@ -34,13 +35,7 @@ const SelectContentTypes = (props) => {
     options['- Choose Content Type -'] = false;
 
     contentTypes.map(contentType => {
-      let uidFieldNames = [];
-
-      Object.entries(contentType.schema.attributes).map(([i, e]) => {
-        if (e.type === "uid") {
-          uidFieldNames.push(i);
-        }
-      })
+      const uidFieldNames = getUidFieldsByContentType(contentType);
       
       if (!isEmpty(uidFieldNames)) {
         options[contentType.apiID] = uidFieldNames;
