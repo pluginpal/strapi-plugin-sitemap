@@ -21,6 +21,7 @@ const createDefaultConfig = async () => {
   const value = {
     hostname: '',
     includeHomepage: true,
+    excludeDrafts: true,
     contentTypes: Map({}),
     customEntries: Map({}),
   }
@@ -123,7 +124,12 @@ module.exports = {
         modelName = contentType;
       }
 
-      const pages = await strapi.query(modelName).find({_limit: -1});
+      let pages = await strapi.query(modelName).find({_limit: -1});
+
+      if (config.excludeDrafts) {
+        pages = pages.filter((page) => page.published_at);
+      }
+
       const pageData = await module.exports.getSitemapPageData(contentType, pages, config);
 
       Object.values(pageData).map(({ url, lastmod }) => {

@@ -1,8 +1,6 @@
 # Strapi Plugin Sitemap
 
-Every public website should have a sitemap.xml to increase SEO. A website where the content is managed by [Strapi](http://strapi.io/) should be no different. With this plugin you can generate a sitemap server side, which allows you to customize it based on your data structure in Strapi. 
-
-This plugin uses the UID field type to fetch URLs, and therefor expects a Strapi version of `3.0.0-beta.19.3` or higher.
+This plugin is an integration of the UID field type. In Strapi you can manage your URLs by adding UID fields to your single or collection types. This field will act as a wrapper for the title field and will generate a unique SEO friendly path for each instance of the type. This plugin will then use those paths to generate a fully customizable sitemap for all your URLs.
 
 ## Installation
 
@@ -18,7 +16,7 @@ Before you can generate the sitemap you need to specify what you want to be in i
 
 After saving the settings and generating the sitemap, it will be written in the `/public` folder of your Strapi project, making it available at `http://localhost:1337/sitemap.xml`. 
 
-![Setup Strapi sitemap](https://api.boazpoolman.nl/uploads/99cebc3da2ad4a7dbc6ce493deee7673.gif)
+![Setup Strapi sitemap](./.github/setup-instruction-video.gif)
 
 ## Optional (but recommended)
 

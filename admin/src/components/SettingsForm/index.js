@@ -41,6 +41,20 @@ const SettingsForm = (props) => {
             {globalContext.formatMessage({ id: 'sitemap.Settings.Field.IncludeHomepage.Description' })}
           </p>
         </div>
+        <div style={{ marginTop: 20 }}>
+        <Label 
+          htmlFor="excludeDrafts" 
+          message={globalContext.formatMessage({ id: 'sitemap.Settings.Field.ExcludeDrafts.Label' })}
+        />
+        <Toggle
+          name="toggle"
+          onChange={(e) => onChange(e, 'excludeDrafts')}
+          value={get(props.settings, 'excludeDrafts', false)}
+        />
+        <p style={{ color: '#9ea7b8', fontSize: 12, marginTop: 5 }}>
+          {globalContext.formatMessage({ id: 'sitemap.Settings.Field.ExcludeDrafts.Description' })}
+        </p>
+      </div>
         </div>
     </Wrapper>
   );
