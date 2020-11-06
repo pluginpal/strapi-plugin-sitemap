@@ -157,8 +157,10 @@ const ModalForm = (props) => {
                   <Select 
                     name="uidField"
                     options={uidFields}
-                    onChange={({ target: { value } }) => setState((prevState) => ({ ...prevState, selectedUidField: value }))}
-                    // disabled={!isEmpty(edit)}
+                    onChange={(e) => {
+                      onChange(e, contentType, settingsType);
+                      setState((prevState) => ({ ...prevState, selectedUidField: e.target.value }))
+                    }}
                     value={state.selectedUidField}
                   />
                   <p style={{ color: '#9ea7b8', fontSize: 12, marginTop: 5, marginBottom: 20 }}>Select the preferred UID field to use for URLs.</p>
