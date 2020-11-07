@@ -16,8 +16,6 @@ Before you can generate the sitemap you need to specify what you want to be in i
 
 After saving the settings and generating the sitemap, it will be written in the `/public` folder of your Strapi project, making it available at `http://localhost:1337/sitemap.xml`. 
 
-![Setup Strapi sitemap](./.github/setup-instruction-video.gif)
-
 ## Optional (but recommended)
 
 1. Add the `sitemap.xml` to the `.gitignore` of your project.
