@@ -49,12 +49,17 @@ const ModalForm = (props) => {
   const handleSelectChange = (e, uidFields) => {
     const contentType = e.target.value; 
     setState(prevState => ({ ...prevState, contentType }));
+    setState(prevState => ({ ...prevState, selectedUidField: '' }));
 
     // Set initial values
     onCancel();
     Object.keys(form).map(input => {
       onChange({target: form[input]}, contentType, settingsType)
     });
+
+    if (uidFields.length > 1 && !uidFields.includes('- Choose UID field -')) {
+      uidFields.unshift('- Choose UID field -');
+    }
 
     setState(prevState => ({ ...prevState, uidFields }));
 
@@ -87,8 +92,10 @@ const ModalForm = (props) => {
 
     if (has(props[subKey], [contentType, input], '')) {
       return get(props[subKey], [contentType, input], '');
-    } else {
+    } else if (form[input]) {
       return form[input].value;
+    } else {
+      return null;
     }
   };
 
@@ -98,10 +105,12 @@ const ModalForm = (props) => {
     paddingBottom: '3rem'
   };
 
-  let { contentType, area, uidFields } = state;
+
+  let { contentType, area, uidFields, selectedUidField } = state;
   if (!isEmpty(edit)) { 
     contentType = edit;
     uidFields = getUidFieldsByContentType(contentTypes.filter((mappedContentType) => mappedContentType.apiID === edit)[0]);
+    selectedUidField = getValue('uidField');
     if (settingsType === 'collection') area = getValue('area');
   };
 
@@ -160,7 +169,7 @@ const ModalForm = (props) => {
                       setState((prevState) => ({ ...prevState, selectedUidField: value }))
                     }}
                     disabled={uidFields.length <= 1}
-                    value={state.selectedUidField}
+                    value={getValue('uidField') || selectedUidField}
                   />
                   <p style={{ color: '#9ea7b8', fontSize: 12, marginTop: 5, marginBottom: 20 }}>The preferred UID field to use for URLs.</p>
                 </React.Fragment>
@@ -175,6 +184,8 @@ const ModalForm = (props) => {
                       name={input}
                       disabled={
                         state.contentType === '- Choose Content Type -'
+                        || selectedUidField === '- Choose UID field -'
+                        || !selectedUidField
                         || !state.contentType && isEmpty(edit)
                       }
                       {...form[input]}
@@ -199,6 +210,8 @@ const ModalForm = (props) => {
                       value={!isEmpty(edit) ? getValue('area') : state.area}
                       disabled={
                         state.contentType === '- Choose Content Type -'
+                        || selectedUidField === '- Choose UID field -'
+                        || !selectedUidField
                         || !state.contentType && isEmpty(edit)
                       }
                     />
@@ -227,7 +240,9 @@ const ModalForm = (props) => {
             style={{ marginLeft: 'auto' }}
             disabled={
               state.contentType === '- Choose Content Type -'
-              || !isEmpty(uidFields) && isEmpty(state.selectedUidField) 
+              || selectedUidField === '- Choose UID field -'
+              || !selectedUidField
+              || isEmpty(edit) && !isEmpty(uidFields) && isEmpty(selectedUidField) 
               || !state.contentType && isEmpty(edit)
             }
             onClick={(e) => {
