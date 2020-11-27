@@ -14,7 +14,7 @@
   "Settings.CollectionTitle": "Collection entries",
   "Settings.CustomTitle": "Custom entries",
   "Settings.CollectionDescription": "Here you can add collection & single types which have at least 1 UID field. Once added, all the instances of this type will be checked for its UID field, which will be added to the sitemap.",
-  "Settings.CustomDescription": "Here you can add URLs which are not managed by Strapi.",
+  "Settings.CustomDescription": "Here you can add any URL to the sitemap",
   "Settings.Field.Hostname.Label": "Hostname",
   "Settings.Field.Hostname.Description": "The URL of your application",
   "Settings.Field.IncludeHomepage.Label": "Include home page",
