@@ -106,12 +106,14 @@ const ModalForm = (props) => {
   };
 
 
-  let { contentType, area, uidFields, selectedUidField } = state;
+  let { contentType, uidFields, selectedUidField } = state;
   if (!isEmpty(edit)) { 
     contentType = edit;
-    uidFields = getUidFieldsByContentType(contentTypes.filter((mappedContentType) => mappedContentType.apiID === edit)[0]);
-    selectedUidField = getValue('uidField');
-    if (settingsType === 'collection') area = getValue('area');
+    
+    if (settingsType === 'Collection') {
+      uidFields = getUidFieldsByContentType(contentTypes.filter((mappedContentType) => mappedContentType.apiID === edit)[0]);
+      selectedUidField = getValue('uidField');
+    }
   };
 
   return (
@@ -184,8 +186,8 @@ const ModalForm = (props) => {
                       name={input}
                       disabled={
                         state.contentType === '- Choose Content Type -'
-                        || selectedUidField === '- Choose UID field -'
-                        || !selectedUidField
+                        || settingsType === 'Collection' && selectedUidField === '- Choose UID field -'
+                        || settingsType === 'Collection' && !selectedUidField
                         || !state.contentType && isEmpty(edit)
                       }
                       {...form[input]}
@@ -240,8 +242,8 @@ const ModalForm = (props) => {
             style={{ marginLeft: 'auto' }}
             disabled={
               state.contentType === '- Choose Content Type -'
-              || selectedUidField === '- Choose UID field -'
-              || !selectedUidField
+              || settingsType === 'Collection' && isEmpty(edit) && selectedUidField === '- Choose UID field -'
+              || settingsType === 'Collection' && isEmpty(edit) && !selectedUidField
               || isEmpty(edit) && !isEmpty(uidFields) && isEmpty(selectedUidField) 
               || !state.contentType && isEmpty(edit)
             }
