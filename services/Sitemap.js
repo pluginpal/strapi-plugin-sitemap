@@ -124,9 +124,10 @@ module.exports = {
         modelName = contentType;
       }
 
+      const hasDraftAndPublish = strapi.query(modelName).model.__schema__.options.draftAndPublish;
       let pages = await strapi.query(modelName).find({_limit: -1});
 
-      if (config.excludeDrafts) {
+      if (config.excludeDrafts && hasDraftAndPublish) {
         pages = pages.filter((page) => page.published_at);
       }
 
