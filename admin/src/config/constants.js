@@ -4,6 +4,8 @@
  *
  */
 
+export const __DEBUG__ = strapi.env === 'development';
+
 export const SUBMIT = 'Sitemap/ConfigPage/SUBMIT';
 export const ON_SUBMIT_SUCCEEDED = 'Sitemap/ConfigPage/ON_SUBMIT_SUCCEEDED';
 export const SUBMIT_MODAL = 'Sitemap/ConfigPage/SUBMIT_MODAL';
