@@ -1,12 +1,13 @@
 import React from 'react';
 import Wrapper from '../Wrapper';
 import { InputText, Label, Toggle } from '@buffetjs/core';
-import { get } from 'lodash';
+import { Map } from 'immutable';
 import { useGlobalContext } from 'strapi-helper-plugin';
+import { useSelector } from 'react-redux';
 
-const SettingsForm = (props) => {
-  const { onChange } = props;
-  const globalContext = useGlobalContext();
+const SettingsForm = ({ onChange }) => {
+  const { formatMessage } = useGlobalContext();
+  const settings = useSelector((state) => state.getIn(['sitemap', 'settings']), Map());
 
   return (
     <Wrapper style={{ zIndex: 1, position: 'relative' }}>
@@ -14,45 +15,45 @@ const SettingsForm = (props) => {
         <div style={{ maxWidth: 500 }}>
           <Label 
             htmlFor="hostname" 
-            message={globalContext.formatMessage({ id: 'sitemap.Settings.Field.Hostname.Label' })}
+            message={formatMessage({ id: 'sitemap.Settings.Field.Hostname.Label' })}
           />
           <InputText
             name="hostname"
             onChange={(e) => onChange(e, 'hostname')}
             placeholder="https://www.strapi.io"
             type="text"
-            value={get(props.settings, 'hostname', '')}
+            value={settings.get('hostname')}
           />
           <p style={{ color: '#9ea7b8', fontSize: 12, marginTop: 5 }}>
-            {globalContext.formatMessage({ id: 'sitemap.Settings.Field.Hostname.Description' })}
+            {formatMessage({ id: 'sitemap.Settings.Field.Hostname.Description' })}
           </p>
         </div>
         <div style={{ marginTop: 20 }}>
           <Label 
             htmlFor="includeHomepage" 
-            message={globalContext.formatMessage({ id: 'sitemap.Settings.Field.IncludeHomepage.Label' })}
+            message={formatMessage({ id: 'sitemap.Settings.Field.IncludeHomepage.Label' })}
           />
           <Toggle
             name="toggle"
             onChange={(e) => onChange(e, 'includeHomepage')}
-            value={get(props.settings, 'includeHomepage', false)}
+            value={settings.get('includeHomepage')}
           />
           <p style={{ color: '#9ea7b8', fontSize: 12, marginTop: 5 }}>
-            {globalContext.formatMessage({ id: 'sitemap.Settings.Field.IncludeHomepage.Description' })}
+            {formatMessage({ id: 'sitemap.Settings.Field.IncludeHomepage.Description' })}
           </p>
         </div>
         <div style={{ marginTop: 20 }}>
         <Label 
           htmlFor="excludeDrafts" 
-          message={globalContext.formatMessage({ id: 'sitemap.Settings.Field.ExcludeDrafts.Label' })}
+          message={formatMessage({ id: 'sitemap.Settings.Field.ExcludeDrafts.Label' })}
         />
         <Toggle
           name="toggle"
           onChange={(e) => onChange(e, 'excludeDrafts')}
-          value={get(props.settings, 'excludeDrafts', false)}
+          value={settings.get('excludeDrafts')}
         />
         <p style={{ color: '#9ea7b8', fontSize: 12, marginTop: 5 }}>
-          {globalContext.formatMessage({ id: 'sitemap.Settings.Field.ExcludeDrafts.Description' })}
+          {formatMessage({ id: 'sitemap.Settings.Field.ExcludeDrafts.Description' })}
         </p>
       </div>
         </div>
