@@ -45,11 +45,8 @@ const ConfigPage = (props) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(submit());
+    dispatch(submit(state.get('settings').toJS()));
   }
-
-  console.log(state.toJS());
-
 
   // if (isEmpty(dispatch(contentTypes)) ){
   //   return (<div />);
@@ -82,7 +79,7 @@ const ConfigPage = (props) => {
         <List 
           settingsType={settingsType}
           settings={state.get('settings')}
-          onDelete={dispatch(deleteContentType())}
+          onDelete={(contentType, settingsType) => dispatch(deleteContentType(contentType, settingsType))}
         />
         <Wrapper style={{ paddingTop: 0, paddingBottom: 0, marginBottom: 0 }}>
           <Button 
@@ -90,14 +87,14 @@ const ConfigPage = (props) => {
             icon={<FontAwesomeIcon icon={faPlus} />} 
             label={formatMessage({ id: 'sitemap.Button.AddAll' })}
             onClick={() => dispatch(populateSettings())}
-            hidden={settingsType === 'Custom' || !isEmpty(state.getIn(['settings', 'contentTypes']))}
+            hidden={settingsType === 'Custom' || !state.getIn(['settings', 'contentTypes'], null)}
           />
           <Button 
             color="primary" 
             icon={<FontAwesomeIcon icon={faPlus} />} 
             label={formatMessage({ id: 'sitemap.Button.AddURL' })}
             onClick={() => props.history.push({ search: 'addNew' })}
-            hidden={settingsType === 'Collection' || !isEmpty(state.getIn(['settings', 'customEntries']))}
+            hidden={settingsType === 'Collection' || !state.getIn(['settings', 'customEntries'], null)}
           />
           <Button 
             color="secondary"
@@ -105,22 +102,20 @@ const ConfigPage = (props) => {
             icon={<FontAwesomeIcon icon={faPlus} />} 
             label={formatMessage({ id: 'sitemap.Button.Add1by1' })}
             onClick={() => props.history.push({ search: 'addNew' })}
-            hidden={settingsType === 'Custom' || !isEmpty(state.getIn(['settings', 'contentTypes']))}
+            hidden={settingsType === 'Custom' || !state.getIn(['settings', 'contentTypes'], null)}
           />
         </Wrapper>
         <ModalForm 
           contentTypes={state.get('contentTypes')}
           modifiedContentTypes={state.get('modifiedContentTypes')}
           modifiedCustomEntries={state.get('modifiedCustomEntries')}
-          settings={state.get('settings')}
           settingsType={settingsType}
           onSubmit={(e) => handleModalSubmit(e)}
-          onCancel={dispatch(discardModifiedContentTypes())}
-          onChange={dispatch(onChangeContentTypes())}
+          onCancel={() => dispatch(discardModifiedContentTypes())}
+          onChange={(e, contentType, settingsType) => dispatch(onChangeContentTypes(e, contentType, settingsType))}
         />
         <SettingsForm 
-          onChange={dispatch(onChangeSettings())} 
-          settings={state.get('settings')}
+          onChange={(e, key) => dispatch(onChangeSettings(e, key))} 
         />
       </ContainerFluid>
     </div>
