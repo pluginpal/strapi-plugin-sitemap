@@ -20,7 +20,7 @@ const ConfigPage = (props) => {
   const { formatMessage } = useGlobalContext();
   const [settingsType, setSettingsType] = useState('');
   const dispatch = useDispatch();
-  const state = useSelector((state) => state.get('sitemap'), Map());
+  const state = useSelector((state) => state.get('sitemap', Map()));
 
   useEffect(() => {
     dispatch(getSettings());

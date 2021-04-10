@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux';
 
 const SettingsForm = ({ onChange }) => {
   const { formatMessage } = useGlobalContext();
-  const settings = useSelector((state) => state.getIn(['sitemap', 'settings']), Map());
+  const settings = useSelector((state) => state.getIn(['sitemap', 'settings'], Map()));
 
   return (
     <Wrapper style={{ zIndex: 1, position: 'relative' }}>
