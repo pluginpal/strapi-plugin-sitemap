@@ -21,4 +21,4 @@ const ContainerFluid = styled.div`
   }
 `;
 
-export { ContainerFluid };
+export default ContainerFluid;

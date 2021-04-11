@@ -6,22 +6,15 @@
  */
 
 import React from 'react';
-import { Switch, Route } from 'react-router-dom';
-import { NotFound } from 'strapi-helper-plugin';
 import { Provider } from 'react-redux';
 
 import { store } from "../../helpers/configureStore";
-import pluginId from '../../helpers/pluginId';
-import ConfigPage from '../ConfigPage';
+import Main from '../Main';
 
 const App = () => {
   return (
     <Provider store={store}>
-      <Switch>
-        <Route path={`/plugins/${pluginId}/collection-entries`} component={ConfigPage} exact />
-        <Route path={`/plugins/${pluginId}/custom-entries`} component={ConfigPage} exact />
-        <Route component={NotFound} />
-      </Switch>
+      <Main />
     </Provider>
   );
 };
