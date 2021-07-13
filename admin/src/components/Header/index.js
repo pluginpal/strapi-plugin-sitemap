@@ -10,7 +10,7 @@ import { Map } from 'immutable';
 import { Header } from '@buffetjs/custom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useGlobalContext } from 'strapi-helper-plugin';
-import openWithNewTab from '../../utils/openWithNewTab';
+import openWithNewTab from '../../helpers/openWithNewTab';
 import { submit, discardAllChanges, generateSitemap } from '../../state/actions/Sitemap';
 
 const HeaderComponent = (props) => {

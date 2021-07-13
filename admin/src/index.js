@@ -1,6 +1,6 @@
 import React from 'react';
 import pluginPkg from '../../package.json';
-import pluginId from './pluginId';
+import pluginId from './helpers/pluginId';
 import App from './containers/App';
 import Initializer from './containers/Initializer';
 import trads from './translations';

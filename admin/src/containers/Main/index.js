@@ -13,7 +13,7 @@
  import pluginId from '../../helpers/pluginId';
  import Tabs from '../../components/Tabs';
  import Header from '../../components/Header';
- import { ContainerFluid } from '../ConfigPage/components';
+ import ContainerFluid from '../../components/Container';
  import CollectionURLs from '../CollectionURLs';
  import CustomURLs from '../CustomURLs';
  import Settings from '../Settings';

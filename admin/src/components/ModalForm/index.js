@@ -18,7 +18,7 @@ import {
 
 import form from './mapper';
 import InputUID from '../inputUID';
-import { getUidFieldsByContentType } from '../../utils/getUidfields';
+import { getUidFieldsByContentType } from '../../helpers/getUidfields';
 
 const ModalForm = (props) => {
   const { search, edit } = useLocation();

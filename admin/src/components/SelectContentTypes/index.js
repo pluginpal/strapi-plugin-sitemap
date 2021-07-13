@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Select, Label } from '@buffetjs/core';
 import { isEmpty } from 'lodash';
-import { getUidFieldsByContentType } from '../../utils/getUidfields';
+import { getUidFieldsByContentType } from '../../helpers/getUidfields';
 
 const SelectContentTypes = (props) => {
   const { edit } = useLocation();
