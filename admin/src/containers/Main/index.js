@@ -14,9 +14,9 @@
  import Tabs from '../../components/Tabs';
  import Header from '../../components/Header';
  import ContainerFluid from '../../components/Container';
- import CollectionURLs from '../CollectionURLs';
- import CustomURLs from '../CustomURLs';
- import Settings from '../Settings';
+ import CollectionURLs from '../../screens/CollectionURLs';
+ import CustomURLs from '../../screens/CustomURLs';
+ import Settings from '../../screens/Settings';
  import { getContentTypes, getSettings, hasSitemap } from '../../state/actions/Sitemap';
  
  const App = () => {
