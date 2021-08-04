@@ -66,9 +66,7 @@ export function onChangeContentTypes({ target }, contentType, settingsType) {
   };
 }
 
-export function onChangeSettings({ target }, key) {
-  const value = target.value;
-
+export function onChangeSettings(key, value) {
   return {
     type: ON_CHANGE_SETTINGS,
     key,
