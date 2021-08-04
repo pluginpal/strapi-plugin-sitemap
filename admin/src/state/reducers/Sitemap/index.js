@@ -19,6 +19,7 @@
    ON_CHANGE_SETTINGS,
    UPDATE_SETTINGS,
    HAS_SITEMAP_SUCCEEDED,
+   ON_CHANGE_CUSTOM_ENTRY
  } from '../../../config/constants';
  
  const initialState = fromJS({
@@ -49,6 +50,9 @@
      case ON_CHANGE_CONTENT_TYPES:
        return state
          .updateIn(action.keys, () => action.value);
+     case ON_CHANGE_CUSTOM_ENTRY:
+       return state
+         .updateIn(['modifiedCustomEntries', action.url, action.key], () => action.value);
      case ON_CHANGE_SETTINGS:
          return state
            .updateIn(['settings', action.key], () => action.value);

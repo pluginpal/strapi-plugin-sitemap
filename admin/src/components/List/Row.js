@@ -9,8 +9,7 @@ import {
   faCube,
 } from '@fortawesome/free-solid-svg-icons';
 
-const CustomRow = ({ changefreq, priority, name, onDelete, prependSlash }) => {
-  const { push } = useHistory();
+const CustomRow = ({ changefreq, priority, name, onDelete, prependSlash, openModal }) => {
   const styles = {
     name: {
       textTransform: !prependSlash ? 'capitalize' : 'none',
@@ -18,7 +17,7 @@ const CustomRow = ({ changefreq, priority, name, onDelete, prependSlash }) => {
   };
 
   const handleEditClick = (e) => {
-    push({ edit: name });
+    openModal(name);
     e.stopPropagation();
   };
 

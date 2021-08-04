@@ -32,7 +32,7 @@ const ListComponent = (props) => {
       color: 'secondary',
       icon: true,
       label: globalContext.formatMessage({ id: 'sitemap.Button.Add' }),
-      onClick: openModal,
+      onClick: () => openModal(),
       type: 'button',
       hidden: items.size === 0,
     },
@@ -43,7 +43,7 @@ const ListComponent = (props) => {
       <List 
         {...listProps} 
         items={formattedItems}  
-        customRowComponent={listProps => <CustomRow {...listProps} prependSlash={prependSlash} />}
+        customRowComponent={listProps => <CustomRow {...listProps} prependSlash={prependSlash} openModal={openModal} />}
       />
     </div>
   );

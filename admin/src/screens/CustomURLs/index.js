@@ -6,21 +6,35 @@ import { Map } from 'immutable';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
-import { deleteContentType, discardModifiedContentTypes, onChangeContentTypes, populateSettings, submitModal, deleteCustomEntry } from '../../state/actions/Sitemap';
+import { deleteContentType, discardModifiedContentTypes, onChangeCustomEntry, populateSettings, submitModal, deleteCustomEntry } from '../../state/actions/Sitemap';
 import List from '../../components/List';
-import ModalForm from '../../components/ModalForm';
+import NewModalForm from '../../components/NewModalForm';
 import Wrapper from '../../components/Wrapper';
 
 const CustomURLs = () => {
   const state = useSelector((state) => state.get('sitemap', Map()));
   const dispatch = useDispatch();
   const [modalOpen, setModalOpen] = useState(false);
+  const [uid, setUid] = useState(null);
   const { formatMessage } = useGlobalContext();
 
   const handleModalSubmit = (e) => {
     e.preventDefault();
-    return dispatch(submitModal());
+    dispatch(submitModal());
+    setModalOpen(false);
+    setUid(null);
   }
+
+  const handleModalOpen = (uid) => {
+    if (uid) setUid(uid);
+    setModalOpen(true);
+  };
+
+  const handleModalClose = (closeModal = true) => {
+    if (closeModal) setModalOpen(false);
+    dispatch(discardModifiedContentTypes());
+    setUid(null);
+  };
 
   // Loading state
   if (!state.getIn(['settings', 'customEntries'])) {
@@ -33,7 +47,7 @@ const CustomURLs = () => {
         items={state.getIn(['settings', 'customEntries'])}
         title={formatMessage({ id: `sitemap.Settings.CustomTitle` })}
         subtitle={formatMessage({ id: `sitemap.Settings.CustomDescription` })}
-        openModal={() => setModalOpen(true)}
+        openModal={(uid) => handleModalOpen(uid)}
         onDelete={(key) => dispatch(deleteCustomEntry(key))}
         prependSlash
       />
@@ -46,21 +60,13 @@ const CustomURLs = () => {
           hidden={state.getIn(['settings', 'customEntries']).size}
         />
       </Wrapper>
-      <ModalForm
-        contentTypes={state.get('contentTypes')}
-        modifiedContentTypes={state.get('modifiedContentTypes')}
-        modifiedCustomEntries={state.get('modifiedCustomEntries')}
-        settingsType={'Custom'}
+      <NewModalForm
+        modifiedState={state.get('modifiedCustomEntries')}
         isOpen={modalOpen}
-        onSubmit={(e) => {
-          handleModalSubmit(e);
-          setModalOpen(false);
-        }}
-        onCancel={() => {
-          dispatch(discardModifiedContentTypes());
-          setModalOpen(false);
-        }}
-        onChange={(e, contentType, settingsType) => dispatch(onChangeContentTypes(e, contentType, settingsType))}
+        id={uid}
+        onSubmit={(e) => handleModalSubmit(e)}
+        onCancel={(closeModal) => handleModalClose(closeModal)}
+        onChange={(url, key, value) => dispatch(onChangeCustomEntry(url, key, value))}
       />
     </div>
   );

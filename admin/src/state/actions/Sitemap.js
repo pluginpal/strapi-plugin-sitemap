@@ -27,6 +27,7 @@
   UPDATE_SETTINGS,
   HAS_SITEMAP,
   HAS_SITEMAP_SUCCEEDED,
+  ON_CHANGE_CUSTOM_ENTRY,
 } from '../../config/constants';
 
 import getTrad from '../../helpers/getTrad';
@@ -62,6 +63,15 @@ export function onChangeContentTypes({ target }, contentType, settingsType) {
   return {
     type: ON_CHANGE_CONTENT_TYPES,
     keys,
+    value,
+  };
+}
+
+export function onChangeCustomEntry(url, key, value) {
+  return {
+    type: ON_CHANGE_CUSTOM_ENTRY,
+    url,
+    key,
     value,
   };
 }
