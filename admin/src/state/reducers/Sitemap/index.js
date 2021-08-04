@@ -67,12 +67,12 @@
          .updateIn(['settings', 'customEntries'], () => state.get('modifiedCustomEntries'));
      case DELETE_CONTENT_TYPE:
        return state
-         .deleteIn(['settings', 'contentTypes', action.contentType])
-         .deleteIn(['modifiedContentTypes', action.contentType])
+         .deleteIn(['settings', 'contentTypes', action.key])
+         .deleteIn(['modifiedContentTypes', action.key])
      case DELETE_CUSTOM_ENTRY:
        return state
-         .deleteIn(['settings', 'customEntries', action.contentType])
-         .deleteIn(['modifiedCustomEntries', action.contentType])
+         .deleteIn(['settings', 'customEntries', action.key])
+         .deleteIn(['modifiedCustomEntries', action.key])
      case GET_CONTENT_TYPES_SUCCEEDED:
        return state
          .update('contentTypes', () => action.contentTypes);

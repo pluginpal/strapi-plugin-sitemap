@@ -141,7 +141,6 @@ export function submit(settings) {
       dispatch(onSubmitSucceeded())
       strapi.notification.success(getTrad('notification.success.submit'));
     } catch(err) {
-      console.log(err);
       strapi.notification.error('notification.error');
     }
   }
@@ -159,12 +158,17 @@ export function submitModal() {
   };
 }
 
-export function deleteContentType(contentType, settingsType) {
-  const type = settingsType === 'Collection' ? DELETE_CONTENT_TYPE : DELETE_CUSTOM_ENTRY;
-     
+export function deleteContentType(key) {
   return {
-    type,
-    contentType
+    type: DELETE_CONTENT_TYPE,
+    key
+  };
+}
+
+export function deleteCustomEntry(key) {
+  return {
+    type: DELETE_CUSTOM_ENTRY,
+    key
   };
 }
 

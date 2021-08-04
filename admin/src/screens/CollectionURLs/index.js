@@ -1,5 +1,5 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React, { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { useGlobalContext } from 'strapi-helper-plugin';
 import { Button } from '@buffetjs/core';
 import { Map } from 'immutable';
@@ -13,14 +13,23 @@ import Wrapper from '../../components/Wrapper';
 
 const CollectionURLs = () => {
   const state = useSelector((state) => state.get('sitemap', Map()));
+  const dispatch = useDispatch();
+  const [modalOpen, setModalOpen] = useState(false);
   const { formatMessage } = useGlobalContext();
+
+  // Loading state
+  if (!state.getIn(['settings', 'contentTypes'])) {
+    return null;
+  }
 
   return (
     <div>
       <List 
-        settingsType={'Collection'}
-        settings={state.get('settings')}
-        onDelete={(contentType, settingsType) => dispatch(deleteContentType(contentType, settingsType))}
+        items={state.getIn(['settings', 'contentTypes'])}
+        title={formatMessage({ id: `sitemap.Settings.CollectionTitle` })}
+        subtitle={formatMessage({ id: `sitemap.Settings.CollectionDescription` })}
+        openModal={() => setModalOpen(true)}
+        onDelete={(key) => dispatch(deleteContentType(key))}
       />
       <Wrapper>
         <Button 
@@ -28,14 +37,7 @@ const CollectionURLs = () => {
           icon={<FontAwesomeIcon icon={faPlus} />} 
           label={formatMessage({ id: 'sitemap.Button.AddAll' })}
           onClick={() => dispatch(populateSettings())}
-          hidden={!state.getIn(['settings', 'contentTypes'], null)}
-        />
-        <Button 
-          color="primary" 
-          icon={<FontAwesomeIcon icon={faPlus} />} 
-          label={formatMessage({ id: 'sitemap.Button.AddURL' })}
-          onClick={() => props.history.push({ search: 'addNew' })}
-          hidden={!state.getIn(['settings', 'customEntries'], null)}
+          hidden={state.getIn(['settings', 'contentTypes']).size}
         />
         <Button 
           color="secondary"
@@ -43,7 +45,7 @@ const CollectionURLs = () => {
           icon={<FontAwesomeIcon icon={faPlus} />} 
           label={formatMessage({ id: 'sitemap.Button.Add1by1' })}
           onClick={() => props.history.push({ search: 'addNew' })}
-          hidden={!state.getIn(['settings', 'contentTypes'], null)}
+          hidden={state.getIn(['settings', 'contentTypes']).size}
         />
       </Wrapper>
       <ModalForm 
@@ -51,6 +53,7 @@ const CollectionURLs = () => {
         modifiedContentTypes={state.get('modifiedContentTypes')}
         modifiedCustomEntries={state.get('modifiedCustomEntries')}
         settingsType={'Collection'}
+        isOpen={modalOpen}
         onSubmit={(e) => handleModalSubmit(e)}
         onCancel={() => dispatch(discardModifiedContentTypes())}
         onChange={(e, contentType, settingsType) => dispatch(onChangeContentTypes(e, contentType, settingsType))}

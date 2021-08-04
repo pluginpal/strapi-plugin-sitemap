@@ -24,7 +24,6 @@ const ModalForm = (props) => {
   const { search, edit } = useLocation();
   const { push } = useHistory();
   const [state, setState] = useState({});
-  const isOpen = !isEmpty(search) || !isEmpty(edit);
   const globalContext = useGlobalContext();
 
   const {
@@ -32,7 +31,8 @@ const ModalForm = (props) => {
     contentTypes,
     onChange,
     onCancel,
-    settingsType
+    settingsType,
+    isOpen
   } = props;
 
   useEffect(() => {
