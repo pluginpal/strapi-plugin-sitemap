@@ -17,7 +17,7 @@ const CollectionForm = (props) => {
     id,
     modifiedState,
     uid,
-    setUid
+    setUid,
   } = props;
 
   const handleSelectChange = (e, uidFields) => {
@@ -25,7 +25,7 @@ const CollectionForm = (props) => {
 
     // Set initial values
     onCancel(false);
-    Object.keys(form).map(input => {
+    Object.keys(form).map((input) => {
       onChange(contentType, input, form[input].value);
     });
 
@@ -36,29 +36,28 @@ const CollectionForm = (props) => {
     } else {
       setUid('');
     }
-  }
+  };
 
   return (
     <div className="container-fluid">
       <section style={{ marginTop: 20 }}>
         <h2><strong>{globalContext.formatMessage({ id: 'sitemap.Modal.Title' })}</strong></h2>
-        { !id &&
+        {!id && (
           <p style={{ maxWidth: 500 }}>{globalContext.formatMessage({ id: `sitemap.Modal.CollectionDescription` })}</p>
-        }
+        )}
         <form className="row" style={{ borderTop: '1px solid #f5f5f6', paddingTop: 30, marginTop: 10 }}>
           <div className="col-md-6">
-            <SelectContentTypes 
-              contentTypes={contentTypes} 
+            <SelectContentTypes
+              contentTypes={contentTypes}
               onChange={(e, uidFields) => handleSelectChange(e, uidFields)}
               value={uid}
               disabled={id}
-              modifiedContentTypes={props.modifiedState}
-            /> 
+              modifiedContentTypes={modifiedState}
+            />
           </div>
           <div className="col-md-6">
             <div className="row">
-              {Object.keys(form).map(input => {
-                return (
+              {Object.keys(form).map((input) => (
                 <div className={form[input].styleName} key={input}>
                   <Inputs
                     name={input}
@@ -68,7 +67,7 @@ const CollectionForm = (props) => {
                     value={modifiedState.getIn([uid, input], form[input].value)}
                   />
                 </div>
-              )})}
+              ))}
               <div className="col-12">
                 <InputUID
                   onChange={(e) => {
@@ -89,6 +88,6 @@ const CollectionForm = (props) => {
       </section>
     </div>
   );
-}
- 
+};
+
 export default CollectionForm;

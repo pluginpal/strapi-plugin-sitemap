@@ -8,7 +8,7 @@ import loggerConfig from '../config/logger';
 import { __DEBUG__ } from '../config/constants';
 
 const configureStore = () => {
-  let initialStoreState = Map();
+  const initialStoreState = Map();
 
   const enhancers = [];
   const middlewares = [

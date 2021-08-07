@@ -9,12 +9,9 @@ function Comp(props) {
   return <App {...props} />;
 }
 
-export default strapi => {
-  const pluginDescription =
-    pluginPkg.strapi.description || pluginPkg.description;
-
-  const icon = pluginPkg.strapi.icon;
-  const name = pluginPkg.strapi.name;
+export default (strapi) => {
+  const pluginDescription = pluginPkg.strapi.description || pluginPkg.description;
+  const { icon, name } = pluginPkg.strapi;
 
   const plugin = {
     icon,
@@ -23,7 +20,6 @@ export default strapi => {
     blockerComponent: null,
     blockerComponentProps: {},
     description: pluginDescription,
-    icon: pluginPkg.strapi.icon,
     id: pluginId,
     initializer: Initializer,
     injectedComponents: [],
@@ -32,7 +28,6 @@ export default strapi => {
     leftMenuLinks: [],
     leftMenuSections: [],
     mainComponent: Comp,
-    name: pluginPkg.strapi.name,
     preventComponentRendering: false,
     trads,
     menu: {

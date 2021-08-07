@@ -494,7 +494,7 @@
 
     "jsx-a11y/href-no-hash": "off",
 
-    "react/jsx-filename-extension": "error",
+    "react/jsx-filename-extension": "off",
 
     "jsx-a11y/no-noninteractive-tabindex": "warn",
 

@@ -1,18 +1,16 @@
 import React from 'react';
 
 import { InputText, Label } from '@buffetjs/core';
-import { useGlobalContext } from 'strapi-helper-plugin';
 
 const inputUID = ({ name, label, description, ...props }) => {
-  const globalContext = useGlobalContext();
 
   return (
     <div>
-      <Label 
+      <Label
         htmlFor={name}
         message={label}
       />
-      <InputText 
+      <InputText
         type="text"
         name={name}
         {...props}
@@ -22,6 +20,6 @@ const inputUID = ({ name, label, description, ...props }) => {
       </p>
     </div>
   );
-}
- 
+};
+
 export default inputUID;

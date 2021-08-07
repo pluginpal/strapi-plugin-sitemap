@@ -12,7 +12,7 @@ import ModalForm from '../../components/ModalForm';
 import Wrapper from '../../components/Wrapper';
 
 const CollectionURLs = () => {
-  const state = useSelector((state) => state.get('sitemap', Map()));
+  const state = useSelector((store) => store.get('sitemap', Map()));
   const dispatch = useDispatch();
   const [modalOpen, setModalOpen] = useState(false);
   const [uid, setUid] = useState(null);
@@ -23,10 +23,10 @@ const CollectionURLs = () => {
     dispatch(submitModal());
     setModalOpen(false);
     setUid(null);
-  }
+  };
 
-  const handleModalOpen = (uid) => {
-    if (uid) setUid(uid);
+  const handleModalOpen = (editId) => {
+    if (editId) setUid(editId);
     setModalOpen(true);
   };
 
@@ -43,31 +43,31 @@ const CollectionURLs = () => {
 
   return (
     <div>
-      <List 
+      <List
         items={state.getIn(['settings', 'contentTypes'])}
         title={formatMessage({ id: `sitemap.Settings.CollectionTitle` })}
         subtitle={formatMessage({ id: `sitemap.Settings.CollectionDescription` })}
-        openModal={(uid) => handleModalOpen(uid)}
+        openModal={(editId) => handleModalOpen(editId)}
         onDelete={(key) => dispatch(deleteContentType(key))}
       />
       <Wrapper>
-        <Button 
-          color="primary" 
-          icon={<FontAwesomeIcon icon={faPlus} />} 
+        <Button
+          color="primary"
+          icon={<FontAwesomeIcon icon={faPlus} />}
           label={formatMessage({ id: 'sitemap.Button.AddAll' })}
           onClick={() => dispatch(populateSettings())}
           hidden={state.getIn(['settings', 'contentTypes']).size}
         />
-        <Button 
+        <Button
           color="secondary"
           style={{ marginLeft: 15 }}
-          icon={<FontAwesomeIcon icon={faPlus} />} 
+          icon={<FontAwesomeIcon icon={faPlus} />}
           label={formatMessage({ id: 'sitemap.Button.Add1by1' })}
           onClick={() => setModalOpen(!modalOpen)}
           hidden={state.getIn(['settings', 'contentTypes']).size}
         />
       </Wrapper>
-      <ModalForm 
+      <ModalForm
         contentTypes={state.get('contentTypes')}
         modifiedState={state.get('modifiedContentTypes')}
         onSubmit={(e) => handleModalSubmit(e)}
@@ -79,6 +79,6 @@ const CollectionURLs = () => {
       />
     </div>
   );
-}
- 
+};
+
 export default CollectionURLs;

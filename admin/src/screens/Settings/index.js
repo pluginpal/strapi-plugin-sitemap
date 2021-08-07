@@ -15,8 +15,8 @@ const Settings = () => {
   return (
     <Wrapper>
       <div style={{ maxWidth: 500 }}>
-        <Label 
-          htmlFor="hostname" 
+        <Label
+          htmlFor="hostname"
           message={formatMessage({ id: 'sitemap.Settings.Field.Hostname.Label' })}
         />
         <InputText
@@ -31,8 +31,8 @@ const Settings = () => {
         </p>
       </div>
       <div style={{ marginTop: 20 }}>
-        <Label 
-          htmlFor="includeHomepage" 
+        <Label
+          htmlFor="includeHomepage"
           message={formatMessage({ id: 'sitemap.Settings.Field.IncludeHomepage.Label' })}
         />
         <Toggle
@@ -45,8 +45,8 @@ const Settings = () => {
         </p>
       </div>
       <div style={{ marginTop: 20 }}>
-        <Label 
-          htmlFor="excludeDrafts" 
+        <Label
+          htmlFor="excludeDrafts"
           message={formatMessage({ id: 'sitemap.Settings.Field.ExcludeDrafts.Label' })}
         />
         <Toggle
@@ -60,6 +60,6 @@ const Settings = () => {
       </div>
     </Wrapper>
   );
-}
- 
+};
+
 export default Settings;
