@@ -1,6 +1,6 @@
 import React from 'react';
 import pluginPkg from '../../package.json';
-import pluginId from './pluginId';
+import pluginId from './helpers/pluginId';
 import App from './containers/App';
 import Initializer from './containers/Initializer';
 import trads from './translations';
@@ -38,7 +38,7 @@ export default strapi => {
     menu: {
       pluginsSectionLinks: [
         {
-          destination: `/plugins/${pluginId}/collection-entries`, // Endpoint of the link
+          destination: `/plugins/${pluginId}/url-patterns`, // Endpoint of the link
           icon,
           name,
           label: {

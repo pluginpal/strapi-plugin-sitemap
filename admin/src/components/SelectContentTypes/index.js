@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Select, Label } from '@buffetjs/core';
 import { isEmpty } from 'lodash';
-import { getUidFieldsByContentType } from '../../utils/getUidfields';
+import { getUidFieldsByContentType } from '../../helpers/getUidfields';
 
 const SelectContentTypes = (props) => {
   const { edit } = useLocation();
@@ -21,7 +21,7 @@ const SelectContentTypes = (props) => {
 
     // Remove the contentypes which are allready set in the sitemap.
     Object.entries(options).map(([i, e]) => {
-      if (!modifiedContentTypes[i]) {
+      if (!modifiedContentTypes.get(i) || value === i) {
         newOptions[i] = e;
       }
     });
@@ -60,7 +60,7 @@ const SelectContentTypes = (props) => {
         label="test"
         onChange={(e) => onChange(e, state.options[e.target.value])}
         options={Object.keys(state.options)}
-        value={!isEmpty(edit) ? edit : value}
+        value={value}
         disabled={disabled}
       />
       <p style={{ color: '#9ea7b8', fontSize: 12, marginTop: 5, marginBottom: 20 }}>Select a content type.</p>

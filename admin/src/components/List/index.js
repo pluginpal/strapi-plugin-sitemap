@@ -7,47 +7,34 @@ import CustomRow from './Row';
 import { List } from '@buffetjs/custom';
 
 const ListComponent = (props) => {
-  const { push } = useHistory();
   const globalContext = useGlobalContext();
-  const { settings, settingsType } = props;
-  const items = [];
+  const { items, openModal, title, subtitle, prependSlash } = props;
+  const formattedItems = [];
 
-  if (settings.contentTypes && settingsType === 'Collection') {
-    Object.keys(settings.contentTypes).map((i) => {
-      let item = {};
-      item.name = i;
-      item.priority = settings.contentTypes[i].priority
-      item.changefreq = settings.contentTypes[i].changefreq
-      item.onDelete = props.onDelete;
-
-      items.push(item);
-    });
-  } else if (settings.customEntries && settingsType === 'Custom') {
-    Object.keys(settings.customEntries).map((i) => {
-      let item = {};
-      item.name = i;
-      item.priority = settings.customEntries[i].priority
-      item.changefreq = settings.customEntries[i].changefreq
-      item.onDelete = props.onDelete;
-
-      items.push(item);
-    });
+  if (!items) {
+    return null;
   }
 
-  const handleClick = () => {
-    push({ search: 'addNew' });
-  }
+  items.map((item, key) => {
+    let formattedItem = {};
+    formattedItem.name = key;
+    formattedItem.priority = item.get('priority');
+    formattedItem.changefreq = item.get('changefreq');
+    formattedItem.onDelete = props.onDelete;
+
+    formattedItems.push(formattedItem);
+  });
 
   const listProps = {
-    title: settingsType && globalContext.formatMessage({ id: `sitemap.Settings.${settingsType}Title` }),
-    subtitle: settingsType && globalContext.formatMessage({ id: `sitemap.Settings.${settingsType}Description` }),
+    title,
+    subtitle,
     button: {
       color: 'secondary',
       icon: true,
       label: globalContext.formatMessage({ id: 'sitemap.Button.Add' }),
-      onClick: handleClick,
+      onClick: () => openModal(),
       type: 'button',
-      hidden: settingsType === 'Collection' ? isEmpty(settings.contentTypes) : isEmpty(settings.customEntries)
+      hidden: items.size === 0,
     },
   };
 
@@ -55,8 +42,8 @@ const ListComponent = (props) => {
     <div style={{ paddingTop: 20, backgroundColor: 'white' }}>
       <List 
         {...listProps} 
-        items={items}  
-        customRowComponent={listProps => <CustomRow {...listProps} settingsType={settingsType} />}
+        items={formattedItems}  
+        customRowComponent={listProps => <CustomRow {...listProps} prependSlash={prependSlash} openModal={openModal} />}
       />
     </div>
   );

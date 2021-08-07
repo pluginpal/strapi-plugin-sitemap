@@ -4,6 +4,8 @@
  *
  */
 
+export const __DEBUG__ = strapi.env === 'development';
+
 export const SUBMIT = 'Sitemap/ConfigPage/SUBMIT';
 export const ON_SUBMIT_SUCCEEDED = 'Sitemap/ConfigPage/ON_SUBMIT_SUCCEEDED';
 export const SUBMIT_MODAL = 'Sitemap/ConfigPage/SUBMIT_MODAL';
@@ -22,3 +24,5 @@ export const GET_CONTENT_TYPES = 'Sitemap/ConfigPage/GET_CONTENT_TYPES';
 export const GET_CONTENT_TYPES_SUCCEEDED = 'Sitemap/ConfigPage/GET_CONTENT_TYPES_SUCCEEDED';
 export const HAS_SITEMAP = 'Sitemap/ConfigPage/HAS_SITEMAP';
 export const HAS_SITEMAP_SUCCEEDED = 'Sitemap/ConfigPage/HAS_SITEMAP_SUCCEEDED';
+export const ON_CHANGE_CUSTOM_ENTRY = 'Sitemap/ConfigPage/ON_CHANGE_CUSTOM_ENTRY';
+
