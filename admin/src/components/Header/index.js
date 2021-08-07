@@ -22,9 +22,9 @@ const HeaderComponent = (props) => {
   const disabled = 
     JSON.stringify(settings) === JSON.stringify(initialData);
   const settingsComplete = 
-    settings.hostname && !isEmpty(settings.contentTypes) ||
-    settings.hostname && !isEmpty(settings.customEntries) ||
-    settings.hostname && settings.includeHomepage;
+    settings.get('hostname') && !isEmpty(settings.get('contentTypes')) ||
+    settings.get('hostname') && !isEmpty(settings.get('customEntries')) ||
+    settings.get('hostname') && settings.get('includeHomepage');
 
   const globalContext = useGlobalContext();
 
