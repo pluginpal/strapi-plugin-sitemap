@@ -51,18 +51,11 @@ export function getSettingsSucceeded(settings) {
   };
 }
 
-export function onChangeContentTypes({ target }, contentType, settingsType) {
-  const subKeys =
-    settingsType === 'Collection' ? ['modifiedContentTypes'] : ['modifiedCustomEntries']
-
-  const keys = subKeys
-    .concat(contentType)
-    .concat(target.name.split('.'));
-  const value = target.value;
-
+export function onChangeContentTypes(contentType, key, value) {
   return {
     type: ON_CHANGE_CONTENT_TYPES,
-    keys,
+    contentType,
+    key,
     value,
   };
 }
@@ -98,7 +91,7 @@ export function updateSettings(settings) {
 }
 
 export function populateSettings() {
-  return async function() {
+  return async function(dispatch) {
     try {
       const settings = await request('/sitemap/settings/populate', { method: 'GET' });
       dispatch(updateSettings(Map(settings)));

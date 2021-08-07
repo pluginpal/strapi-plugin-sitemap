@@ -8,7 +8,7 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
 import { deleteContentType, discardModifiedContentTypes, onChangeCustomEntry, populateSettings, submitModal, deleteCustomEntry } from '../../state/actions/Sitemap';
 import List from '../../components/List';
-import NewModalForm from '../../components/NewModalForm';
+import ModalForm from '../../components/ModalForm';
 import Wrapper from '../../components/Wrapper';
 
 const CustomURLs = () => {
@@ -60,13 +60,14 @@ const CustomURLs = () => {
           hidden={state.getIn(['settings', 'customEntries']).size}
         />
       </Wrapper>
-      <NewModalForm
+      <ModalForm
         modifiedState={state.get('modifiedCustomEntries')}
         isOpen={modalOpen}
         id={uid}
         onSubmit={(e) => handleModalSubmit(e)}
         onCancel={(closeModal) => handleModalClose(closeModal)}
         onChange={(url, key, value) => dispatch(onChangeCustomEntry(url, key, value))}
+        type="custom"
       />
     </div>
   );

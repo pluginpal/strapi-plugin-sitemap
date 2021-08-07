@@ -49,7 +49,7 @@
            .updateIn(['settings', 'contentTypes'], () => fromJS(action.settings.get('contentTypes')))
      case ON_CHANGE_CONTENT_TYPES:
        return state
-         .updateIn(action.keys, () => action.value);
+         .updateIn(['modifiedContentTypes', action.contentType, action.key], () => action.value);
      case ON_CHANGE_CUSTOM_ENTRY:
        return state
          .updateIn(['modifiedCustomEntries', action.url, action.key], () => action.value);
