@@ -38,7 +38,7 @@ export default strapi => {
     menu: {
       pluginsSectionLinks: [
         {
-          destination: `/plugins/${pluginId}/collection-entries`, // Endpoint of the link
+          destination: `/plugins/${pluginId}/url-patterns`, // Endpoint of the link
           icon,
           name,
           label: {

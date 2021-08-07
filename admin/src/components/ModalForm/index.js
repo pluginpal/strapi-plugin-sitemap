@@ -61,7 +61,7 @@ const ModalForm = (props) => {
       <HeaderModal>
         <section style={{ alignItems: 'center' }}>
           <AttributeIcon type='enum' />
-          <HeaderModalTitle style={{ marginLeft: 15 }}>{globalContext.formatMessage({ id: 'sitemap.Modal.HeaderTitle' })} - {type}}</HeaderModalTitle>
+          <HeaderModalTitle style={{ marginLeft: 15 }}>{globalContext.formatMessage({ id: 'sitemap.Modal.HeaderTitle' })} - {type}</HeaderModalTitle>
         </section>
       </HeaderModal>
       <ModalBody style={modalBodyStyle}>
