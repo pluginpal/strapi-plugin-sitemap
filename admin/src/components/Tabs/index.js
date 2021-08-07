@@ -1,5 +1,5 @@
 import React from 'react';
-import { useGlobalContext, HeaderNav } from 'strapi-helper-plugin';
+import { HeaderNav } from 'strapi-helper-plugin';
 import pluginId from '../../helpers/pluginId';
 
 const Tabs = () => {
@@ -22,6 +22,6 @@ const Tabs = () => {
       style={{ marginTop: '4.6rem' }}
     />
   );
-}
- 
+};
+
 export default Tabs;

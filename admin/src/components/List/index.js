@@ -1,10 +1,8 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
 import { useGlobalContext } from 'strapi-helper-plugin';
-import { isEmpty } from 'lodash';
+import { List } from '@buffetjs/custom';
 
 import CustomRow from './Row';
-import { List } from '@buffetjs/custom';
 
 const ListComponent = (props) => {
   const globalContext = useGlobalContext();
@@ -16,7 +14,7 @@ const ListComponent = (props) => {
   }
 
   items.map((item, key) => {
-    let formattedItem = {};
+    const formattedItem = {};
     formattedItem.name = key;
     formattedItem.priority = item.get('priority');
     formattedItem.changefreq = item.get('changefreq');
@@ -40,13 +38,13 @@ const ListComponent = (props) => {
 
   return (
     <div style={{ paddingTop: 20, backgroundColor: 'white' }}>
-      <List 
-        {...listProps} 
-        items={formattedItems}  
-        customRowComponent={listProps => <CustomRow {...listProps} prependSlash={prependSlash} openModal={openModal} />}
+      <List
+        {...listProps}
+        items={formattedItems}
+        customRowComponent={(listRowProps) => <CustomRow {...listRowProps} prependSlash={prependSlash} openModal={openModal} />}
       />
     </div>
   );
-}
- 
+};
+
 export default ListComponent;

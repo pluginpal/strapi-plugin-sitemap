@@ -13,7 +13,7 @@ const SelectContentTypes = (props) => {
     onChange,
     disabled,
     value,
-    modifiedContentTypes
+    modifiedContentTypes,
   } = props;
 
   const filterOptions = (options) => {
@@ -30,30 +30,30 @@ const SelectContentTypes = (props) => {
   }
 
   const buildOptions = () => {
-    let options = {};
+    const options = {};
 
     options['- Choose Content Type -'] = false;
 
-    contentTypes.map(contentType => {
+    contentTypes.map((contentType) => {
       const uidFieldNames = getUidFieldsByContentType(contentType);
-      
+
       if (!isEmpty(uidFieldNames)) {
         options[contentType.apiID] = uidFieldNames;
       }
-    })
+    });
 
     return filterOptions(options);
-  }
+  };
 
   useEffect(() => {
-    setState(prevState => ({ 
-      ...prevState, 
-      options: edit ? { [edit]: false } : buildOptions()
+    setState((prevState) => ({
+      ...prevState,
+      options: edit ? { [edit]: false } : buildOptions(),
     }));
-  }, [])
+  }, []);
 
   return (
-    <React.Fragment>
+    <>
       <Label htmlFor="select" message="Content Type" />
       <Select
         name="select"
@@ -64,8 +64,8 @@ const SelectContentTypes = (props) => {
         disabled={disabled}
       />
       <p style={{ color: '#9ea7b8', fontSize: 12, marginTop: 5, marginBottom: 20 }}>Select a content type.</p>
-    </React.Fragment>
+    </>
   );
-}
- 
+};
+
 export default SelectContentTypes;

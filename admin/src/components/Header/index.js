@@ -13,25 +13,23 @@ import { useGlobalContext } from 'strapi-helper-plugin';
 import openWithNewTab from '../../helpers/openWithNewTab';
 import { submit, discardAllChanges, generateSitemap } from '../../state/actions/Sitemap';
 
-const HeaderComponent = (props) => {
+const HeaderComponent = () => {
   const settings = useSelector((state) => state.getIn(['sitemap', 'settings'], Map()));
   const initialData = useSelector((state) => state.getIn(['sitemap', 'initialData'], Map()));
   const sitemapPresence = useSelector((state) => state.getIn(['sitemap', 'sitemapPresence'], Map()));
   const dispatch = useDispatch();
 
-  const disabled = 
-    JSON.stringify(settings) === JSON.stringify(initialData);
-  const settingsComplete = 
-    settings.get('hostname') && !isEmpty(settings.get('contentTypes')) ||
-    settings.get('hostname') && !isEmpty(settings.get('customEntries')) ||
-    settings.get('hostname') && settings.get('includeHomepage');
+  const disabled = JSON.stringify(settings) === JSON.stringify(initialData);
+  const settingsComplete = settings.get('hostname') && !isEmpty(settings.get('contentTypes'))
+    || settings.get('hostname') && !isEmpty(settings.get('customEntries'))
+    || settings.get('hostname') && settings.get('includeHomepage');
 
   const globalContext = useGlobalContext();
 
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(submit(settings.toJS()));
-  }
+  };
 
   const actions = [
     {
@@ -46,7 +44,7 @@ const HeaderComponent = (props) => {
       onClick: handleSubmit,
       color: 'success',
       type: 'submit',
-      hidden: disabled
+      hidden: disabled,
     },
     {
       color: 'none',
@@ -55,14 +53,14 @@ const HeaderComponent = (props) => {
       onClick: () => openWithNewTab('/sitemap.xml'),
       type: 'button',
       key: 'button-open',
-      hidden: !disabled || !settingsComplete || !sitemapPresence
+      hidden: !disabled || !settingsComplete || !sitemapPresence,
     },
     {
       label: globalContext.formatMessage({ id: 'sitemap.Header.Button.Generate' }),
       onClick: () => dispatch(generateSitemap()),
       color: 'primary',
       type: 'button',
-      hidden: !disabled || !settingsComplete
+      hidden: !disabled || !settingsComplete,
     },
   ];
 
@@ -73,7 +71,7 @@ const HeaderComponent = (props) => {
     content: globalContext.formatMessage({ id: 'sitemap.Header.Description' }),
     actions: actions,
   };
-  
+
   return (
     <Header {...headerProps} />
   );

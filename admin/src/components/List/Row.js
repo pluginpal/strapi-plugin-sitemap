@@ -1,12 +1,10 @@
 import React from 'react';
 import { IconLinks } from '@buffetjs/core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useHistory } from 'react-router-dom';
 
 import {
   faTrash,
   faPencilAlt,
-  faCube,
 } from '@fortawesome/free-solid-svg-icons';
 
 const CustomRow = ({ changefreq, priority, name, onDelete, prependSlash, openModal }) => {
@@ -53,4 +51,4 @@ const CustomRow = ({ changefreq, priority, name, onDelete, prependSlash, openMod
   );
 };
 
-export default CustomRow
+export default CustomRow;

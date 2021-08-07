@@ -15,11 +15,11 @@ const CustomForm = (props) => {
     modifiedState,
     id,
     uid,
-    setUid
+    setUid,
   } = props;
 
   const handleCustomChange = (e) => {
-    let contentType = e.target.value; 
+    let contentType = e.target.value;
 
     if (contentType.match(/^[A-Za-z0-9-_.~/]*$/)) {
       setUid(contentType);
@@ -29,18 +29,18 @@ const CustomForm = (props) => {
 
     // Set initial values
     onCancel(false);
-    Object.keys(form).map(input => {
+    Object.keys(form).map((input) => {
       onChange(contentType, input, form[input].value);
     });
-  }
+  };
 
   return (
     <div className="container-fluid">
       <section style={{ marginTop: 20 }}>
         <h2><strong>{globalContext.formatMessage({ id: 'sitemap.Modal.Title' })}</strong></h2>
-        { !id &&
+        {!id && (
           <p style={{ maxWidth: 500 }}>{globalContext.formatMessage({ id: `sitemap.Modal.CustomDescription` })}</p>
-        }
+        )}
         <form className="row" style={{ borderTop: '1px solid #f5f5f6', paddingTop: 30, marginTop: 10 }}>
           <div className="col-md-6">
             <InputUID
@@ -54,8 +54,7 @@ const CustomForm = (props) => {
           </div>
           <div className="col-md-6">
             <div className="row">
-              {Object.keys(form).map(input => {
-                return (
+              {Object.keys(form).map((input) => (
                 <div className={form[input].styleName} key={input}>
                   <Inputs
                     name={input}
@@ -65,13 +64,13 @@ const CustomForm = (props) => {
                     value={modifiedState.getIn([uid, input], form[input].value)}
                   />
                 </div>
-              )})}
+              ))}
             </div>
           </div>
         </form>
       </section>
     </div>
   );
-}
- 
+};
+
 export default CustomForm;

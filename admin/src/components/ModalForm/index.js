@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 
 import { Button, AttributeIcon } from '@buffetjs/core';
-import { useGlobalContext } from 'strapi-helper-plugin';
 
 import {
   HeaderModal,
   HeaderModalTitle,
   Modal,
   ModalBody,
-  ModalFooter
+  ModalFooter,
+  useGlobalContext,
 } from 'strapi-helper-plugin';
 
 import CustomForm from './Custom';
@@ -36,8 +36,8 @@ const ModalForm = (props) => {
 
   // Styles
   const modalBodyStyle = {
-    paddingTop: '0.5rem', 
-    paddingBottom: '3rem'
+    paddingTop: '0.5rem',
+    paddingBottom: '3rem',
   };
 
   const form = () => {
@@ -47,20 +47,20 @@ const ModalForm = (props) => {
       case 'custom':
         return <CustomForm uid={uid} setUid={setUid} {...props} />;
       default:
-        return;
+        return null;
     }
-  }
+  };
 
   return (
     <Modal
       isOpen={isOpen}
       onClosed={() => onCancel()}
       onToggle={() => onCancel()}
-      withoverflow={'displayName'}
+      withoverflow="displayName"
     >
       <HeaderModal>
         <section style={{ alignItems: 'center' }}>
-          <AttributeIcon type='enum' />
+          <AttributeIcon type="enum" />
           <HeaderModalTitle style={{ marginLeft: 15 }}>{globalContext.formatMessage({ id: 'sitemap.Modal.HeaderTitle' })} - {type}</HeaderModalTitle>
         </section>
       </HeaderModal>
@@ -87,6 +87,6 @@ const ModalForm = (props) => {
       </ModalFooter>
     </Modal>
   );
-}
- 
+};
+
 export default ModalForm;
