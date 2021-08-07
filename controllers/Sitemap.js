@@ -14,7 +14,7 @@ module.exports = {
     await strapi.plugins.sitemap.services.sitemap.createSitemap();
 
     ctx.send({
-      message: 'The sitemap has been generated.'
+      message: 'The sitemap has been generated.',
     });
   },
 
@@ -23,19 +23,19 @@ module.exports = {
     ctx.send({ main: hasSitemap });
   },
 
-  getSettings: async ctx => {
-    let config = await strapi.plugins.sitemap.services.sitemap.getConfig();
+  getSettings: async (ctx) => {
+    const config = await strapi.plugins.sitemap.services.sitemap.getConfig();
 
     ctx.send(config);
   },
 
   populateSettings: async (ctx) => {
     const settings = await strapi.plugins.sitemap.services.sitemap.getPopulatedConfig();
-  
+
     ctx.send(settings);
   },
 
-  updateSettings: async ctx => {
+  updateSettings: async (ctx) => {
     await strapi
       .store({
         environment: '',

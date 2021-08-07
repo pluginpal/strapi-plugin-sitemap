@@ -24,11 +24,11 @@ const createDefaultConfig = async () => {
     excludeDrafts: true,
     contentTypes: Map({}),
     customEntries: Map({}),
-  }
+  };
 
   await pluginStore.set({ key: 'settings', value });
 
-  return await strapi
+  return strapi
     .store({
       environment: '',
       type: 'plugin',
@@ -60,9 +60,9 @@ module.exports = {
 
   getPopulatedConfig: async () => {
     const config = await module.exports.getConfig();
-    let contentTypes = {};
+    const contentTypes = {};
 
-    Object.values(strapi.contentTypes).map(contentType => {
+    Object.values(strapi.contentTypes).map((contentType) => {
       let uidFieldName = false;
 
       Object.entries(contentType.__schema__.attributes).map(([i, e]) => {
@@ -76,10 +76,10 @@ module.exports = {
           uidField: uidFieldName,
           priority: 0.5,
           changefreq: 'monthly',
-          area: ''
+          area: '',
         };
       }
-    })
+    });
 
     return {
       hostname: '',
@@ -89,21 +89,21 @@ module.exports = {
   },
 
   getSitemapPageData: (contentType, pages, config) => {
-    let pageData = {};
+    const pageData = {};
 
     pages.map((e) => {
-      const id = e.id;
+      const { id } = e;
       pageData[id] = {};
       pageData[id].lastmod = e.updated_at;
 
       Object.entries(e).map(([i, e]) => {
         if (i === config.contentTypes[contentType].uidField) {
           const area = trim(config.contentTypes[contentType].area, '/');
-          const url = [area, e].filter(Boolean).join('/')
+          const url = [area, e].filter(Boolean).join('/');
           pageData[id].url = url;
         }
-      })
-    })
+      });
+    });
 
     return pageData;
   },
@@ -115,7 +115,7 @@ module.exports = {
     await Promise.all(Object.keys(config.contentTypes).map(async (contentType) => {
       let modelName;
       const contentTypeByName = Object.values(strapi.contentTypes)
-        .find(strapiContentType => strapiContentType.info.name === contentType);
+        .find((strapiContentType) => strapiContentType.info.name === contentType);
 
       // Backward compatibility for issue https://github.com/boazpoolman/strapi-plugin-sitemap/issues/4
       if (contentTypeByName) {
@@ -125,7 +125,7 @@ module.exports = {
       }
 
       const hasDraftAndPublish = strapi.query(modelName).model.__schema__.options.draftAndPublish;
-      let pages = await strapi.query(modelName).find({_limit: -1});
+      let pages = await strapi.query(modelName).find({ _limit: -1 });
 
       if (config.excludeDrafts && hasDraftAndPublish) {
         pages = pages.filter((page) => page.published_at);
@@ -139,8 +139,8 @@ module.exports = {
           lastmod,
           changefreq: config.contentTypes[contentType].changefreq,
           priority: config.contentTypes[contentType].priority,
-        })
-      })
+        });
+      });
     }));
 
     if (config.customEntries) {
@@ -149,20 +149,20 @@ module.exports = {
           url: customEntry,
           changefreq: config.customEntries[customEntry].changefreq,
           priority: config.customEntries[customEntry].priority,
-        })
+        });
       }));
     }
 
     // Add a homepage when none is present
     if (config.includeHomepage) {
-      const hasHomePage = !isEmpty(sitemapEntries.filter(entry => entry.url === ''));
+      const hasHomePage = !isEmpty(sitemapEntries.filter((entry) => entry.url === ''));
 
       if (!hasHomePage) {
         sitemapEntries.push({
           url: '/',
           changefreq: 'monthly',
           priority: '1',
-        })
+        });
       }
     }
 
@@ -172,11 +172,11 @@ module.exports = {
   writeSitemapFile: (filename, sitemap) => {
     streamToPromise(sitemap)
       .then((sm) => {
-        fs.writeFile(`public/${filename}`, sm.toString(), function (err) {
+        fs.writeFile(`public/${filename}`, sm.toString(), (err) => {
           if (err) throw err;
         });
       })
-      .catch(() => console.error );
+      .catch(() => console.error);
   },
 
   createSitemap: async (sitemapEntries) => {
@@ -186,8 +186,8 @@ module.exports = {
     const allSitemapEntries = sitemapEntries || await module.exports.createSitemapEntries();
 
     allSitemapEntries.map((sitemapEntry) => {
-      sitemap.write(sitemapEntry)
-    })
+      sitemap.write(sitemapEntry);
+    });
 
     sitemap.end();
 
