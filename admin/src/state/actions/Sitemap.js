@@ -39,7 +39,7 @@ export function getSettings() {
       const settings = await request('/sitemap/settings/', { method: 'GET' });
       dispatch(getSettingsSucceeded(Map(settings)));
     } catch(err) {
-      strapi.notification.error('notification.error');
+      strapi.notification.toggle({type: 'warning', message: { id: 'notification.error' }});
     }
   }
 }
@@ -96,7 +96,7 @@ export function populateSettings() {
       const settings = await request('/sitemap/settings/populate', { method: 'GET' });
       dispatch(updateSettings(Map(settings)));
     } catch(err) {
-      strapi.notification.error('notification.error');
+      strapi.notification.toggle({type: 'warning', message: { id: 'notification.error' }});
     }
   }
 }
@@ -112,9 +112,9 @@ export function generateSitemap() {
     try {
       const { message } = await request('/sitemap', { method: 'GET' });
       dispatch(hasSitemap());
-      strapi.notification.success(message);
+      strapi.notification.toggle({ type: 'success', message});
     } catch(err) {
-      strapi.notification.error('notification.error');
+      strapi.notification.toggle({type: 'warning', message: { id: 'notification.error' }});
     }
   }
 }
@@ -125,7 +125,7 @@ export function getContentTypes() {
       const { data } = await request('/content-manager/content-types', { method: 'GET' });
       dispatch(getContentTypesSucceeded(data))
     } catch(err) {
-      strapi.notification.error('notification.error');
+      strapi.notification.toggle({type: 'warning', message: { id: 'notification.error' }});
     }
   }
 }
@@ -142,9 +142,9 @@ export function submit(settings) {
     try {
       await request('/sitemap/settings/', { method: 'PUT', body: settings });
       dispatch(onSubmitSucceeded())
-      strapi.notification.success(getTrad('notification.success.submit'));
+      strapi.notification.toggle({ type: 'success', message: {id: getTrad('notification.success.submit')} });
     } catch(err) {
-      strapi.notification.error('notification.error');
+      strapi.notification.toggle({type: 'warning', message: { id: 'notification.error' }});
     }
   }
 }
@@ -181,7 +181,7 @@ export function hasSitemap() {
       const { main } = await request('/sitemap/presence', { method: 'GET' });
       dispatch(hasSitemapSucceeded(main))
     } catch(err) {
-      strapi.notification.error('notification.error');
+      strapi.notification.toggle({type: 'warning', message: { id: 'notification.error' }});
     }
   }
 }
