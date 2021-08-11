@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.0.0",
-    "@buffetjs/core": "^2.0.0",
+    "@buffetjs/core": "^3.3.8",
     "@buffetjs/custom": "^3.3.8",
     "@buffetjs/styles": "^2.0.0",
     "immutable": "^4.0.0-rc.14",

@@ -128,7 +128,7 @@
     "@babel/helper-validator-identifier" "^7.14.9"
     to-fast-properties "^2.0.0"
 
-"@buffetjs/core@3.3.8":
+"@buffetjs/core@3.3.8", "@buffetjs/core@^3.3.8":
   version "3.3.8"
   resolved "https://registry.yarnpkg.com/@buffetjs/core/-/core-3.3.8.tgz#59899e85ccc238b57ec0d4fcbe9b160c480e5c00"
   integrity sha512-lDobqgC6aUigHPH7Cx82S/AzeMEer3SxepOZ9PMLxgyc0JeTK1jSAUTr6IYBrbZdYzvGX+zMFtneI4se93Q/Vg==
@@ -152,25 +152,6 @@
     react-with-direction "^1.3.1"
     reactstrap "^8.5.1"
 
-"@buffetjs/core@^2.0.0":
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/@buffetjs/core/-/core-2.1.0.tgz#04633d4fdbfa6c2b340283e5c9ae041ea1dcee74"
-  integrity sha512-ItK+PXFVxI2+suAPLumK0DwvZWQ2eQRFp7ntqo9sT+aQzhGXxQRjgo9uJIPXixx0XR1e14JpDQMPA9UXnjNoZg==
-  dependencies:
-    "@buffetjs/hooks" "2.1.0"
-    "@buffetjs/icons" "2.0.0"
-    "@buffetjs/styles" "2.0.0"
-    "@buffetjs/utils" "2.0.0"
-    "@fortawesome/fontawesome-svg-core" "^1.2.25"
-    "@fortawesome/free-regular-svg-icons" "^5.11.2"
-    "@fortawesome/free-solid-svg-icons" "^5.11.2"
-    "@fortawesome/react-fontawesome" "^0.1.4"
-    invariant "^2.2.4"
-    moment "^2.24.0"
-    rc-input-number "^4.5.0"
-    react-dates "^21.5.1"
-    react-moment-proptypes "^1.7.0"
-
 "@buffetjs/custom@3.3.8", "@buffetjs/custom@^3.3.8":
   version "3.3.8"
   resolved "https://registry.yarnpkg.com/@buffetjs/custom/-/custom-3.3.8.tgz#d7e73d9043ec34380410cc1163236df7443a70e9"
@@ -184,20 +165,10 @@
     prop-types "^15.5.10"
     react-moment-proptypes "^1.7.0"
 
-"@buffetjs/hooks@2.1.0":
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/@buffetjs/hooks/-/hooks-2.1.0.tgz#9b02012fa9b7d0a3fcaa1c019a70b9dc6df40870"
-  integrity sha512-2MFpRN4FPLvM9AG7wKrCln7yGn9msckrG9JAlW9kw/GoMp06Y689KTw/5Cx4iahmhGvzxMn9ZbwBFBUqsK8EQQ==
-
 "@buffetjs/hooks@3.3.8":
   version "3.3.8"
   resolved "https://registry.yarnpkg.com/@buffetjs/hooks/-/hooks-3.3.8.tgz#0b03b1aa9cf2236861d5e8533567baa8123fa7ed"
   integrity sha512-PaobbbBnzlkWcG04nyNWEvcX6zzC5LdPh2uoAUccEwXG4saXIihrQfnGxuKqvlYHof4PFqQb/cmJHXtrTiE20A==
-
-"@buffetjs/icons@2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@buffetjs/icons/-/icons-2.0.0.tgz#947b9133010dad72d82acae6cb589e292edaab65"
-  integrity sha512-+T2Rztmmif1OEDNX3x7wwHl94D5XyveY8sVQ6hBL6JX//ehE+I+ks359iHq1tCABKjvTDs9c0ogEuKYF5J5MLQ==
 
 "@buffetjs/icons@3.3.8":
   version "3.3.8"
@@ -205,18 +176,6 @@
   integrity sha512-T1h3w5zu4JmwiZXcJPHJZXOpaIZzCpOQDaXLrzZNGze+8qcifUEKu4Y8pGS9+14OwMXjrAi+SsWxaeY/t7zYTQ==
   dependencies:
     prop-types "^15.5.10"
-
-"@buffetjs/styles@2.0.0", "@buffetjs/styles@^2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@buffetjs/styles/-/styles-2.0.0.tgz#e694d69a0b670b326d4518087552dda4ea5dc44b"
-  integrity sha512-MFXRg7hThO2273uHYPnVs1XFpFupX8OiB2kF/RDihPXa/p7xLnE36/yl3bg/7CI+Mtv9bEbm7dxRvkp8XQjQ1w==
-  dependencies:
-    "@fortawesome/fontawesome-free" "^5.12.0"
-    "@fortawesome/fontawesome-svg-core" "^1.2.22"
-    "@fortawesome/free-regular-svg-icons" "^5.10.2"
-    "@fortawesome/free-solid-svg-icons" "^5.10.2"
-    "@fortawesome/react-fontawesome" "^0.1.4"
-    react-dates "^21.1.0"
 
 "@buffetjs/styles@3.3.8":
   version "3.3.8"
@@ -232,12 +191,17 @@
     react-dates "^21.1.0"
     react-tooltip "^4.2.11"
 
-"@buffetjs/utils@2.0.0":
+"@buffetjs/styles@^2.0.0":
   version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@buffetjs/utils/-/utils-2.0.0.tgz#7c295660fb79196b9eb16356a6c2a54897578b0f"
-  integrity sha512-QNaVelPlKBKrQG9BVl4xwnLYtnH2o+omfwyqgJKV/D8KTeDnXvA9Syk6xT/tzPNcvmYdTINmiWRV45r3ourtag==
+  resolved "https://registry.yarnpkg.com/@buffetjs/styles/-/styles-2.0.0.tgz#e694d69a0b670b326d4518087552dda4ea5dc44b"
+  integrity sha512-MFXRg7hThO2273uHYPnVs1XFpFupX8OiB2kF/RDihPXa/p7xLnE36/yl3bg/7CI+Mtv9bEbm7dxRvkp8XQjQ1w==
   dependencies:
-    yup "^0.27.0"
+    "@fortawesome/fontawesome-free" "^5.12.0"
+    "@fortawesome/fontawesome-svg-core" "^1.2.22"
+    "@fortawesome/free-regular-svg-icons" "^5.10.2"
+    "@fortawesome/free-solid-svg-icons" "^5.10.2"
+    "@fortawesome/react-fontawesome" "^0.1.4"
+    react-dates "^21.1.0"
 
 "@buffetjs/utils@3.3.8":
   version "3.3.8"
@@ -1544,11 +1508,6 @@ flatted@^2.0.0:
   resolved "https://registry.yarnpkg.com/flatted/-/flatted-2.0.2.tgz#4575b21e2bcee7434aa9be662f4b7b5f9c2b5138"
   integrity sha512-r5wGx7YeOwNWNlCA0wQ86zKyDLMQr+/RB8xy74M4hTphfmjlijTSSXGuH8rnvKZnfT9i+75zmd8jcKdMR4O6jA==
 
-fn-name@~2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/fn-name/-/fn-name-2.0.1.tgz#5214d7537a4d06a4a301c0cc262feb84188002e7"
-  integrity sha1-UhTXU3pNBqSjAcDMJi/rhBiAAuc=
-
 fs.realpath@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/fs.realpath/-/fs.realpath-1.0.0.tgz#1504ad2523158caa40db4a2787cb01411994ea4f"
@@ -2560,11 +2519,6 @@ prop-types@^15.5.10, prop-types@^15.5.4, prop-types@^15.5.8, prop-types@^15.6.1,
     object-assign "^4.1.1"
     react-is "^16.8.1"
 
-property-expr@^1.5.0:
-  version "1.5.1"
-  resolved "https://registry.yarnpkg.com/property-expr/-/property-expr-1.5.1.tgz#22e8706894a0c8e28d58735804f6ba3a3673314f"
-  integrity sha512-CGuc0VUTGthpJXL36ydB6jnbyOf/rAHFvmVrJlH+Rg0DqqLFQGAP6hIaxD/G0OAmBJPhXDHuEJigrp0e0wFV6g==
-
 property-expr@^2.0.4:
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/property-expr/-/property-expr-2.0.4.tgz#37b925478e58965031bb612ec5b3260f8241e910"
@@ -3381,11 +3335,6 @@ supports-color@^5.3.0, supports-color@^5.5.0:
   dependencies:
     has-flag "^3.0.0"
 
-synchronous-promise@^2.0.6:
-  version "2.0.15"
-  resolved "https://registry.yarnpkg.com/synchronous-promise/-/synchronous-promise-2.0.15.tgz#07ca1822b9de0001f5ff73595f3d08c4f720eb8e"
-  integrity sha512-k8uzYIkIVwmT+TcglpdN50pS2y1BDcUnBPK9iJeGu0Pl1lOI8pD6wtzgw91Pjpe+RxtTncw32tLxs/R0yNL2Mg==
-
 table@^5.2.3:
   version "5.4.6"
   resolved "https://registry.yarnpkg.com/table/-/table-5.4.6.tgz#1292d19500ce3f86053b05f0e8e7e4a3bb21079e"
@@ -3632,18 +3581,6 @@ xtend@^4.0.0:
   version "4.0.2"
   resolved "https://registry.yarnpkg.com/xtend/-/xtend-4.0.2.tgz#bb72779f5fa465186b1f438f674fa347fdb5db54"
   integrity sha512-LKYU1iAXJXUgAXn9URjiu+MWhyUXHsvfp7mcuYm9dSUKK0/CjtrUwFAxD82/mCWbtLsGjFIad0wIsod4zrTAEQ==
-
-yup@^0.27.0:
-  version "0.27.0"
-  resolved "https://registry.yarnpkg.com/yup/-/yup-0.27.0.tgz#f8cb198c8e7dd2124beddc2457571329096b06e7"
-  integrity sha512-v1yFnE4+u9za42gG/b/081E7uNW9mUj3qtkmelLbW5YPROZzSH/KUUyJu9Wt8vxFJcT9otL/eZopS0YK1L5yPQ==
-  dependencies:
-    "@babel/runtime" "^7.0.0"
-    fn-name "~2.0.1"
-    lodash "^4.17.11"
-    property-expr "^1.5.0"
-    synchronous-promise "^2.0.6"
-    toposort "^2.0.2"
 
 yup@^0.32.9:
   version "0.32.9"
