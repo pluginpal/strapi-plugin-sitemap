@@ -50,7 +50,7 @@
   },
   "license": "MIT",
   "scripts": {
-    "eslint": "eslint './**/*.{js,jsx}'",
+    "eslint": "eslint --max-warnings=0 './**/*.{js,jsx}'",
     "eslint:fix": "eslint --fix './**/*.{js,jsx}'"
   },
   "devDependencies": {
