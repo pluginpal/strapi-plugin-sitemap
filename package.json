@@ -55,6 +55,7 @@
   },
   "devDependencies": {
     "babel-eslint": "9.0.0",
+    "codecov": "^3.8.3",
     "eslint": "^5.16.0",
     "eslint-config-airbnb": "^18.2.1",
     "eslint-config-react-app": "^3.0.7",
