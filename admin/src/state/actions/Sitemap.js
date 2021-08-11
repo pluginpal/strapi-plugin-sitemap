@@ -33,7 +33,7 @@ export function getSettings() {
       const settings = await request('/sitemap/settings/', { method: 'GET' });
       dispatch(getSettingsSucceeded(Map(settings)));
     } catch (err) {
-      strapi.notification.toggle({type: 'warning', message: { id: 'notification.error' }});
+      strapi.notification.toggle({ type: 'warning', message: { id: 'notification.error' } });
     }
   };
 }

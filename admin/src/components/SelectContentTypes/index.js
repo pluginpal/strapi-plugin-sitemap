@@ -27,7 +27,7 @@ const SelectContentTypes = (props) => {
     });
 
     return newOptions;
-  }
+  };
 
   const buildOptions = () => {
     const options = {};

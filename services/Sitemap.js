@@ -69,7 +69,7 @@ module.exports = {
         if (e.type === "uid") {
           uidFieldName = i;
         }
-      })
+      });
 
       if (uidFieldName) {
         contentTypes[contentType.modelName] = {
@@ -91,12 +91,12 @@ module.exports = {
   getSitemapPageData: (contentType, pages, config) => {
     const pageData = {};
 
-    pages.map((e) => {
-      const { id } = e;
+    pages.map((page) => {
+      const { id } = page;
       pageData[id] = {};
-      pageData[id].lastmod = e.updated_at;
+      pageData[id].lastmod = page.updated_at;
 
-      Object.entries(e).map(([i, e]) => {
+      Object.entries(page).map(([i, e]) => {
         if (i === config.contentTypes[contentType].uidField) {
           const area = trim(config.contentTypes[contentType].area, '/');
           const url = [area, e].filter(Boolean).join('/');
