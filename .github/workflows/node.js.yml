@@ -17,5 +17,5 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node }}
-        run: yarn
-        run: yarn eslint
+      - run: yarn
+      - run: yarn eslint
