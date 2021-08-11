@@ -24,13 +24,13 @@ module.exports = {
   },
 
   getSettings: async (ctx) => {
-    const config = await strapi.plugins.sitemap.services.sitemap.getConfig();
+    const config = await strapi.plugins.sitemap.services.config.getConfig();
 
     ctx.send(config);
   },
 
   populateSettings: async (ctx) => {
-    const settings = await strapi.plugins.sitemap.services.sitemap.getPopulatedConfig();
+    const settings = await strapi.plugins.sitemap.services.config.getPopulatedConfig();
 
     ctx.send(settings);
   },
