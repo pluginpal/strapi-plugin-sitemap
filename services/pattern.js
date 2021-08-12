@@ -22,10 +22,6 @@ const getFields = async (contentType) => {
       }
     });
   });
-
-  // Add id field manually because it is not on the attributes object of a content type.
-  fields.push('id');
-
   return fields;
 };
 
@@ -38,14 +34,14 @@ const getFields = async (contentType) => {
  * @returns {string} The path.
  */
 const resolvePattern = async (pattern, entity) => {
-  const fields = pattern.match(/[[\w\d]+]/g); // Get all substrings between [] as array.
+  const fields = pattern.match(/[[\w\d]+]/g); // Get all substring between [] as array.
 
   fields.map((field) => {
     const formattedField = RegExp(/(?<=\[)(.*?)(?=\])/).exec(field)[0]; // Strip [] from string.
     pattern = pattern.replace(field, entity[formattedField]);
   });
 
-  pattern = pattern.replace(/([^:]\/)\/+/g, "$1"); // Remove duplicate forward slashes.
+  pattern = pattern.replace(/([^:]\/)\/+/g, "$1"); // Remove duplicate slashes.
   return pattern;
 };
 

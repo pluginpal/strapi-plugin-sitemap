@@ -46,35 +46,4 @@ module.exports = {
 
     ctx.send({ ok: true });
   },
-
-  allowedFields: async (ctx) => {
-    const formattedFields = {};
-
-    Object.values(strapi.contentTypes).map(async (contentType) => {
-      const fields = await strapi.plugins.sitemap.services.pattern.getFields(contentType);
-      formattedFields[contentType.modelName] = fields;
-    });
-
-    ctx.send(formattedFields);
-  },
-
-  resolvePattern: async (ctx) => {
-    const { pattern } = ctx.request.body;
-
-    const pages = await strapi.query('page').find({ _limit: -1 });
-
-    pages.map(async (page) => {
-      const url = await strapi.plugins.sitemap.services.pattern.resolvePattern(pattern, page);
-      console.log(url);
-    });
-
-    ctx.send(pattern);
-  },
-
-  validatePattern: async (ctx) => {
-    const { pattern } = ctx.request.body;
-    const validated = await strapi.plugins.sitemap.services.pattern.validatePattern(pattern);
-
-    ctx.send(validated);
-  },
 };

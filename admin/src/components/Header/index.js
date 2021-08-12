@@ -24,7 +24,7 @@ const HeaderComponent = () => {
     || settings.get('hostname') && !isEmpty(settings.get('customEntries'))
     || settings.get('hostname') && settings.get('includeHomepage');
 
-  const { formatMessage } = useGlobalContext();
+  const globalContext = useGlobalContext();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -33,14 +33,14 @@ const HeaderComponent = () => {
 
   const actions = [
     {
-      label: formatMessage({ id: 'sitemap.Button.Cancel' }),
+      label: globalContext.formatMessage({ id: 'sitemap.Button.Cancel' }),
       onClick: () => dispatch(discardAllChanges()),
       color: 'cancel',
       type: 'button',
       hidden: disabled,
     },
     {
-      label: formatMessage({ id: 'sitemap.Button.Save' }),
+      label: globalContext.formatMessage({ id: 'sitemap.Button.Save' }),
       onClick: handleSubmit,
       color: 'success',
       type: 'submit',
@@ -48,7 +48,7 @@ const HeaderComponent = () => {
     },
     {
       color: 'none',
-      label: formatMessage({ id: 'sitemap.Header.Button.SitemapLink' }),
+      label: globalContext.formatMessage({ id: 'sitemap.Header.Button.SitemapLink' }),
       className: 'buttonOutline',
       onClick: () => openWithNewTab('/sitemap.xml'),
       type: 'button',
@@ -56,7 +56,7 @@ const HeaderComponent = () => {
       hidden: !disabled || !settingsComplete || !sitemapPresence,
     },
     {
-      label: formatMessage({ id: 'sitemap.Header.Button.Generate' }),
+      label: globalContext.formatMessage({ id: 'sitemap.Header.Button.Generate' }),
       onClick: () => dispatch(generateSitemap()),
       color: 'primary',
       type: 'button',
@@ -66,9 +66,9 @@ const HeaderComponent = () => {
 
   const headerProps = {
     title: {
-      label: formatMessage({ id: 'sitemap.Header.Title' }),
+      label: globalContext.formatMessage({ id: 'sitemap.Header.Title' }),
     },
-    content: formatMessage({ id: 'sitemap.Header.Description' }),
+    content: globalContext.formatMessage({ id: 'sitemap.Header.Description' }),
     actions: actions,
   };
 
