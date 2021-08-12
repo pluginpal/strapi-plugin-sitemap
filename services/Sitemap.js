@@ -32,7 +32,7 @@ module.exports = {
   },
 
   createSitemapEntries: async () => {
-    const config = await module.exports.getConfig();
+    const config = await strapi.plugins.sitemap.services.config.getConfig();
     const sitemapEntries = [];
 
     await Promise.all(Object.keys(config.contentTypes).map(async (contentType) => {
@@ -103,7 +103,7 @@ module.exports = {
   },
 
   createSitemap: async (sitemapEntries) => {
-    const config = await module.exports.getConfig();
+    const config = await strapi.plugins.sitemap.services.config.getConfig();
     const sitemap = new SitemapStream({ hostname: config.hostname });
 
     const allSitemapEntries = sitemapEntries || await module.exports.createSitemapEntries();
