@@ -42,7 +42,7 @@ const CollectionForm = (props) => {
   return (
     <div className="container-fluid">
       <section style={{ marginTop: 20 }}>
-        <div>
+        <div style={{ position: 'relative' }}>
           <h2><strong>{globalContext.formatMessage({ id: 'sitemap.Modal.Title' })}</strong></h2>
           {!id && (
             <p style={{ maxWidth: 500 }}>{globalContext.formatMessage({ id: `sitemap.Modal.CollectionDescription` })}</p>
@@ -51,9 +51,6 @@ const CollectionForm = (props) => {
             {NAVLINKS.map((link, index) => {
               return (
                 <HeaderNavLink
-                  // The advanced tab is disabled when adding an existing component
-                  // step 1
-                  isDisabled={false}
                   isActive={tab === link.id}
                   key={link.id}
                   {...link}
@@ -78,25 +75,34 @@ const CollectionForm = (props) => {
           </div>
           <div className="col-md-6">
             {tab === 'base' && (
-              <InputUID
-                onChange={async (e) => {
-                  if (e.target.value.match(/^[A-Za-z0-9-_.~[\]/]*$/)) {
-                    onChange(uid, 'pattern', e.target.value);
-                    const valid = await request('/sitemap/pattern/validate-pattern', {
-                      method: 'POST',
-                      body: { pattern: e.target.value },
-                    });
-
-                    setPatternInvalid(!valid);
-                  }
-                }}
-                invalid={patternInvalid}
-                label={globalContext.formatMessage({ id: 'sitemap.Settings.Field.Pattern.Label' })}
-                error={globalContext.formatMessage({ id: 'sitemap.Settings.Field.Pattern.Error' })}
-                name="pattern"
-                value={modifiedState.getIn([uid, 'pattern'], '')}
-                disabled={!uid}
-              />
+              <div>
+                <InputUID
+                  onChange={async (e) => {
+                    if (e.target.value.match(/^[A-Za-z0-9-_.~[\]/]*$/)) {
+                      onChange(uid, 'pattern', e.target.value);
+                      setPatternInvalid(false);
+                    }
+                  }}
+                  invalid={patternInvalid}
+                  error={globalContext.formatMessage({ id: 'sitemap.Settings.Field.Pattern.Error' })}
+                  label={globalContext.formatMessage({ id: 'sitemap.Settings.Field.Pattern.Label' })}
+                  placeholder="/en/pages/[id]"
+                  name="pattern"
+                  value={modifiedState.getIn([uid, 'pattern'], '')}
+                  disabled={!uid}
+                />
+                <p style={{ marginBottom: 0 }}>Create a dynamic URL pattern for the type. Use fields of the type as part of the URL by escaping them like so: [url-field].</p>
+                {contentTypes[uid] && (
+                  <div>
+                    <p>Choose from the fields listed below:</p>
+                    <ul style={{ fontWeight: 500, marginBottom: 0, paddingLeft: 0, listStyle: 'none' }}>
+                      {contentTypes[uid].map((fieldName) => (
+                        <li key={fieldName}>{`[${fieldName}]`}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
             )}
             {tab === 'advanced' && (
               <div className="row">

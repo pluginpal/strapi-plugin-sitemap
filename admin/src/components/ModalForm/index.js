@@ -9,6 +9,7 @@ import {
   ModalBody,
   ModalFooter,
   useGlobalContext,
+  request,
 } from 'strapi-helper-plugin';
 
 import CustomForm from './Custom';
@@ -46,7 +47,12 @@ const ModalForm = (props) => {
   };
 
   const submitForm = async (e) => {
-    if (type === 'collection' && (!modifiedState.getIn([uid, 'pattern'], null) || patternInvalid)) {
+    const valid = await request('/sitemap/pattern/validate-pattern', {
+      method: 'POST',
+      body: { pattern: modifiedState.getIn([uid, 'pattern'], null) },
+    });
+
+    if (!valid && type === 'collection') {
       setPatternInvalid(true);
     } else onSubmit(e);
   };

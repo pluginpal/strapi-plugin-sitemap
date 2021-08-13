@@ -18,7 +18,7 @@ const HeaderModalNavContainer = styled.div`
   text-transform: uppercase;
   position: absolute;
   right: 30px;
-  top: 21px;
+  bottom: -12px;
 
   > div:last-child {
     margin-left: 3rem;
