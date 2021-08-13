@@ -14,6 +14,9 @@ import {
 import CustomForm from './Custom';
 import CollectionForm from './Collection';
 
+import HeaderModalNavContainer from '../HeaderModalNavContainer';
+import HeaderNavLink from '../HeaderNavLink';
+
 const ModalForm = (props) => {
   const [uid, setUid] = useState('');
   const globalContext = useGlobalContext();
@@ -38,6 +41,7 @@ const ModalForm = (props) => {
   const modalBodyStyle = {
     paddingTop: '0.5rem',
     paddingBottom: '3rem',
+    position: 'relative',
   };
 
   const form = () => {
@@ -51,6 +55,8 @@ const ModalForm = (props) => {
     }
   };
 
+const NAVLINKS = [{ id: 'base' }, { id: 'advanced' }];
+
   return (
     <Modal
       isOpen={isOpen}
@@ -61,7 +67,9 @@ const ModalForm = (props) => {
       <HeaderModal>
         <section style={{ alignItems: 'center' }}>
           <AttributeIcon type="enum" />
-          <HeaderModalTitle style={{ marginLeft: 15 }}>{globalContext.formatMessage({ id: 'sitemap.Modal.HeaderTitle' })} - {type}</HeaderModalTitle>
+          <HeaderModalTitle style={{ marginLeft: 15 }}>
+            {globalContext.formatMessage({ id: 'sitemap.Modal.HeaderTitle' })} - {type}
+          </HeaderModalTitle>
         </section>
       </HeaderModal>
       <ModalBody style={modalBodyStyle}>

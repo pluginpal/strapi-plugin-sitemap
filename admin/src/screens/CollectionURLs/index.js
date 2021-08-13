@@ -41,6 +41,8 @@ const CollectionURLs = () => {
     return null;
   }
 
+  console.log(state.toJS());
+
   return (
     <div>
       <List
