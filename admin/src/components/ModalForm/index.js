@@ -14,11 +14,9 @@ import {
 import CustomForm from './Custom';
 import CollectionForm from './Collection';
 
-import HeaderModalNavContainer from '../HeaderModalNavContainer';
-import HeaderNavLink from '../HeaderNavLink';
-
 const ModalForm = (props) => {
   const [uid, setUid] = useState('');
+  const [patternInvalid, setPatternInvalid] = useState(false);
   const globalContext = useGlobalContext();
 
   const {
@@ -27,9 +25,12 @@ const ModalForm = (props) => {
     isOpen,
     id,
     type,
+    modifiedState,
   } = props;
 
   useEffect(() => {
+    setPatternInvalid(false);
+
     if (id && !uid) {
       setUid(id);
     } else {
@@ -44,18 +45,22 @@ const ModalForm = (props) => {
     position: 'relative',
   };
 
+  const submitForm = async (e) => {
+    if (type === 'collection' && (!modifiedState.getIn([uid, 'pattern'], null) || patternInvalid)) {
+      setPatternInvalid(true);
+    } else onSubmit(e);
+  };
+
   const form = () => {
     switch (type) {
       case 'collection':
-        return <CollectionForm uid={uid} setUid={setUid} {...props} />;
+        return <CollectionForm uid={uid} setUid={setUid} setPatternInvalid={setPatternInvalid} patternInvalid={patternInvalid} {...props} />;
       case 'custom':
         return <CustomForm uid={uid} setUid={setUid} {...props} />;
       default:
         return null;
     }
   };
-
-const NAVLINKS = [{ id: 'base' }, { id: 'advanced' }];
 
   return (
     <Modal
@@ -87,7 +92,7 @@ const NAVLINKS = [{ id: 'base' }, { id: 'advanced' }];
             color="primary"
             style={{ marginLeft: 'auto' }}
             disabled={!uid}
-            onClick={(e) => onSubmit(e)}
+            onClick={submitForm}
           >
             {globalContext.formatMessage({ id: 'sitemap.Button.Save' })}
           </Button>

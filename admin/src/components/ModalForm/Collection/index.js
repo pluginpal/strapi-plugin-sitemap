@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 import { Inputs } from '@buffetjs/custom';
-import { useGlobalContext } from 'strapi-helper-plugin';
+import { useGlobalContext, request } from 'strapi-helper-plugin';
 
 import SelectContentTypes from '../../SelectContentTypes';
 import HeaderModalNavContainer from '../../HeaderModalNavContainer';
@@ -24,6 +24,8 @@ const CollectionForm = (props) => {
     modifiedState,
     uid,
     setUid,
+    patternInvalid,
+    setPatternInvalid,
   } = props;
 
   const handleSelectChange = (e) => {
@@ -77,13 +79,20 @@ const CollectionForm = (props) => {
           <div className="col-md-6">
             {tab === 'base' && (
               <InputUID
-                onChange={(e) => {
+                onChange={async (e) => {
                   if (e.target.value.match(/^[A-Za-z0-9-_.~[\]/]*$/)) {
                     onChange(uid, 'pattern', e.target.value);
+                    const valid = await request('/sitemap/pattern/validate-pattern', {
+                      method: 'POST',
+                      body: { pattern: e.target.value },
+                    });
+
+                    setPatternInvalid(!valid);
                   }
                 }}
+                invalid={patternInvalid}
                 label={globalContext.formatMessage({ id: 'sitemap.Settings.Field.Pattern.Label' })}
-                description={globalContext.formatMessage({ id: 'sitemap.Settings.Field.Pattern.Description' })}
+                error={globalContext.formatMessage({ id: 'sitemap.Settings.Field.Pattern.Error' })}
                 name="pattern"
                 value={modifiedState.getIn([uid, 'pattern'], '')}
                 disabled={!uid}

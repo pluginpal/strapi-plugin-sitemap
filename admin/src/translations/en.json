@@ -28,6 +28,7 @@
   "Settings.Field.URL.Description": "This field forces the UID type regex",
   "Settings.Field.Pattern.Label": "Pattern",
   "Settings.Field.Pattern.Description": "The dynamic path for each entity of the type.",
+  "Settings.Field.Pattern.Error": "This is not a valid pattern.",
 
   "Modal.Title": "Configurations",
   "Modal.HeaderTitle": "Sitemap entries",
