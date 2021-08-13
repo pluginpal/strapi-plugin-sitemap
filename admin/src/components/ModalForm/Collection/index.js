@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 import { Inputs } from '@buffetjs/custom';
-import { useGlobalContext, request } from 'strapi-helper-plugin';
+import { useGlobalContext } from 'strapi-helper-plugin';
 
 import SelectContentTypes from '../../SelectContentTypes';
 import HeaderModalNavContainer from '../../HeaderModalNavContainer';
