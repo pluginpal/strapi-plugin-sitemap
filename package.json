@@ -25,7 +25,8 @@
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.3.0",
     "sitemap": "^5.1.0",
-    "styled-components": "^4.1.2"
+    "styled-components": "^4.1.2",
+    "strapi-helper-plugin": "^3.6.6"
   },
   "author": {
     "name": "Boaz Poolman",
