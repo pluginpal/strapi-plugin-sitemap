@@ -102,7 +102,7 @@ module.exports = {
     const config = await strapi.plugins.sitemap.services.config.getConfig();
     const sitemap = new SitemapStream({
       hostname: config.hostname,
-      xslUrl: "https://raw.githubusercontent.com/boazpoolman/strapi-plugin-sitemap/develop/xsl/sitemap.xsl",
+      xslUrl: "/sitemap.xsl",
     });
 
     const allSitemapEntries = sitemapEntries || await module.exports.createSitemapEntries();
