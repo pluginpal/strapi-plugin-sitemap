@@ -14,6 +14,8 @@ const SelectContentTypes = (props) => {
   const filterOptions = (options) => {
     const newOptions = {};
 
+    newOptions['- Choose Content Type -'] = false;
+
     // Remove the contentypes which are allready set in the sitemap.
     Object.entries(options).map(([i, e]) => {
       if (!modifiedContentTypes.get(i) || value === i) {

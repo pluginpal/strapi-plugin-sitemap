@@ -45,7 +45,7 @@ module.exports = {
       .get({ key: 'settings' });
 
     if (!config) {
-      config = await createDefaultConfig('');
+      config = await createDefaultConfig();
     }
 
     if (!config.customEntries) {

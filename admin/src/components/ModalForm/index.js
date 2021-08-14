@@ -17,7 +17,7 @@ import CollectionForm from './Collection';
 
 const ModalForm = (props) => {
   const [uid, setUid] = useState('');
-  const [patternInvalid, setPatternInvalid] = useState(false);
+  const [patternInvalid, setPatternInvalid] = useState({ invalid: false });
   const globalContext = useGlobalContext();
 
   const {
@@ -30,7 +30,7 @@ const ModalForm = (props) => {
   } = props;
 
   useEffect(() => {
-    setPatternInvalid(false);
+    setPatternInvalid({ invalid: false });
 
     if (id && !uid) {
       setUid(id);
@@ -47,13 +47,18 @@ const ModalForm = (props) => {
   };
 
   const submitForm = async (e) => {
-    const valid = await request('/sitemap/pattern/validate-pattern', {
-      method: 'POST',
-      body: { pattern: modifiedState.getIn([uid, 'pattern'], null) },
-    });
+    if (type === 'collection') {
+      const response = await request('/sitemap/pattern/validate-pattern', {
+        method: 'POST',
+        body: {
+          pattern: modifiedState.getIn([uid, 'pattern'], null),
+          modelName: uid,
+        },
+      });
 
-    if (!valid && type === 'collection') {
-      setPatternInvalid(true);
+      if (!response.valid) {
+        setPatternInvalid({ invalid: true, message: response.message });
+      } else onSubmit(e);
     } else onSubmit(e);
   };
 

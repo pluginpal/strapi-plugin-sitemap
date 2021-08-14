@@ -30,6 +30,8 @@ const CollectionForm = (props) => {
 
   const handleSelectChange = (e) => {
     const contentType = e.target.value;
+    if (contentType === '- Choose Content Type -') return;
+
     setUid(contentType);
 
     // Set initial values
@@ -80,11 +82,11 @@ const CollectionForm = (props) => {
                   onChange={async (e) => {
                     if (e.target.value.match(/^[A-Za-z0-9-_.~[\]/]*$/)) {
                       onChange(uid, 'pattern', e.target.value);
-                      setPatternInvalid(false);
+                      setPatternInvalid({ invalid: false });
                     }
                   }}
-                  invalid={patternInvalid}
-                  error={globalContext.formatMessage({ id: 'sitemap.Settings.Field.Pattern.Error' })}
+                  invalid={patternInvalid.invalid}
+                  error={patternInvalid.message}
                   label={globalContext.formatMessage({ id: 'sitemap.Settings.Field.Pattern.Label' })}
                   placeholder="/en/pages/[id]"
                   name="pattern"

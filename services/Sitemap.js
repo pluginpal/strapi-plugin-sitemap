@@ -14,18 +14,14 @@ module.exports = {
   getSitemapPageData: (contentType, pages, config) => {
     const pageData = {};
 
-    pages.map((page) => {
+    pages.map(async (page) => {
       const { id } = page;
       pageData[id] = {};
       pageData[id].lastmod = page.updated_at;
 
-      Object.entries(page).map(([i, e]) => {
-        if (i === config.contentTypes[contentType].uidField) {
-          const area = trim(config.contentTypes[contentType].area, '/');
-          const url = [area, e].filter(Boolean).join('/');
-          pageData[id].url = url;
-        }
-      });
+      const { pattern } = config.contentTypes[contentType];
+      const url = await strapi.plugins.sitemap.services.pattern.resolvePattern(pattern, page);
+      pageData[id].url = url;
     });
 
     return pageData;
