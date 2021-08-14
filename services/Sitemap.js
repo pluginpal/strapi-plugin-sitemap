@@ -57,7 +57,7 @@ module.exports = {
           url,
           lastmod,
           changefreq: config.contentTypes[contentType].changefreq,
-          priority: parseInt(config.contentTypes[contentType].priority),
+          priority: parseFloat(config.contentTypes[contentType].priority),
         });
       });
     }));
@@ -67,7 +67,7 @@ module.exports = {
         sitemapEntries.push({
           url: customEntry,
           changefreq: config.customEntries[customEntry].changefreq,
-          priority: parseInt(config.customEntries[customEntry].priority),
+          priority: parseFloat(config.customEntries[customEntry].priority),
         });
       }));
     }
