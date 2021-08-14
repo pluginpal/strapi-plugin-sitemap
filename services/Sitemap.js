@@ -57,7 +57,7 @@ module.exports = {
           url,
           lastmod,
           changefreq: config.contentTypes[contentType].changefreq,
-          priority: config.contentTypes[contentType].priority,
+          priority: parseInt(config.contentTypes[contentType].priority),
         });
       });
     }));
@@ -67,7 +67,7 @@ module.exports = {
         sitemapEntries.push({
           url: customEntry,
           changefreq: config.customEntries[customEntry].changefreq,
-          priority: config.customEntries[customEntry].priority,
+          priority: parseInt(config.customEntries[customEntry].priority),
         });
       }));
     }
@@ -80,7 +80,7 @@ module.exports = {
         sitemapEntries.push({
           url: '/',
           changefreq: 'monthly',
-          priority: '1',
+          priority: 1,
         });
       }
     }
@@ -100,7 +100,10 @@ module.exports = {
 
   createSitemap: async (sitemapEntries) => {
     const config = await strapi.plugins.sitemap.services.config.getConfig();
-    const sitemap = new SitemapStream({ hostname: config.hostname });
+    const sitemap = new SitemapStream({
+      hostname: config.hostname,
+      xslUrl: "https://raw.githubusercontent.com/boazpoolman/strapi-plugin-sitemap/develop/xsl/sitemap.xsl",
+    });
 
     const allSitemapEntries = sitemapEntries || await module.exports.createSitemapEntries();
 
