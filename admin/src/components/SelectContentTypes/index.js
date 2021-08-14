@@ -1,12 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import React from 'react';
 import { Select, Label } from '@buffetjs/core';
-import { isEmpty } from 'lodash';
-import { getUidFieldsByContentType } from '../../helpers/getUidfields';
 
 const SelectContentTypes = (props) => {
-  const { edit } = useLocation();
-  const [state, setState] = useState({ options: {} });
 
   const {
     contentTypes,
@@ -19,6 +14,8 @@ const SelectContentTypes = (props) => {
   const filterOptions = (options) => {
     const newOptions = {};
 
+    newOptions['- Choose Content Type -'] = false;
+
     // Remove the contentypes which are allready set in the sitemap.
     Object.entries(options).map(([i, e]) => {
       if (!modifiedContentTypes.get(i) || value === i) {
@@ -29,28 +26,7 @@ const SelectContentTypes = (props) => {
     return newOptions;
   };
 
-  const buildOptions = () => {
-    const options = {};
-
-    options['- Choose Content Type -'] = false;
-
-    contentTypes.map((contentType) => {
-      const uidFieldNames = getUidFieldsByContentType(contentType);
-
-      if (!isEmpty(uidFieldNames)) {
-        options[contentType.apiID] = uidFieldNames;
-      }
-    });
-
-    return filterOptions(options);
-  };
-
-  useEffect(() => {
-    setState((prevState) => ({
-      ...prevState,
-      options: edit ? { [edit]: false } : buildOptions(),
-    }));
-  }, []);
+  const options = filterOptions(contentTypes);
 
   return (
     <>
@@ -58,8 +34,8 @@ const SelectContentTypes = (props) => {
       <Select
         name="select"
         label="test"
-        onChange={(e) => onChange(e, state.options[e.target.value])}
-        options={Object.keys(state.options)}
+        onChange={(e) => onChange(e)}
+        options={Object.keys(options)}
         value={value}
         disabled={disabled}
       />

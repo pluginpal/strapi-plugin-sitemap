@@ -9,6 +9,7 @@ import {
   ModalBody,
   ModalFooter,
   useGlobalContext,
+  request,
 } from 'strapi-helper-plugin';
 
 import CustomForm from './Custom';
@@ -16,6 +17,7 @@ import CollectionForm from './Collection';
 
 const ModalForm = (props) => {
   const [uid, setUid] = useState('');
+  const [patternInvalid, setPatternInvalid] = useState({ invalid: false });
   const globalContext = useGlobalContext();
 
   const {
@@ -24,9 +26,12 @@ const ModalForm = (props) => {
     isOpen,
     id,
     type,
+    modifiedState,
   } = props;
 
   useEffect(() => {
+    setPatternInvalid({ invalid: false });
+
     if (id && !uid) {
       setUid(id);
     } else {
@@ -38,12 +43,29 @@ const ModalForm = (props) => {
   const modalBodyStyle = {
     paddingTop: '0.5rem',
     paddingBottom: '3rem',
+    position: 'relative',
+  };
+
+  const submitForm = async (e) => {
+    if (type === 'collection') {
+      const response = await request('/sitemap/pattern/validate-pattern', {
+        method: 'POST',
+        body: {
+          pattern: modifiedState.getIn([uid, 'pattern'], null),
+          modelName: uid,
+        },
+      });
+
+      if (!response.valid) {
+        setPatternInvalid({ invalid: true, message: response.message });
+      } else onSubmit(e);
+    } else onSubmit(e);
   };
 
   const form = () => {
     switch (type) {
       case 'collection':
-        return <CollectionForm uid={uid} setUid={setUid} {...props} />;
+        return <CollectionForm uid={uid} setUid={setUid} setPatternInvalid={setPatternInvalid} patternInvalid={patternInvalid} {...props} />;
       case 'custom':
         return <CustomForm uid={uid} setUid={setUid} {...props} />;
       default:
@@ -61,7 +83,9 @@ const ModalForm = (props) => {
       <HeaderModal>
         <section style={{ alignItems: 'center' }}>
           <AttributeIcon type="enum" />
-          <HeaderModalTitle style={{ marginLeft: 15 }}>{globalContext.formatMessage({ id: 'sitemap.Modal.HeaderTitle' })} - {type}</HeaderModalTitle>
+          <HeaderModalTitle style={{ marginLeft: 15 }}>
+            {globalContext.formatMessage({ id: 'sitemap.Modal.HeaderTitle' })} - {type}
+          </HeaderModalTitle>
         </section>
       </HeaderModal>
       <ModalBody style={modalBodyStyle}>
@@ -79,7 +103,7 @@ const ModalForm = (props) => {
             color="primary"
             style={{ marginLeft: 'auto' }}
             disabled={!uid}
-            onClick={(e) => onSubmit(e)}
+            onClick={submitForm}
           >
             {globalContext.formatMessage({ id: 'sitemap.Button.Save' })}
           </Button>

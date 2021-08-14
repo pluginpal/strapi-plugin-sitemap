@@ -5,11 +5,14 @@
   "Button.AddAll": "Add all",
   "Button.Add1by1": "Add 1 by 1",
   "Button.AddURL": "Add URL",
-  
+
   "Header.Title": "Sitemap",
   "Header.Description": "Settings for the sitemap.xml",
   "Header.Button.Generate": "Generate sitemap",
   "Header.Button.SitemapLink": "Go to sitemap",
+
+  "popUpForm.navContainer.base": "Base settings",
+  "popUpForm.navContainer.advanced": "Advanced settings",
 
   "Settings.CollectionTitle": "URL patterns",
   "Settings.CustomTitle": "Custom URLs",
@@ -23,8 +26,9 @@
   "Settings.Field.ExcludeDrafts.Description": "Remove all draft entries from the sitemap.",
   "Settings.Field.URL.Label": "Slug",
   "Settings.Field.URL.Description": "This field forces the UID type regex",
-  "Settings.Field.Area.Label": "Area",
-  "Settings.Field.Area.Description": "The path under which the pages are located.",
+  "Settings.Field.Pattern.Label": "Pattern",
+  "Settings.Field.Pattern.Description": "The dynamic path for each entity of the type.",
+  "Settings.Field.Pattern.Error": "This is not a valid pattern.",
 
   "Modal.Title": "Configurations",
   "Modal.HeaderTitle": "Sitemap entries",

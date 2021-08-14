@@ -1,8 +1,7 @@
 'use strict';
 
-const { Map } = require('immutable');
 const { SitemapStream, streamToPromise } = require('sitemap');
-const { isEmpty, trim } = require('lodash');
+const { isEmpty } = require('lodash');
 const fs = require('fs');
 
 /**
@@ -11,105 +10,25 @@ const fs = require('fs');
  * @description: A set of functions similar to controller's actions to avoid code duplication.
  */
 
-const createDefaultConfig = async () => {
-  const pluginStore = strapi.store({
-    environment: '',
-    type: 'plugin',
-    name: 'sitemap',
-  });
-
-  const value = {
-    hostname: '',
-    includeHomepage: true,
-    excludeDrafts: true,
-    contentTypes: Map({}),
-    customEntries: Map({}),
-  };
-
-  await pluginStore.set({ key: 'settings', value });
-
-  return strapi
-    .store({
-      environment: '',
-      type: 'plugin',
-      name: 'sitemap',
-    })
-    .get({ key: 'settings' });
-};
-
 module.exports = {
-  getConfig: async () => {
-    let config = await strapi
-      .store({
-        environment: '',
-        type: 'plugin',
-        name: 'sitemap',
-      })
-      .get({ key: 'settings' });
-
-    if (!config) {
-      config = await createDefaultConfig('');
-    }
-
-    if (!config.customEntries) {
-      config.customEntries = {};
-    }
-
-    return config;
-  },
-
-  getPopulatedConfig: async () => {
-    const config = await module.exports.getConfig();
-    const contentTypes = {};
-
-    Object.values(strapi.contentTypes).map((contentType) => {
-      let uidFieldName = false;
-
-      Object.entries(contentType.__schema__.attributes).map(([i, e]) => {
-        if (e.type === "uid") {
-          uidFieldName = i;
-        }
-      });
-
-      if (uidFieldName) {
-        contentTypes[contentType.modelName] = {
-          uidField: uidFieldName,
-          priority: 0.5,
-          changefreq: 'monthly',
-          area: '',
-        };
-      }
-    });
-
-    return {
-      hostname: '',
-      customEntries: config.customEntries,
-      contentTypes,
-    };
-  },
-
   getSitemapPageData: (contentType, pages, config) => {
     const pageData = {};
 
-    pages.map((page) => {
+    pages.map(async (page) => {
       const { id } = page;
       pageData[id] = {};
       pageData[id].lastmod = page.updated_at;
 
-      Object.entries(page).map(([i, e]) => {
-        if (i === config.contentTypes[contentType].uidField) {
-          const area = trim(config.contentTypes[contentType].area, '/');
-          const url = [area, e].filter(Boolean).join('/');
-          pageData[id].url = url;
-        }
-      });
+      const { pattern } = config.contentTypes[contentType];
+      const url = await strapi.plugins.sitemap.services.pattern.resolvePattern(pattern, page);
+      pageData[id].url = url;
     });
 
     return pageData;
   },
 
   createSitemapEntries: async () => {
-    const config = await module.exports.getConfig();
+    const config = await strapi.plugins.sitemap.services.config.getConfig();
     const sitemapEntries = [];
 
     await Promise.all(Object.keys(config.contentTypes).map(async (contentType) => {
@@ -138,7 +57,7 @@ module.exports = {
           url,
           lastmod,
           changefreq: config.contentTypes[contentType].changefreq,
-          priority: config.contentTypes[contentType].priority,
+          priority: parseInt(config.contentTypes[contentType].priority),
         });
       });
     }));
@@ -148,7 +67,7 @@ module.exports = {
         sitemapEntries.push({
           url: customEntry,
           changefreq: config.customEntries[customEntry].changefreq,
-          priority: config.customEntries[customEntry].priority,
+          priority: parseInt(config.customEntries[customEntry].priority),
         });
       }));
     }
@@ -161,7 +80,7 @@ module.exports = {
         sitemapEntries.push({
           url: '/',
           changefreq: 'monthly',
-          priority: '1',
+          priority: 1,
         });
       }
     }
@@ -180,8 +99,11 @@ module.exports = {
   },
 
   createSitemap: async (sitemapEntries) => {
-    const config = await module.exports.getConfig();
-    const sitemap = new SitemapStream({ hostname: config.hostname });
+    const config = await strapi.plugins.sitemap.services.config.getConfig();
+    const sitemap = new SitemapStream({
+      hostname: config.hostname,
+      xslUrl: "https://raw.githubusercontent.com/boazpoolman/strapi-plugin-sitemap/develop/xsl/sitemap.xsl",
+    });
 
     const allSitemapEntries = sitemapEntries || await module.exports.createSitemapEntries();
 

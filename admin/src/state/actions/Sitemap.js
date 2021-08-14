@@ -116,8 +116,8 @@ export function generateSitemap() {
 export function getContentTypes() {
   return async function(dispatch) {
     try {
-      const { data } = await request('/content-manager/content-types', { method: 'GET' });
-      dispatch(getContentTypesSucceeded(data));
+      const contentTypes = await request('/sitemap/pattern/allowed-fields', { method: 'GET' });
+      dispatch(getContentTypesSucceeded(contentTypes));
     } catch (err) {
       strapi.notification.toggle({ type: 'warning', message: { id: 'notification.error' } });
     }

@@ -39,6 +39,22 @@
       "config": {
         "policies": []
       }
+    },
+    {
+      "method": "GET",
+      "path": "/pattern/allowed-fields",
+      "handler": "Sitemap.allowedFields",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/pattern/validate-pattern",
+      "handler": "Sitemap.validatePattern",
+      "config": {
+        "policies": []
+      }
     }
   ]
 }
