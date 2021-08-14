@@ -24,14 +24,16 @@ table.sitemap tfoot tr th {
   padding: 3px;
 }
 
-table.sitemap thead tr .tablesorter-header:not(.sorter-false) {
+table.sitemap thead tr {
   cursor: pointer;
 }
 
-table.sitemap thead tr .tablesorter-header .tablesorter-header-inner {
-  position: relative;
-  display: inline-block;
-  padding-right: 15px;
+table.sitemap thead tr th {
+  padding-right: 20px;
+}
+
+table.sitemap tbody tr:nth-child(odd) td {
+  background-color: #efefef;
 }
 
 table.sitemap tbody td {
@@ -41,27 +43,24 @@ table.sitemap tbody td {
   vertical-align: top;
 }
 
-table.sitemap tbody .odd td {
-  background-color: #efefef;
-}
-
-table.sitemap thead tr .tablesorter-headerAsc,
-table.sitemap thead tr .tablesorter-headerDesc {
+table.sitemap thead tr .dir-u,
+table.sitemap thead tr .dir-d {
   background-color: #5050d3;
+  position: relative;
   color: #fff;
   font-style: italic;
 }
 
-table.sitemap thead tr .tablesorter-headerAsc .tablesorter-header-inner:after {
+table.sitemap thead tr .dir-u:after {
   content: '\25b2';
   position:absolute;
-  right: 0;
+  right: 5px;
 }
 
-table.sitemap thead tr .tablesorter-headerDesc .tablesorter-header-inner:after {
+table.sitemap thead tr .dir-d:after {
   content: '\25bc';
   position:absolute;
-  right: 0;
+  right: 5px;
 }
 
 table.sitemap tbody tr ul {
