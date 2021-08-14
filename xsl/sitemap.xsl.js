@@ -34,5 +34,9 @@ if (document) {
     for (var i = 0; i < tds.length; i++) {
       tds[i].setAttribute('data-sort', formatChangeFreq(tds[i].textContent))
     }
+
+    var h1 = document.getElementsByTagName("h1")[0];
+    h1.innerHTML = h1.textContent + ': ' + location;
+    document.title = h1.textContent;
   }, 0);
 }
