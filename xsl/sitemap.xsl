@@ -12,7 +12,7 @@
     <html>
       <head>
         <title>Sitemap file</title>
-        <link href="https://raw.githubusercontent.com/boazpoolman/strapi-plugin-sitemap/develop/xsl/sitemap.xsl.css" type="text/css" rel="stylesheet"/>
+        <link href="./sitemap.xsl.css" type="text/css" rel="stylesheet"/>
       </head>
       <body>
         <h1>Sitemap file</h1>

@@ -14,6 +14,8 @@
     "@buffetjs/styles": "^2.0.0",
     "immutable": "^4.0.0-rc.14",
     "lodash": "^4.17.11",
+    "patch-package": "^6.4.7",
+    "postinstall-postinstall": "^2.1.0",
     "prop-types": "^15.5.10",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
@@ -25,8 +27,8 @@
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.3.0",
     "sitemap": "^6.1.0",
-    "styled-components": "^4.1.2",
-    "strapi-helper-plugin": "^3.6.6"
+    "strapi-helper-plugin": "^3.6.6",
+    "styled-components": "^4.1.2"
   },
   "author": {
     "name": "Boaz Poolman",
@@ -51,7 +53,8 @@
   "license": "MIT",
   "scripts": {
     "eslint": "eslint --max-warnings=0 './**/*.{js,jsx}'",
-    "eslint:fix": "eslint --fix './**/*.{js,jsx}'"
+    "eslint:fix": "eslint --fix './**/*.{js,jsx}'",
+    "postinstall": "patch-package"
   },
   "devDependencies": {
     "babel-eslint": "9.0.0",
