@@ -1,7 +1,7 @@
 'use strict';
 
 const { SitemapStream, streamToPromise } = require('sitemap');
-const { isEmpty, trim } = require('lodash');
+const { isEmpty } = require('lodash');
 const fs = require('fs');
 
 /**
