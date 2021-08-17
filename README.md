@@ -1,5 +1,21 @@
 # Strapi Plugin Sitemap
 
+<p>
+  <a href="https://www.npmjs.org/package/strapi-plugin-sitemap">
+    <img src="https://img.shields.io/npm/v/strapi-plugin-sitemap/latest.svg" alt="NPM Version" />
+  </a>
+  <a href="https://www.npmjs.org/package/strapi-plugin-sitemap">
+    <img src="https://img.shields.io/npm/dm/strapi-plugin-sitemap" alt="Monthly download on NPM" />
+  </a>
+  <a href="https://codecov.io/gh/boazpoolman/strapi-plugin-sitemap">
+    <img src="https://img.shields.io/github/workflow/status/boazpoolman/strapi-plugin-sitemap/Tests/master" alt="CI build status" />
+  </a>
+  <a href="https://codecov.io/gh/boazpoolman/strapi-plugin-sitemap">
+    <img src="https://codecov.io/gh/boazpoolman/strapi-plugin-sitemap/coverage.svg?branch=master" alt="codecov.io" />
+  </a>
+</p>
+
+
 This plugin is an integration of the UID field type. In Strapi you can manage your URLs by adding UID fields to your single or collection types. This field will act as a wrapper for the title field and will generate a unique SEO friendly path for each instance of the type. This plugin will then use those paths to generate a fully customizable sitemap for all your URLs.
 
 ## Installation
