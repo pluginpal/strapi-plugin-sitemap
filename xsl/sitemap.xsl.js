@@ -1,9 +1,5 @@
 var document = document || null;
 if (document) {
-  document.addEventListener("DOMContentLoaded", function() {
-    document.getElementById('default-sort').click();
-  });
-
   function formatChangeFreq(changeFreq) {
     switch (changeFreq) {
       case 'always':
@@ -30,13 +26,18 @@ if (document) {
   }
 
   setTimeout(function() {
+    // Set data-sort attribute for changefreq field.
     var tds = document.getElementsByClassName("changefreq");
     for (var i = 0; i < tds.length; i++) {
       tds[i].setAttribute('data-sort', formatChangeFreq(tds[i].textContent))
     }
 
+    // Add URL to title.
     var h1 = document.getElementsByTagName("h1")[0];
     h1.innerHTML = h1.textContent + ': ' + location;
     document.title = h1.textContent;
+
+    // Set default sort.
+    document.getElementById('default-sort').click();
   }, 0);
 }
