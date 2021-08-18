@@ -6,7 +6,7 @@ import { Map } from 'immutable';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
-import { deleteContentType, discardModifiedContentTypes, onChangeContentTypes, populateSettings, submitModal } from '../../state/actions/Sitemap';
+import { deleteContentType, discardModifiedContentTypes, onChangeContentTypes, submitModal } from '../../state/actions/Sitemap';
 import List from '../../components/List';
 import ModalForm from '../../components/ModalForm';
 import Wrapper from '../../components/Wrapper';
@@ -52,17 +52,9 @@ const CollectionURLs = () => {
       />
       <Wrapper>
         <Button
-          color="primary"
-          icon={<FontAwesomeIcon icon={faPlus} />}
-          label={formatMessage({ id: 'sitemap.Button.AddAll' })}
-          onClick={() => dispatch(populateSettings())}
-          hidden={state.getIn(['settings', 'contentTypes']).size}
-        />
-        <Button
           color="secondary"
-          style={{ marginLeft: 15 }}
           icon={<FontAwesomeIcon icon={faPlus} />}
-          label={formatMessage({ id: 'sitemap.Button.Add1by1' })}
+          label={formatMessage({ id: 'sitemap.Button.Add' })}
           onClick={() => setModalOpen(!modalOpen)}
           hidden={state.getIn(['settings', 'contentTypes']).size}
         />

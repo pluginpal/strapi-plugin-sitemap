@@ -84,17 +84,6 @@ export function updateSettings(settings) {
   };
 }
 
-export function populateSettings() {
-  return async function(dispatch) {
-    try {
-      const settings = await request('/sitemap/settings/populate', { method: 'GET' });
-      dispatch(updateSettings(Map(settings)));
-    } catch (err) {
-      strapi.notification.toggle({ type: 'warning', message: { id: 'notification.error' } });
-    }
-  };
-}
-
 export function discardModifiedContentTypes() {
   return {
     type: DISCARD_MODIFIED_CONTENT_TYPES,

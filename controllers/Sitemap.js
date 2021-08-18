@@ -29,12 +29,6 @@ module.exports = {
     ctx.send(config);
   },
 
-  populateSettings: async (ctx) => {
-    const settings = await strapi.plugins.sitemap.services.config.getPopulatedConfig();
-
-    ctx.send(settings);
-  },
-
   updateSettings: async (ctx) => {
     await strapi
       .store({
