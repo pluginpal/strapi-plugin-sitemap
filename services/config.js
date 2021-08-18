@@ -48,40 +48,6 @@ module.exports = {
       config = await createDefaultConfig();
     }
 
-    if (!config.customEntries) {
-      config.customEntries = {};
-    }
-
     return config;
-  },
-
-  getPopulatedConfig: async () => {
-    const config = await module.exports.getConfig();
-    const contentTypes = {};
-
-    Object.values(strapi.contentTypes).map((contentType) => {
-      let uidFieldName = false;
-
-      Object.entries(contentType.__schema__.attributes).map(([i, e]) => {
-        if (e.type === "uid") {
-          uidFieldName = i;
-        }
-      });
-
-      if (uidFieldName) {
-        contentTypes[contentType.modelName] = {
-          uidField: uidFieldName,
-          priority: 0.5,
-          changefreq: 'monthly',
-          area: '',
-        };
-      }
-    });
-
-    return {
-      hostname: '',
-      customEntries: config.customEntries,
-      contentTypes,
-    };
   },
 };
