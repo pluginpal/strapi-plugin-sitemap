@@ -1,13 +1,23 @@
 'use strict';
 
+/**
+ * Sitemap service.
+ */
+
 const { SitemapStream, streamToPromise } = require('sitemap');
 const { isEmpty } = require('lodash');
 const fs = require('fs');
 
 /**
- * Sitemap service.
+ * Get a formatted array of different language URLs of a single page.
+ *
+ * @param {string} page - The entity.
+ * @param {string} contentType - The model of the entity.
+ * @param {string} pattern - The pattern of the model.
+ * @param {string} defaultURL - The default URL of the different languages.
+ *
+ * @returns {array} The language links.
  */
-
 const getLanguageLinks = async (page, contentType, pattern, defaultURL) => {
   if (!page.localizations) return null;
 
@@ -27,112 +37,121 @@ const getLanguageLinks = async (page, contentType, pattern, defaultURL) => {
   return links;
 };
 
-module.exports = {
-  getSitemapPageData: async (contentType, pages, config) => {
-    const pageData = {};
+/**
+ * Get a formatted sitemap entry object for a single page.
+ *
+ * @param {string} page - The entity.
+ * @param {string} contentType - The model of the entity.
+ *
+ * @returns {object} The sitemap entry data.
+ */
+const getSitemapPageData = async (page, contentType) => {
+  const config = await strapi.plugins.sitemap.services.config.getConfig();
+  const { pattern } = config.contentTypes[contentType];
+  const url = await strapi.plugins.sitemap.services.pattern.resolvePattern(pattern, page);
 
+  return {
+    lastmod: page.updated_at,
+    url: url,
+    links: await getLanguageLinks(page, contentType, pattern, url),
+    changefreq: config.contentTypes[contentType].changefreq,
+    priority: parseFloat(config.contentTypes[contentType].priority),
+  };
+};
+
+/**
+ * Get array of sitemap entries based on the plugins configurations.
+ *
+ * @returns {array} The entries.
+ */
+const createSitemapEntries = async () => {
+  const config = await strapi.plugins.sitemap.services.config.getConfig();
+  const sitemapEntries = [];
+
+  // Collection entries.
+  await Promise.all(Object.keys(config.contentTypes).map(async (contentType) => {
+    const hasDraftAndPublish = strapi.query(contentType).model.__schema__.options.draftAndPublish;
+    let pages = await strapi.query(contentType).find({ _limit: -1 });
+
+    // Remove draft pages.
+    if (config.excludeDrafts && hasDraftAndPublish) {
+      pages = pages.filter((page) => page.published_at);
+    }
+
+    // Add formatted sitemap page data to the array.
     await Promise.all(pages.map(async (page) => {
-      const { id } = page;
-      pageData[id] = {};
-      pageData[id].lastmod = page.updated_at;
-
-      const { pattern } = config.contentTypes[contentType];
-      const url = await strapi.plugins.sitemap.services.pattern.resolvePattern(pattern, page);
-      pageData[id].url = url;
-      pageData[id].links = await getLanguageLinks(page, contentType, pattern, url);
+      const pageData = await getSitemapPageData(page, contentType);
+      sitemapEntries.push(pageData);
     }));
+  }));
 
-    return pageData;
-  },
+  // Custom entries.
+  await Promise.all(Object.keys(config.customEntries).map(async (customEntry) => {
+    sitemapEntries.push({
+      url: customEntry,
+      changefreq: config.customEntries[customEntry].changefreq,
+      priority: parseFloat(config.customEntries[customEntry].priority),
+    });
+  }));
 
-  createSitemapEntries: async () => {
-    const config = await strapi.plugins.sitemap.services.config.getConfig();
-    const sitemapEntries = [];
+  // Custom homepage entry.
+  if (config.includeHomepage) {
+    const hasHomePage = !isEmpty(sitemapEntries.filter((entry) => entry.url === ''));
 
-    await Promise.all(Object.keys(config.contentTypes).map(async (contentType) => {
-      let modelName;
-      const contentTypeByName = Object.values(strapi.contentTypes)
-        .find((strapiContentType) => strapiContentType.info.name === contentType);
-
-      // Backward compatibility for issue https://github.com/boazpoolman/strapi-plugin-sitemap/issues/4
-      if (contentTypeByName) {
-        modelName = contentTypeByName.modelName;
-      } else {
-        modelName = contentType;
-      }
-
-      const hasDraftAndPublish = strapi.query(modelName).model.__schema__.options.draftAndPublish;
-      let pages = await strapi.query(modelName).find({ _limit: -1 });
-
-      if (config.excludeDrafts && hasDraftAndPublish) {
-        pages = pages.filter((page) => page.published_at);
-      }
-
-      const pageData = await module.exports.getSitemapPageData(contentType, pages, config);
-
-      Object.values(pageData).map(({ url, lastmod, links }) => {
-        console.log(links);
-        sitemapEntries.push({
-          url,
-          lastmod,
-          links,
-          changefreq: config.contentTypes[contentType].changefreq,
-          priority: parseFloat(config.contentTypes[contentType].priority),
-        });
+    // Only add it when no other '/' entry in present.
+    if (!hasHomePage) {
+      sitemapEntries.push({
+        url: '/',
+        changefreq: 'monthly',
+        priority: 1,
       });
-    }));
-
-    if (config.customEntries) {
-      await Promise.all(Object.keys(config.customEntries).map(async (customEntry) => {
-        sitemapEntries.push({
-          url: customEntry,
-          changefreq: config.customEntries[customEntry].changefreq,
-          priority: parseFloat(config.customEntries[customEntry].priority),
-        });
-      }));
     }
+  }
 
-    // Add a homepage when none is present
-    if (config.includeHomepage) {
-      const hasHomePage = !isEmpty(sitemapEntries.filter((entry) => entry.url === ''));
+  return sitemapEntries;
+};
 
-      if (!hasHomePage) {
-        sitemapEntries.push({
-          url: '/',
-          changefreq: 'monthly',
-          priority: 1,
-        });
-      }
-    }
+/**
+ * Write the sitemap xml file in the public folder.
+ *
+ * @param {string} filename - The file name.
+ * @param {object} sitemap - The SitemapStream instance.
+ *
+ * @returns {void}
+ */
+const writeSitemapFile = (filename, sitemap) => {
+  streamToPromise(sitemap)
+    .then((sm) => {
+      fs.writeFile(`public/${filename}`, sm.toString(), (err) => {
+        if (err) throw err;
+      });
+    })
+    .catch(() => console.error);
+};
 
-    return sitemapEntries;
-  },
+/**
+ * The main sitemap generation service.
+ *
+ * @returns {void}
+ */
+const createSitemap = async () => {
+  const config = await strapi.plugins.sitemap.services.config.getConfig();
+  const sitemap = new SitemapStream({
+    hostname: config.hostname,
+    xslUrl: "/sitemap.xsl",
+  });
 
-  writeSitemapFile: (filename, sitemap) => {
-    streamToPromise(sitemap)
-      .then((sm) => {
-        fs.writeFile(`public/${filename}`, sm.toString(), (err) => {
-          if (err) throw err;
-        });
-      })
-      .catch(() => console.error);
-  },
+  const sitemapEntries = await createSitemapEntries();
+  sitemapEntries.map((sitemapEntry) => sitemap.write(sitemapEntry));
+  sitemap.end();
 
-  createSitemap: async (sitemapEntries) => {
-    const config = await strapi.plugins.sitemap.services.config.getConfig();
-    const sitemap = new SitemapStream({
-      hostname: config.hostname,
-      xslUrl: "/sitemap.xsl",
-    });
+  await writeSitemapFile('sitemap.xml', sitemap);
+};
 
-    const allSitemapEntries = sitemapEntries || await module.exports.createSitemapEntries();
-
-    allSitemapEntries.map((sitemapEntry) => {
-      sitemap.write(sitemapEntry);
-    });
-
-    sitemap.end();
-
-    await module.exports.writeSitemapFile('sitemap.xml', sitemap);
-  },
+module.exports = {
+  getLanguageLinks,
+  getSitemapPageData,
+  createSitemapEntries,
+  writeSitemapFile,
+  createSitemap,
 };
