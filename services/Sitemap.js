@@ -5,16 +5,33 @@ const { isEmpty } = require('lodash');
 const fs = require('fs');
 
 /**
- * Sitemap.js service
- *
- * @description: A set of functions similar to controller's actions to avoid code duplication.
+ * Sitemap service.
  */
 
+const getLanguageLinks = async (page, contentType, pattern, defaultURL) => {
+  if (!page.localizations) return null;
+
+  const links = [];
+  links.push({ lang: page.locale, url: defaultURL });
+
+  await Promise.all(page.localizations.map(async (translation) => {
+    const translationEntity = await strapi.query(contentType).findOne({ id: translation.id });
+    const translationUrl = await strapi.plugins.sitemap.services.pattern.resolvePattern(pattern, translationEntity);
+
+    links.push({
+      lang: translationEntity.locale,
+      url: translationUrl,
+    });
+  }));
+
+  return links;
+};
+
 module.exports = {
-  getSitemapPageData: (contentType, pages, config) => {
+  getSitemapPageData: async (contentType, pages, config) => {
     const pageData = {};
 
-    pages.map(async (page) => {
+    await Promise.all(pages.map(async (page) => {
       const { id } = page;
       pageData[id] = {};
       pageData[id].lastmod = page.updated_at;
@@ -22,7 +39,8 @@ module.exports = {
       const { pattern } = config.contentTypes[contentType];
       const url = await strapi.plugins.sitemap.services.pattern.resolvePattern(pattern, page);
       pageData[id].url = url;
-    });
+      pageData[id].links = await getLanguageLinks(page, contentType, pattern, url);
+    }));
 
     return pageData;
   },
@@ -52,10 +70,12 @@ module.exports = {
 
       const pageData = await module.exports.getSitemapPageData(contentType, pages, config);
 
-      Object.values(pageData).map(({ url, lastmod }) => {
+      Object.values(pageData).map(({ url, lastmod, links }) => {
+        console.log(links);
         sitemapEntries.push({
           url,
           lastmod,
+          links,
           changefreq: config.contentTypes[contentType].changefreq,
           priority: parseFloat(config.contentTypes[contentType].priority),
         });
