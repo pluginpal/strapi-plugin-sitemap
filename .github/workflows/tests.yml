@@ -7,8 +7,8 @@ on:
   pull_request:
 
 jobs:
-  eslint:
-    name: 'eslint'
+  lint:
+    name: 'lint'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -20,3 +20,19 @@ jobs:
         run: yarn --frozen-lockfile
       - name: Run eslint
         run: yarn run eslint
+  unit:
+    name: 'unit'
+    needs: [lint]
+    runs-on: ubuntu-latest
+    env:
+      CODECOV_TOKEN: ${{ secrets.CODECOV }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+      - uses: ./.github/actions/install-modules
+        with:
+          globalPackages: codecov
+      - name: Run test
+        run: yarn run -s test:front && codecov -C -F front
