@@ -116,6 +116,7 @@ const validatePattern = async (pattern, allowedFieldNames) => {
 
 module.exports = {
   getAllowedFields,
+  getFieldsFromPattern,
   resolvePattern,
   validatePattern,
 };

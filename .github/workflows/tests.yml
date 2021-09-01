@@ -4,11 +4,12 @@ on:
   push:
     branches:
       - master
+      - develop
   pull_request:
 
 jobs:
-  eslint:
-    name: 'eslint'
+  lint:
+    name: 'lint'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -20,3 +21,24 @@ jobs:
         run: yarn --frozen-lockfile
       - name: Run eslint
         run: yarn run eslint
+  unit:
+    name: 'unit'
+    needs: [lint]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+          cache: 'yarn'
+      - name: Install dependencies
+        run: yarn --frozen-lockfile
+      - name: Run test
+        run: yarn run -s test:unit
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV }}
+          flags: unit
+          verbose: true
+          fail_ci_if_error: true
