@@ -31,7 +31,7 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: '14'
-      - uses: ./.github/actions/install-modules
+          cache: 'yarn'
         with:
           globalPackages: codecov
       - name: Run test
