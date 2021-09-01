@@ -32,7 +32,6 @@ jobs:
         with:
           node-version: '14'
           cache: 'yarn'
-        with:
           globalPackages: codecov
       - name: Run test
         run: yarn run -s test:front && codecov -C -F front
