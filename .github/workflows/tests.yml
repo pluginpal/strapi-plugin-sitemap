@@ -32,6 +32,7 @@ jobs:
         with:
           node-version: '14'
           cache: 'yarn'
-          globalPackages: codecov
+      - name: Install dependencies
+        run: yarn --frozen-lockfile
       - name: Run test
         run: yarn run -s test:unit && codecov -C -F unit
