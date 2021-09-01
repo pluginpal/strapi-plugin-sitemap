@@ -24,8 +24,6 @@ jobs:
     name: 'unit'
     needs: [lint]
     runs-on: ubuntu-latest
-    env:
-      CODECOV_TOKEN: ${{ secrets.CODECOV }}
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
@@ -35,4 +33,8 @@ jobs:
       - name: Install dependencies
         run: yarn --frozen-lockfile
       - name: Run test
-        run: yarn run -s test:unit && codecov -C -F unit
+        run: yarn run -s test:unit
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1
+        with:
+            token: ${{ secrets.CODECOV }}
