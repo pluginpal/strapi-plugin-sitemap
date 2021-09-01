@@ -34,4 +34,4 @@ jobs:
           cache: 'yarn'
           globalPackages: codecov
       - name: Run test
-        run: yarn run -s test:front && codecov -C -F front
+        run: yarn run -s test:unit && codecov -C -F unit
