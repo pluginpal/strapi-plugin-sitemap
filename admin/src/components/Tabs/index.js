@@ -1,27 +1,39 @@
 import React from 'react';
-import { HeaderNav } from '@strapi/helper-plugin';
-import pluginId from '../../helpers/pluginId';
+import { Tabs, Tab, TabGroup, TabPanels, TabPanel } from '@strapi/parts/Tabs';
+import { Box } from '@strapi/parts/Box';
+import CollectionURLs from '../../screens/CollectionURLs';
+import CustomURLs from '../../screens/CustomURLs';
+import Settings from '../../screens/Settings';
 
-const Tabs = () => {
+const SitemapTabs = () => {
   return (
-    <HeaderNav
-      links={[
-        {
-          name: 'URL patterns',
-          to: `/plugins/${pluginId}/url-patterns`,
-        },
-        {
-          name: 'Custom URLs',
-          to: `/plugins/${pluginId}/custom-urls`,
-        },
-        {
-          name: 'Settings',
-          to: `/plugins/${pluginId}/settings`,
-        },
-      ]}
-      style={{ marginTop: '4.6rem' }}
-    />
+    <Box padding={8}>
+      <TabGroup id="tabs">
+        <Tabs>
+          <Tab>URL bundles</Tab>
+          <Tab>Custom URLs</Tab>
+          <Tab>Settings</Tab>
+        </Tabs>
+        <TabPanels>
+          <TabPanel>
+            <Box padding={4} background="neutral0">
+              1
+            </Box>
+          </TabPanel>
+          <TabPanel>
+            <Box padding={4} background="neutral0">
+              2
+            </Box>
+          </TabPanel>
+          <TabPanel>
+            <Box padding={4} background="neutral0">
+              <Settings />
+            </Box>
+          </TabPanel>
+        </TabPanels>
+      </TabGroup>
+    </Box>
   );
 };
 
-export default Tabs;
+export default SitemapTabs;

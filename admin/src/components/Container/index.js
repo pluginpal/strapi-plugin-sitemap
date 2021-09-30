@@ -2,9 +2,6 @@ import styled from 'styled-components';
 
 const ContainerFluid = styled.div`
   padding: 18px 30px;
-  > div:first-child {
-    max-height: 33px;
-  }
 
   .buttonOutline {
     height: 30px;
