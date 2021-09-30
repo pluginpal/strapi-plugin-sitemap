@@ -5,7 +5,7 @@
  *
  */
 
- import { request } from 'strapi-helper-plugin';
+ import { request } from '@strapi/helper-plugin';
  import { Map } from 'immutable';
 
  import {

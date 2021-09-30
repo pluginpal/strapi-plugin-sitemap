@@ -3,15 +3,19 @@
   "version": "1.0.0",
   "description": "A plugin for Strapi to create a customizable sitemap.",
   "strapi": {
-    "name": "Sitemap",
-    "icon": "list",
-    "description": "A plugin for Strapi to create a customizable sitemap."
+    "displayName": "Sitemap",
+    "name": "sitemap",
+    "icon": "sitemap",
+    "description": "sitemap.plugin.description",
+    "required": false,
+    "kind": "plugin"
   },
   "dependencies": {
     "@babel/runtime": "^7.0.0",
     "@buffetjs/core": "^3.3.8",
     "@buffetjs/custom": "^3.3.8",
     "@buffetjs/styles": "^2.0.0",
+    "@strapi/helper-plugin": "^4.0.0-beta.0",
     "immutable": "^4.0.0-rc.14",
     "lodash": "^4.17.11",
     "patch-package": "^6.4.7",
@@ -27,8 +31,7 @@
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.3.0",
     "sitemap": "^6.1.0",
-    "strapi-helper-plugin": "^3.6.6",
-    "styled-components": "^4.1.2"
+    "styled-components": "^5.2.3"
   },
   "author": {
     "name": "Boaz Poolman",
@@ -52,8 +55,8 @@
   },
   "license": "MIT",
   "scripts": {
-    "lint": "eslint --max-warnings=0 './**/*.{js,jsx}'",
-    "lint:fix": "eslint --fix './**/*.{js,jsx}'",
+    "eslint": "eslint --max-warnings=0 './**/*.{js,jsx}'",
+    "eslint:fix": "eslint --fix './**/*.{js,jsx}'",
     "test:unit": "jest --verbose",
     "postinstall": "patch-package"
   },

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { useGlobalContext } from 'strapi-helper-plugin';
+import { useIntl } from 'react-intl';
 import { Button } from '@buffetjs/core';
 import { Map } from 'immutable';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -16,7 +16,7 @@ const CollectionURLs = () => {
   const dispatch = useDispatch();
   const [modalOpen, setModalOpen] = useState(false);
   const [uid, setUid] = useState(null);
-  const { formatMessage } = useGlobalContext();
+  const { formatMessage } = useIntl();
 
   const handleModalSubmit = (e) => {
     e.preventDefault();

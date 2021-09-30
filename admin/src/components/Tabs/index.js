@@ -1,5 +1,5 @@
 import React from 'react';
-import { HeaderNav } from 'strapi-helper-plugin';
+import { HeaderNav } from '@strapi/helper-plugin';
 import pluginId from '../../helpers/pluginId';
 
 const Tabs = () => {

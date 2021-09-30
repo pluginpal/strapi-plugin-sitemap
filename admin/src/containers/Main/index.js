@@ -7,7 +7,7 @@
 
 import React, { useEffect } from 'react';
 import { Switch, Route } from 'react-router-dom';
-import { NotFound } from 'strapi-helper-plugin';
+import { NotFound } from '@strapi/helper-plugin';
 import { useDispatch } from 'react-redux';
 
 import pluginId from '../../helpers/pluginId';

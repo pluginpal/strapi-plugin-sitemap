@@ -9,7 +9,7 @@ import { isEmpty } from 'lodash';
 import { Map } from 'immutable';
 import { Header } from '@buffetjs/custom';
 import { useDispatch, useSelector } from 'react-redux';
-import { useGlobalContext } from 'strapi-helper-plugin';
+import { useIntl } from 'react-intl';
 import openWithNewTab from '../../helpers/openWithNewTab';
 import { submit, discardAllChanges, generateSitemap } from '../../state/actions/Sitemap';
 
@@ -24,7 +24,7 @@ const HeaderComponent = () => {
     || settings.get('hostname') && !isEmpty(settings.get('customEntries'))
     || settings.get('hostname') && settings.get('includeHomepage');
 
-  const { formatMessage } = useGlobalContext();
+  const { formatMessage } = useIntl();
 
   const handleSubmit = (e) => {
     e.preventDefault();

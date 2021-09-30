@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 import { Inputs } from '@buffetjs/custom';
-import { useGlobalContext } from 'strapi-helper-plugin';
+import { useIntl } from 'react-intl';
 
 import SelectContentTypes from '../../SelectContentTypes';
 import HeaderModalNavContainer from '../../HeaderModalNavContainer';
@@ -14,7 +14,7 @@ const NAVLINKS = [{ id: 'base' }, { id: 'advanced' }];
 
 const CollectionForm = (props) => {
   const [tab, setTab] = useState('base');
-  const globalContext = useGlobalContext();
+  const { formatMessage } = useIntl();
 
   const {
     contentTypes,
@@ -45,9 +45,9 @@ const CollectionForm = (props) => {
     <div className="container-fluid">
       <section style={{ marginTop: 20 }}>
         <div style={{ position: 'relative' }}>
-          <h2><strong>{globalContext.formatMessage({ id: 'sitemap.Modal.Title' })}</strong></h2>
+          <h2><strong>{formatMessage({ id: 'sitemap.Modal.Title' })}</strong></h2>
           {!id && (
-            <p style={{ maxWidth: 500 }}>{globalContext.formatMessage({ id: `sitemap.Modal.CollectionDescription` })}</p>
+            <p style={{ maxWidth: 500 }}>{formatMessage({ id: `sitemap.Modal.CollectionDescription` })}</p>
           )}
           <HeaderModalNavContainer>
             {NAVLINKS.map((link, index) => {
@@ -87,7 +87,7 @@ const CollectionForm = (props) => {
                   }}
                   invalid={patternInvalid.invalid}
                   error={patternInvalid.message}
-                  label={globalContext.formatMessage({ id: 'sitemap.Settings.Field.Pattern.Label' })}
+                  label={formatMessage({ id: 'sitemap.Settings.Field.Pattern.Label' })}
                   placeholder="/en/pages/[id]"
                   name="pattern"
                   value={modifiedState.getIn([uid, 'pattern'], '')}

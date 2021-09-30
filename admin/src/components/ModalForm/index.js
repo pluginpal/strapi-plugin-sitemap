@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 import { Button, AttributeIcon } from '@buffetjs/core';
+import { useIntl } from 'react-intl';
 
 import {
   HeaderModal,
@@ -8,9 +9,8 @@ import {
   Modal,
   ModalBody,
   ModalFooter,
-  useGlobalContext,
   request,
-} from 'strapi-helper-plugin';
+} from '@strapi/helper-plugin';
 
 import CustomForm from './Custom';
 import CollectionForm from './Collection';
@@ -18,7 +18,7 @@ import CollectionForm from './Collection';
 const ModalForm = (props) => {
   const [uid, setUid] = useState('');
   const [patternInvalid, setPatternInvalid] = useState({ invalid: false });
-  const globalContext = useGlobalContext();
+  const { formatMessage } = useIntl();
 
   const {
     onSubmit,
@@ -84,7 +84,7 @@ const ModalForm = (props) => {
         <section style={{ alignItems: 'center' }}>
           <AttributeIcon type="enum" />
           <HeaderModalTitle style={{ marginLeft: 15 }}>
-            {globalContext.formatMessage({ id: 'sitemap.Modal.HeaderTitle' })} - {type}
+            {formatMessage({ id: 'sitemap.Modal.HeaderTitle' })} - {type}
           </HeaderModalTitle>
         </section>
       </HeaderModal>
@@ -97,7 +97,7 @@ const ModalForm = (props) => {
             color="cancel"
             onClick={() => onCancel()}
           >
-            {globalContext.formatMessage({ id: 'sitemap.Button.Cancel' })}
+            {formatMessage({ id: 'sitemap.Button.Cancel' })}
           </Button>
           <Button
             color="primary"
@@ -105,7 +105,7 @@ const ModalForm = (props) => {
             disabled={!uid}
             onClick={submitForm}
           >
-            {globalContext.formatMessage({ id: 'sitemap.Button.Save' })}
+            {formatMessage({ id: 'sitemap.Button.Save' })}
           </Button>
         </section>
       </ModalFooter>

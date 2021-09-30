@@ -1,49 +1,64 @@
-import React from 'react';
+import { prefixPluginTranslations } from '@strapi/helper-plugin';
 import pluginPkg from '../../package.json';
 import pluginId from './helpers/pluginId';
-import App from './containers/App';
-import Initializer from './containers/Initializer';
-import trads from './translations';
+import pluginLogo from './assets/images/logo.svg';
+import pluginPermissions from './permissions';
+import getTrad from './helpers/getTrad';
 
-function Comp(props) {
-  return <App {...props} />;
-}
-
-export default (strapi) => {
-  const pluginDescription = pluginPkg.strapi.description || pluginPkg.description;
+const pluginDescription = pluginPkg.strapi.description || pluginPkg.description;
   const { icon, name } = pluginPkg.strapi;
 
-  const plugin = {
-    icon,
-    name,
-    destination: `/plugins/${pluginId}`,
-    blockerComponent: null,
-    blockerComponentProps: {},
-    description: pluginDescription,
-    id: pluginId,
-    initializer: Initializer,
-    injectedComponents: [],
-    isReady: false,
-    layout: null,
-    leftMenuLinks: [],
-    leftMenuSections: [],
-    mainComponent: Comp,
-    preventComponentRendering: false,
-    trads,
-    menu: {
-      pluginsSectionLinks: [
-        {
-          destination: `/plugins/${pluginId}/url-patterns`, // Endpoint of the link
-          icon,
-          name,
-          label: {
-            id: `${pluginId}.plugin.name`, // Refers to a i18n
-            defaultMessage: 'Sitemap',
-          },
-        },
-      ],
-    },
-  };
+export default {
+  register(app) {
+    app.addMenuLink({
+      to: `/plugins/${pluginId}`,
+      icon,
+      intlLabel: {
+        id: `${pluginId}.plugin.name`,
+        defaultMessage: 'Sitemap',
+      },
+      Component: async () => {
+        const component = await import(
+          /* webpackChunkName: "sitemap-settings-page" */ './containers/App'
+        );
 
-  return strapi.registerPlugin(plugin);
+        return component;
+      },
+      permissions: [], // TODO: Add permission to view settings page.
+    });
+
+    app.registerPlugin({
+      description: pluginDescription,
+      icon,
+      id: pluginId,
+      isReady: true,
+      isRequired: pluginPkg.strapi.required || false,
+      name,
+      pluginLogo,
+    });
+  },
+  bootstrap() {},
+  async registerTrads({ locales }) {
+    const importedTrads = await Promise.all(
+      locales.map((locale) => {
+        return import(
+          /* webpackChunkName: "sitemap-translation-[request]" */ `./translations/${locale}.json`
+        )
+          .then(({ default: data }) => {
+            return {
+              data: prefixPluginTranslations(data, pluginId),
+              locale,
+            };
+          })
+          .catch(() => {
+            return {
+              data: {},
+              locale,
+            };
+          });
+      })
+    );
+
+    return Promise.resolve(importedTrads);
+  },
 };

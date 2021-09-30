@@ -1,11 +1,11 @@
 import React from 'react';
-import { useGlobalContext } from 'strapi-helper-plugin';
+import { useIntl } from 'react-intl';
 import { List } from '@buffetjs/custom';
 
 import CustomRow from './Row';
 
 const ListComponent = (props) => {
-  const globalContext = useGlobalContext();
+  const { formatMessage } = useIntl();
   const { items, openModal, title, subtitle, prependSlash } = props;
   const formattedItems = [];
 
@@ -29,7 +29,7 @@ const ListComponent = (props) => {
     button: {
       color: 'secondary',
       icon: true,
-      label: globalContext.formatMessage({ id: 'sitemap.Button.Add' }),
+      label: formatMessage({ id: 'sitemap.Button.Add' }),
       onClick: () => openModal(),
       type: 'button',
       hidden: items.size === 0,

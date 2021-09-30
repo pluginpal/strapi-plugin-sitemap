@@ -4,7 +4,7 @@
  *
  */
 
-export const __DEBUG__ = strapi.env === 'development';
+export const __DEBUG__ = true; // TODO: set actual env.
 
 export const SUBMIT = 'Sitemap/ConfigPage/SUBMIT';
 export const ON_SUBMIT_SUCCEEDED = 'Sitemap/ConfigPage/ON_SUBMIT_SUCCEEDED';

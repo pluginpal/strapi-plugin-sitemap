@@ -2,13 +2,13 @@ import React from 'react';
 import { Map } from 'immutable';
 import { useDispatch, useSelector } from 'react-redux';
 import { InputText, Label, Toggle } from '@buffetjs/core';
-import { useGlobalContext } from 'strapi-helper-plugin';
+import { useIntl } from 'react-intl';
 
 import { onChangeSettings } from '../../state/actions/Sitemap';
 import Wrapper from '../../components/Wrapper';
 
 const Settings = () => {
-  const { formatMessage } = useGlobalContext();
+  const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const settings = useSelector((state) => state.getIn(['sitemap', 'settings'], Map()));
 
