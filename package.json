@@ -10,6 +10,13 @@
     "required": false,
     "kind": "plugin"
   },
+  "files": [
+    "admin",
+    "server",
+    "public",
+    "strapi-admin.js",
+    "strapi-server.js"
+  ],
   "dependencies": {
     "@babel/runtime": "^7.0.0",
     "@buffetjs/core": "^3.3.8",
