@@ -153,10 +153,10 @@ const createSitemap = async () => {
   await writeSitemapFile('sitemap.xml', sitemap);
 };
 
-module.exports = {
+module.exports = () => ({
   getLanguageLinks,
   getSitemapPageData,
   createSitemapEntries,
   writeSitemapFile,
   createSitemap,
-};
+});

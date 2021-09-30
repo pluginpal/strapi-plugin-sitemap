@@ -34,7 +34,7 @@ const createDefaultConfig = async () => {
     .get({ key: 'settings' });
 };
 
-module.exports = {
+module.exports = () => ({
   getConfig: async () => {
     let config = await strapi
       .store({
@@ -50,4 +50,4 @@ module.exports = {
 
     return config;
   },
-};
+});

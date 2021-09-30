@@ -2,16 +2,21 @@
 
 const fs = require('fs');
 
+const { getService } = require('../utils');
+
 /**
  * Sitemap.js controller
  *
  * @description: A set of functions called "actions" of the `sitemap` plugin.
  */
 
+
 module.exports = {
   buildSitemap: async (ctx) => {
+    const sitemapService = getService('sitemap');
+
     // Generate the sitemap
-    await strapi.plugins.sitemap.services.sitemap.createSitemap();
+    await sitemapService.createSitemap();
 
     ctx.send({
       message: 'The sitemap has been generated.',
@@ -24,7 +29,8 @@ module.exports = {
   },
 
   getSettings: async (ctx) => {
-    const config = await strapi.plugins.sitemap.services.config.getConfig();
+    const configService = getService('config');
+    const config = await configService.getConfig();
 
     ctx.send(config);
   },
@@ -42,10 +48,11 @@ module.exports = {
   },
 
   allowedFields: async (ctx) => {
+    const patternService = getService('pattern');
     const formattedFields = {};
 
     Object.values(strapi.contentTypes).map(async (contentType) => {
-      const fields = await strapi.plugins.sitemap.services.pattern.getAllowedFields(contentType);
+      const fields = await patternService.getAllowedFields(contentType);
       formattedFields[contentType.modelName] = fields;
     });
 
@@ -53,13 +60,14 @@ module.exports = {
   },
 
   validatePattern: async (ctx) => {
+    const patternService = getService('pattern');
     const { pattern, modelName } = ctx.request.body;
 
     const contentType = Object.values(strapi.contentTypes)
       .find((strapiContentType) => strapiContentType.modelName === modelName);
 
-    const fields = await strapi.plugins.sitemap.services.pattern.getAllowedFields(contentType);
-    const validated = await strapi.plugins.sitemap.services.pattern.validatePattern(pattern, fields);
+    const fields = await patternService.getAllowedFields(contentType);
+    const validated = await patternService.validatePattern(pattern, fields);
 
     ctx.send(validated);
   },
