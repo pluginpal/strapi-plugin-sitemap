@@ -11,7 +11,3 @@ module.exports = () => ({
     // execute some bootstrap code
   },
 });
-
- 
-
- 
