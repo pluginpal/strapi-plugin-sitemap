@@ -1,11 +1,13 @@
 import React from 'react';
 import { Map } from 'immutable';
 import { useDispatch, useSelector } from 'react-redux';
-import { InputText, Label, Toggle } from '@buffetjs/core';
 import { useIntl } from 'react-intl';
 
+import { ToggleInput } from '@strapi/parts/ToggleInput';
+import { Grid, GridItem } from '@strapi/parts/Grid';
+import { TextInput } from '@strapi/parts/TextInput';
+
 import { onChangeSettings } from '../../state/actions/Sitemap';
-import Wrapper from '../../components/Wrapper';
 
 const Settings = () => {
   const { formatMessage } = useIntl();
@@ -13,52 +15,51 @@ const Settings = () => {
   const settings = useSelector((state) => state.getIn(['sitemap', 'settings'], Map()));
 
   return (
-    <Wrapper>
-      <div style={{ maxWidth: 500 }}>
-        <Label
-          htmlFor="hostname"
-          message={formatMessage({ id: 'sitemap.Settings.Field.Hostname.Label' })}
-        />
-        <InputText
-          name="hostname"
-          onChange={(e) => dispatch(onChangeSettings('hostname', e.target.value))}
+    <Grid gap={6}>
+      <GridItem col={6} s={12}>
+        <TextInput
           placeholder="https://www.strapi.io"
-          type="text"
+          label={formatMessage({ id: 'sitemap.Settings.Field.Hostname.Label' })}
+          name="hostname"
           value={settings.get('hostname')}
+          hint={formatMessage({ id: 'sitemap.Settings.Field.Hostname.Description' })}
+          onChange={(e) => dispatch(onChangeSettings('hostname', e.target.value))}
         />
-        <p style={{ color: '#9ea7b8', fontSize: 12, marginTop: 5 }}>
-          {formatMessage({ id: 'sitemap.Settings.Field.Hostname.Description' })}
-        </p>
-      </div>
-      <div style={{ marginTop: 20 }}>
-        <Label
-          htmlFor="includeHomepage"
-          message={formatMessage({ id: 'sitemap.Settings.Field.IncludeHomepage.Label' })}
+      </GridItem>
+      <GridItem col={12} s={12}>
+        <ToggleInput
+          hint={formatMessage({ id: 'sitemap.Settings.Field.IncludeHomepage.Description' })}
+          label={formatMessage({ id: 'sitemap.Settings.Field.IncludeHomepage.Label' })}
+          name="includeHomepage"
+          onLabel="on"
+          offLabel="off"
+          checked={settings.get('includeHomepage')}
+          onChange={(e) => dispatch(onChangeSettings('includeHomepage', e.target.checked))}
         />
-        <Toggle
-          name="toggle"
-          onChange={(e) => dispatch(onChangeSettings('includeHomepage', e.target.value))}
-          value={settings.get('includeHomepage')}
+      </GridItem>
+      <GridItem col={12} s={12}>
+        <ToggleInput
+          hint={formatMessage({ id: 'sitemap.Settings.Field.ExcludeDrafts.Description' })}
+          label={formatMessage({ id: 'sitemap.Settings.Field.ExcludeDrafts.Label' })}
+          name="excludeDrafts"
+          onLabel="on"
+          offLabel="off"
+          checked={settings.get('excludeDrafts')}
+          onChange={(e) => dispatch(onChangeSettings('excludeDrafts', e.target.checked))}
         />
-        <p style={{ color: '#9ea7b8', fontSize: 12, marginTop: 5 }}>
-          {formatMessage({ id: 'sitemap.Settings.Field.IncludeHomepage.Description' })}
-        </p>
-      </div>
-      <div style={{ marginTop: 20 }}>
-        <Label
-          htmlFor="excludeDrafts"
-          message={formatMessage({ id: 'sitemap.Settings.Field.ExcludeDrafts.Label' })}
+      </GridItem>
+      <GridItem col={12} s={12}>
+        <ToggleInput
+          hint={formatMessage({ id: 'sitemap.Settings.Field.AutoGenerate.Description' })}
+          label={formatMessage({ id: 'sitemap.Settings.Field.AutoGenerate.Label' })}
+          name="autoGenerate"
+          onLabel="on"
+          offLabel="off"
+          checked={settings.get('autoGenerate')}
+          onChange={(e) => dispatch(onChangeSettings('autoGenerate', e.target.checked))}
         />
-        <Toggle
-          name="toggle"
-          onChange={(e) => dispatch(onChangeSettings('excludeDrafts', e.target.value))}
-          value={settings.get('excludeDrafts')}
-        />
-        <p style={{ color: '#9ea7b8', fontSize: 12, marginTop: 5 }}>
-          {formatMessage({ id: 'sitemap.Settings.Field.ExcludeDrafts.Description' })}
-        </p>
-      </div>
-    </Wrapper>
+      </GridItem>
+    </Grid>
   );
 };
 

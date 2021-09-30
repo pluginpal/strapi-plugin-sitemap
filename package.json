@@ -16,6 +16,7 @@
     "@buffetjs/custom": "^3.3.8",
     "@buffetjs/styles": "^2.0.0",
     "@strapi/helper-plugin": "^4.0.0-beta.0",
+    "@strapi/parts": "^0.0.1-alpha.42",
     "immutable": "^4.0.0-rc.14",
     "lodash": "^4.17.11",
     "patch-package": "^6.4.7",
