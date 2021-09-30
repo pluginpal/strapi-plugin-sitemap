@@ -26,7 +26,6 @@
     "@strapi/parts": "^0.0.1-alpha.42",
     "immutable": "^4.0.0-rc.14",
     "lodash": "^4.17.11",
-    "patch-package": "^6.4.7",
     "postinstall-postinstall": "^2.1.0",
     "prop-types": "^15.5.10",
     "react": "^16.8.6",
@@ -39,7 +38,7 @@
     "redux-immutable": "^4.0.0",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.3.0",
-    "sitemap": "^6.1.0",
+    "sitemap": "boazpoolman/sitemap.js#build",
     "styled-components": "^5.2.3"
   },
   "author": {
@@ -66,8 +65,7 @@
   "scripts": {
     "eslint": "eslint --max-warnings=0 './**/*.{js,jsx}'",
     "eslint:fix": "eslint --fix './**/*.{js,jsx}'",
-    "test:unit": "jest --verbose",
-    "postinstall": "patch-package"
+    "test:unit": "jest --verbose"
   },
   "devDependencies": {
     "babel-eslint": "9.0.0",
