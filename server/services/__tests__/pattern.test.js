@@ -8,7 +8,7 @@ describe('Pattern service', () => {
     test('Should return an array of fieldnames extracted from a pattern', () => {
       const pattern = '/en/[category]/[slug]';
 
-      const result = patternService.getFieldsFromPattern(pattern);
+      const result = patternService().getFieldsFromPattern(pattern);
 
       expect(result).toEqual(['category', 'slug']);
     });
@@ -21,7 +21,7 @@ describe('Pattern service', () => {
         slug: 'my-page-slug',
       };
 
-      const result = await patternService.resolvePattern(pattern, entity);
+      const result = await patternService().resolvePattern(pattern, entity);
 
       expect(result).toMatch('/en/category-a/my-page-slug');
     });
@@ -32,7 +32,7 @@ describe('Pattern service', () => {
         slug: 'my-page-slug',
       };
 
-      const result = await patternService.resolvePattern(pattern, entity);
+      const result = await patternService().resolvePattern(pattern, entity);
 
       expect(result).toMatch('/en/my-page-slug');
     });
@@ -42,7 +42,7 @@ describe('Pattern service', () => {
       const pattern = '/en/[category]/[slug]';
       const allowedFieldNames = ['category', 'slug', 'id'];
 
-      const result = await patternService.validatePattern(pattern, allowedFieldNames);
+      const result = await patternService().validatePattern(pattern, allowedFieldNames);
 
       expect(result).toMatchObject({ valid: true });
     });
@@ -51,7 +51,7 @@ describe('Pattern service', () => {
       const pattern = '/en/[category]/[slug]';
       const allowedFieldNames = ['category', 'id'];
 
-      const result = await patternService.validatePattern(pattern, allowedFieldNames);
+      const result = await patternService().validatePattern(pattern, allowedFieldNames);
 
       expect(result).toMatchObject({ valid: false });
     });
@@ -60,7 +60,7 @@ describe('Pattern service', () => {
       const pattern = '/en/[category]/[slug';
       const allowedFieldNames = ['category', 'slug', 'id'];
 
-      const result = await patternService.validatePattern(pattern, allowedFieldNames);
+      const result = await patternService().validatePattern(pattern, allowedFieldNames);
 
       expect(result).toMatchObject({ valid: false });
     });
@@ -69,7 +69,7 @@ describe('Pattern service', () => {
       const pattern = '';
       const allowedFieldNames = ['category', 'slug', 'id'];
 
-      const result = await patternService.validatePattern(pattern, allowedFieldNames);
+      const result = await patternService().validatePattern(pattern, allowedFieldNames);
 
       expect(result).toMatchObject({ valid: false });
     });
@@ -78,7 +78,7 @@ describe('Pattern service', () => {
       const pattern = '/en/pages';
       const allowedFieldNames = ['category', 'slug', 'id'];
 
-      const result = await patternService.validatePattern(pattern, allowedFieldNames);
+      const result = await patternService().validatePattern(pattern, allowedFieldNames);
 
       expect(result).toMatchObject({ valid: false });
     });
