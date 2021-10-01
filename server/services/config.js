@@ -19,6 +19,7 @@ const createDefaultConfig = async () => {
     hostname: '',
     includeHomepage: true,
     excludeDrafts: true,
+    autoGenerate: true,
     contentTypes: Map({}),
     customEntries: Map({}),
   };

@@ -150,6 +150,8 @@ const createSitemap = async () => {
   sitemapEntries.map((sitemapEntry) => sitemap.write(sitemapEntry));
   sitemap.end();
 
+  strapi.log.info('Sitemap has been generated');
+
   await writeSitemapFile('sitemap.xml', sitemap);
 };
 
