@@ -8,13 +8,7 @@ import { Tr, Td } from '@strapi/parts/Table';
 import { Text } from '@strapi/parts/Text';
 import { IconButton } from '@strapi/parts/IconButton';
 
-const CustomRow = ({ prependSlash, openModal, entry }) => {
-  const styles = {
-    name: {
-      textTransform: !prependSlash ? 'capitalize' : 'none',
-    },
-  };
-
+const CustomRow = ({ openModal, entry }) => {
   const handleEditClick = (e) => {
     openModal(entry.name);
     e.stopPropagation();
@@ -46,32 +40,6 @@ const CustomRow = ({ prependSlash, openModal, entry }) => {
       </Td>
     </Tr>
   );
-
-  // return (
-  //   <tr>
-  //     <td>
-  //       <p style={styles.name}>{prependSlash && '/'}{name}</p>
-  //     </td>
-  //     <td>
-  //       <p>{changefreq}</p>
-  //     </td>
-  //     <td>
-  //       <p>{priority}</p>
-  //     </td>
-  //     <td>
-  //       <IconLinks links={[
-  //         {
-  //           icon: <FontAwesomeIcon icon={faPencilAlt} />,
-  //           onClick: handleEditClick,
-  //         },
-  //         {
-  //           icon: <FontAwesomeIcon icon={faTrash} />,
-  //           onClick: handleDeleteClick,
-  //         },
-  //       ]} />
-  //     </td>
-  //   </tr>
-  // );
 };
 
 export default CustomRow;

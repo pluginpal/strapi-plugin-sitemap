@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { useIntl } from 'react-intl';
 import { Map } from 'immutable';
 
 import { discardModifiedContentTypes, onChangeCustomEntry, submitModal, deleteCustomEntry } from '../../state/actions/Sitemap';
@@ -12,7 +11,6 @@ const CustomURLs = () => {
   const dispatch = useDispatch();
   const [modalOpen, setModalOpen] = useState(false);
   const [uid, setUid] = useState(null);
-  const { formatMessage } = useIntl();
 
   const handleModalSubmit = (e) => {
     e.preventDefault();
@@ -41,8 +39,6 @@ const CustomURLs = () => {
     <div>
       <List
         items={state.getIn(['settings', 'customEntries'])}
-        title={formatMessage({ id: `sitemap.Settings.CustomTitle` })}
-        subtitle={formatMessage({ id: `sitemap.Settings.CustomDescription` })}
         openModal={(editId) => handleModalOpen(editId)}
         onDelete={(key) => dispatch(deleteCustomEntry(key))}
         prependSlash

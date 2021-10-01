@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { useIntl } from 'react-intl';
 import { Map } from 'immutable';
 
 import { deleteContentType, discardModifiedContentTypes, onChangeContentTypes, submitModal } from '../../state/actions/Sitemap';
@@ -12,7 +11,6 @@ const CollectionURLs = () => {
   const dispatch = useDispatch();
   const [modalOpen, setModalOpen] = useState(false);
   const [uid, setUid] = useState(null);
-  const { formatMessage } = useIntl();
 
   const handleModalSubmit = (e) => {
     e.preventDefault();
@@ -41,8 +39,6 @@ const CollectionURLs = () => {
     <div>
       <List
         items={state.getIn(['settings', 'contentTypes'])}
-        title={formatMessage({ id: `sitemap.Settings.CollectionTitle` })}
-        subtitle={formatMessage({ id: `sitemap.Settings.CollectionDescription` })}
         openModal={(editId) => handleModalOpen(editId)}
         onDelete={(key) => dispatch(deleteContentType(key))}
       />

@@ -1,6 +1,5 @@
 'use strict';
 
-const { omit, pick } = require('lodash/fp');
 const { getService } = require('../utils');
 
 /**

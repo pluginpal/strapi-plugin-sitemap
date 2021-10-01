@@ -57,7 +57,7 @@ const CollectionForm = (props) => {
 
   return (
     <TabGroup label="Some stuff for the label" id="tabs" variant="simple">
-      <Tabs style={{ display: 'flex', justifyContent: 'flex-end', }}>
+      <Tabs style={{ display: 'flex', justifyContent: 'flex-end' }}>
         <Tab>Base settings</Tab>
         <Tab>Advanced settings</Tab>
       </Tabs>
