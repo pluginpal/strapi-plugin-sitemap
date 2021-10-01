@@ -6,7 +6,7 @@ module.exports = {
     {
       method: "GET",
       path: "/",
-      handler: "Sitemap.buildSitemap",
+      handler: "sitemap.buildSitemap",
       config: {
         policies: [],
       },
@@ -14,7 +14,7 @@ module.exports = {
     {
       method: "GET",
       path: "/presence",
-      handler: "Sitemap.hasSitemap",
+      handler: "sitemap.hasSitemap",
       config: {
         policies: [],
       },
@@ -22,7 +22,7 @@ module.exports = {
     {
       method: "GET",
       path: "/settings",
-      handler: "Sitemap.getSettings",
+      handler: "sitemap.getSettings",
       config: {
         policies: [],
       },
@@ -30,7 +30,7 @@ module.exports = {
     {
       method: "PUT",
       path: "/settings",
-      handler: "Sitemap.updateSettings",
+      handler: "sitemap.updateSettings",
       config: {
         policies: [],
       },
@@ -38,7 +38,7 @@ module.exports = {
     {
       method: "GET",
       path: "/pattern/allowed-fields",
-      handler: "Sitemap.allowedFields",
+      handler: "sitemap.allowedFields",
       config: {
         policies: [],
       },
@@ -46,7 +46,15 @@ module.exports = {
     {
       method: "POST",
       path: "/pattern/validate-pattern",
-      handler: "Sitemap.validatePattern",
+      handler: "sitemap.validatePattern",
+      config: {
+        policies: [],
+      },
+    },
+    {
+      method: "GET",
+      path: "/content-types",
+      handler: "sitemap.getContentTypes",
       config: {
         policies: [],
       },

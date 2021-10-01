@@ -28,7 +28,7 @@ const ListComponent = (props) => {
 
   return (
     <Box padding={8} background="neutral100">
-      <Table footer={<TFooter onClick={() => openModal()} icon={<AddIcon />}>Add another field to this collection type</TFooter>}>
+      <Table colCount={4} rowCount={formattedItems.length + 1} footer={<TFooter onClick={() => openModal()} icon={<AddIcon />}>Add another field to this collection type</TFooter>}>
         <Thead>
           <Tr>
             <Th>

@@ -30,7 +30,7 @@ const getLanguageLinks = async (page, contentType, pattern, defaultURL, excludeD
     const translationUrl = await strapi.plugins.sitemap.services.pattern.resolvePattern(pattern, translationEntity);
 
     // Exclude draft translations.
-    if (excludeDrafts && !translation.published_at) return null;
+    if (excludeDrafts && !translation.publishedAt) return null;
 
     links.push({
       lang: translationEntity.locale,
@@ -75,12 +75,12 @@ const createSitemapEntries = async () => {
 
   // Collection entries.
   await Promise.all(Object.keys(config.contentTypes).map(async (contentType) => {
-    const excludeDrafts = config.excludeDrafts && strapi.query(contentType).model.__schema__.options.draftAndPublish;
-    let pages = await strapi.query(contentType).find({ _limit: -1 });
+    const excludeDrafts = config.excludeDrafts && strapi.contentTypes[contentType].options.draftAndPublish;
+    let pages = await strapi.query(contentType).findMany({ _limit: -1 });
 
     // Remove draft pages.
     if (excludeDrafts) {
-      pages = pages.filter((page) => page.published_at);
+      pages = pages.filter((page) => page.publishedAt);
     }
 
     // Add formatted sitemap page data to the array.
@@ -127,7 +127,7 @@ const createSitemapEntries = async () => {
 const writeSitemapFile = (filename, sitemap) => {
   streamToPromise(sitemap)
     .then((sm) => {
-      fs.writeFile(`public/${filename}`, sm.toString(), (err) => {
+      fs.writeFile(`public/sitemap/${filename}`, sm.toString(), (err) => {
         if (err) throw err;
       });
     })
@@ -143,7 +143,7 @@ const createSitemap = async () => {
   const config = await strapi.plugins.sitemap.services.config.getConfig();
   const sitemap = new SitemapStream({
     hostname: config.hostname,
-    xslUrl: "/sitemap.xsl",
+    xslUrl: "xsl/sitemap.xsl",
   });
 
   const sitemapEntries = await createSitemapEntries();
@@ -152,7 +152,7 @@ const createSitemap = async () => {
 
   strapi.log.info('Sitemap has been generated');
 
-  await writeSitemapFile('sitemap.xml', sitemap);
+  await writeSitemapFile('index.xml', sitemap);
 };
 
 module.exports = () => ({

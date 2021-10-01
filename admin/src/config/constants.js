@@ -24,3 +24,4 @@ export const GET_CONTENT_TYPES_SUCCEEDED = 'Sitemap/ConfigPage/GET_CONTENT_TYPES
 export const HAS_SITEMAP = 'Sitemap/ConfigPage/HAS_SITEMAP';
 export const HAS_SITEMAP_SUCCEEDED = 'Sitemap/ConfigPage/HAS_SITEMAP_SUCCEEDED';
 export const ON_CHANGE_CUSTOM_ENTRY = 'Sitemap/ConfigPage/ON_CHANGE_CUSTOM_ENTRY';
+export const GET_ALLOWED_FIELDS_SUCCEEDED = 'Sitemap/ConfigPage/GET_ALLOWED_FIELDS_SUCCEEDED';

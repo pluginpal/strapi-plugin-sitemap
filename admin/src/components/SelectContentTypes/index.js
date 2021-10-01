@@ -35,9 +35,9 @@ const SelectContentTypes = (props) => {
       onChange={(newValue) => onChange(newValue)}
       value={value}
     >
-      {Object.keys(options).map((option) => (
-        <Option value={option} key={option}>{option}</Option>
-      ))}
+      {Object.entries(options).map(([uid, { displayName }]) => {
+        return <Option value={uid} key={uid}>{displayName}</Option>;
+      })}
     </Select>
   );
 

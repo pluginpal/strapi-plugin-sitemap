@@ -12,15 +12,9 @@ module.exports = () => ({
     const config = await getService('config').getConfig();
     const sitemapService = await getService('sitemap');
 
-    // TODO: Remove test config
-    const testConfig = {
-      'api::page.page': {},
-      'api::article.article': {},
-    };
-
     // Loop over configured contentTypes from store.
-    if (testConfig && config.autoGenerate) {
-      Object.keys(testConfig).map(async (contentType) => {
+    if (config.contentTypes && config.autoGenerate) {
+      Object.keys(config.contentTypes).map(async (contentType) => {
         if (strapi.contentTypes[contentType]) {
           await strapi.db.lifecycles.subscribe({
             models: [contentType],

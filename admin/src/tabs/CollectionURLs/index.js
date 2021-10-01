@@ -44,6 +44,7 @@ const CollectionURLs = () => {
       />
       <ModalForm
         contentTypes={state.get('contentTypes')}
+        allowedFields={state.get('allowedFields')}
         modifiedState={state.get('modifiedContentTypes')}
         onSubmit={(e) => handleModalSubmit(e)}
         onCancel={(closeModal) => handleModalClose(closeModal)}

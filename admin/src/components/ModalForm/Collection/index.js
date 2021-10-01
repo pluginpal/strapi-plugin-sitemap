@@ -16,6 +16,7 @@ const CollectionForm = (props) => {
 
   const {
     contentTypes,
+    allowedFields,
     onChange,
     onCancel,
     id,
@@ -39,12 +40,13 @@ const CollectionForm = (props) => {
   const patternHint = () => {
     const base = 'Create a dynamic URL pattern';
     let suffix = '';
-    if (contentTypes[uid]) {
+    console.log(allowedFields[uid]);
+    if (allowedFields[uid]) {
       suffix = ' using ';
-      contentTypes[uid].map((fieldName, i) => {
+      allowedFields[uid].map((fieldName, i) => {
         if (i === 0) {
           suffix = `${suffix}[${fieldName}]`;
-        } else if (contentTypes[uid].length !== i + 1) {
+        } else if (allowedFields[uid].length !== i + 1) {
           suffix = `${suffix}, [${fieldName}]`;
         } else {
           suffix = `${suffix} and [${fieldName}]`;
@@ -82,7 +84,7 @@ const CollectionForm = (props) => {
                     value={modifiedState.getIn([uid, 'pattern'], '')}
                     hint={patternHint()}
                     disabled={!uid}
-                    error={patternInvalid.invalid && patternInvalid.message}
+                    error={patternInvalid.invalid ? patternInvalid.message : ''}
                     placeholder="/en/pages/[id]"
                     onChange={async (e) => {
                       if (e.target.value.match(/^[A-Za-z0-9-_.~[\]/]*$/)) {

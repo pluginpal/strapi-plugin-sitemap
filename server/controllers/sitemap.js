@@ -35,6 +35,18 @@ module.exports = {
     ctx.send(config);
   },
 
+  getContentTypes: async (ctx) => {
+    const contentTypes = {};
+
+    Object.values(strapi.contentTypes).map(async (contentType) => {
+      contentTypes[contentType.uid] = {
+        displayName: contentType.globalId,
+      };
+    });
+
+    ctx.send(contentTypes);
+  },
+
   updateSettings: async (ctx) => {
     await strapi
       .store({
@@ -53,7 +65,7 @@ module.exports = {
 
     Object.values(strapi.contentTypes).map(async (contentType) => {
       const fields = await patternService.getAllowedFields(contentType);
-      formattedFields[contentType.modelName] = fields;
+      formattedFields[contentType.uid] = fields;
     });
 
     ctx.send(formattedFields);
@@ -63,8 +75,7 @@ module.exports = {
     const patternService = getService('pattern');
     const { pattern, modelName } = ctx.request.body;
 
-    const contentType = Object.values(strapi.contentTypes)
-      .find((strapiContentType) => strapiContentType.modelName === modelName);
+    const contentType = strapi.contentTypes[modelName];
 
     const fields = await patternService.getAllowedFields(contentType);
     const validated = await patternService.validatePattern(pattern, fields);

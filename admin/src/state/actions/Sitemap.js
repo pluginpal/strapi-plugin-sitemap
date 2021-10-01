@@ -22,6 +22,7 @@
   UPDATE_SETTINGS,
   HAS_SITEMAP_SUCCEEDED,
   ON_CHANGE_CUSTOM_ENTRY,
+  GET_ALLOWED_FIELDS_SUCCEEDED,
 } from '../../config/constants';
 
 import getTrad from '../../helpers/getTrad';
@@ -105,7 +106,7 @@ export function generateSitemap() {
 export function getContentTypes() {
   return async function(dispatch) {
     try {
-      const contentTypes = await request('/sitemap/pattern/allowed-fields', { method: 'GET' });
+      const contentTypes = await request('/sitemap/content-types/', { method: 'GET' });
       dispatch(getContentTypesSucceeded(contentTypes));
     } catch (err) {
       strapi.notification.toggle({ type: 'warning', message: { id: 'notification.error' } });
@@ -173,5 +174,23 @@ export function hasSitemapSucceeded(main) {
   return {
     type: HAS_SITEMAP_SUCCEEDED,
     hasSitemap: main,
+  };
+}
+
+export function getAllowedFields() {
+  return async function(dispatch) {
+    try {
+      const fields = await request('/sitemap/pattern/allowed-fields/', { method: 'GET' });
+      dispatch(getAllowedFieldsSucceeded(fields));
+    } catch (err) {
+      strapi.notification.toggle({ type: 'warning', message: { id: 'notification.error' } });
+    }
+  };
+}
+
+export function getAllowedFieldsSucceeded(fields) {
+  return {
+    type: GET_ALLOWED_FIELDS_SUCCEEDED,
+    fields,
   };
 }

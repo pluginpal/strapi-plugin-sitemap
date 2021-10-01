@@ -20,10 +20,12 @@ import {
   UPDATE_SETTINGS,
   HAS_SITEMAP_SUCCEEDED,
   ON_CHANGE_CUSTOM_ENTRY,
+  GET_ALLOWED_FIELDS_SUCCEEDED,
 } from '../../../config/constants';
 
 const initialState = fromJS({
   sitemapPresence: false,
+  allowedFields: {},
   settings: Map({}),
   contentTypes: {},
   initialData: Map({}),
@@ -86,6 +88,9 @@ export default function sitemapReducer(state = initialState, action) {
     case HAS_SITEMAP_SUCCEEDED:
       return state
         .update('sitemapPresence', () => action.hasSitemap);
+    case GET_ALLOWED_FIELDS_SUCCEEDED:
+      return state
+        .update('allowedFields', () => action.fields);
     default:
       return state;
   }
