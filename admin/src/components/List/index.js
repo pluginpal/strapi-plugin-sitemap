@@ -1,19 +1,11 @@
 import React from 'react';
 import { useIntl } from 'react-intl';
-import { List } from '@buffetjs/custom';
 
-import EditIcon from '@strapi/icons/EditIcon';
-import DeleteIcon from '@strapi/icons/DeleteIcon';
-import DropdownIcon from '@strapi/icons/FilterDropdown';
 import AddIcon from '@strapi/icons/AddIcon';
 import { Box } from '@strapi/parts/Box';
-import { Row } from '@strapi/parts/Row';
 import { VisuallyHidden } from '@strapi/parts/VisuallyHidden';
-import { BaseCheckbox } from '@strapi/parts/BaseCheckbox';
-import { Table, Thead, Tbody, Tr, Td, Th, TFooter } from '@strapi/parts/Table';
-import { Text, TableLabel } from '@strapi/parts/Text';
-import { Avatar } from '@strapi/parts/Avatar';
-import { IconButton } from '@strapi/parts/IconButton';
+import { Table, Thead, Tbody, Tr, Th, TFooter } from '@strapi/parts/Table';
+import { TableLabel } from '@strapi/parts/Text';
 
 import CustomRow from './Row';
 

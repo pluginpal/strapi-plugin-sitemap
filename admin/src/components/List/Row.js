@@ -1,24 +1,12 @@
 import React from 'react';
-import { IconLinks } from '@buffetjs/core';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import EditIcon from '@strapi/icons/EditIcon';
 import DeleteIcon from '@strapi/icons/DeleteIcon';
-import DropdownIcon from '@strapi/icons/FilterDropdown';
-import AddIcon from '@strapi/icons/AddIcon';
 import { Box } from '@strapi/parts/Box';
 import { Row } from '@strapi/parts/Row';
-import { VisuallyHidden } from '@strapi/parts/VisuallyHidden';
-import { BaseCheckbox } from '@strapi/parts/BaseCheckbox';
-import { Table, Thead, Tbody, Tr, Td, Th, TFooter } from '@strapi/parts/Table';
-import { Text, TableLabel } from '@strapi/parts/Text';
-import { Avatar } from '@strapi/parts/Avatar';
+import { Tr, Td } from '@strapi/parts/Table';
+import { Text } from '@strapi/parts/Text';
 import { IconButton } from '@strapi/parts/IconButton';
-
-import {
-  faTrash,
-  faPencilAlt,
-} from '@fortawesome/free-solid-svg-icons';
 
 const CustomRow = ({ prependSlash, openModal, entry }) => {
   const styles = {

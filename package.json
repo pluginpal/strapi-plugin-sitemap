@@ -19,9 +19,6 @@
   ],
   "dependencies": {
     "@babel/runtime": "^7.0.0",
-    "@buffetjs/core": "^3.3.8",
-    "@buffetjs/custom": "^3.3.8",
-    "@buffetjs/styles": "^2.0.0",
     "@strapi/helper-plugin": "^4.0.0-beta.0",
     "@strapi/parts": "^0.0.1-alpha.42",
     "immutable": "^4.0.0-rc.14",

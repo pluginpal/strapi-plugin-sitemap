@@ -9,7 +9,9 @@ import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 
 import Tabs from '../../components/Tabs';
-import Header from '../../components/New/Header';
+import Header from '../../components/Header';
+import Info from '../../components/Info';
+
 import { getContentTypes, getSettings, hasSitemap } from '../../state/actions/Sitemap';
 
 const App = () => {
@@ -24,6 +26,7 @@ const App = () => {
   return (
     <div>
       <Header />
+      <Info />
       <Tabs />
     </div>
   );
