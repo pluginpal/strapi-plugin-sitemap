@@ -56,7 +56,7 @@ const getSitemapPageData = async (page, contentType, excludeDrafts) => {
   const url = await strapi.plugins.sitemap.services.pattern.resolvePattern(pattern, page);
 
   return {
-    lastmod: page.updated_at,
+    lastmod: page.updatedAt,
     url: url,
     links: await getLanguageLinks(page, contentType, pattern, url, excludeDrafts),
     changefreq: config.contentTypes[contentType].changefreq,
