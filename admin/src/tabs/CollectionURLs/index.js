@@ -1,15 +1,11 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useIntl } from 'react-intl';
-import { Button } from '@buffetjs/core';
 import { Map } from 'immutable';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
 import { deleteContentType, discardModifiedContentTypes, onChangeContentTypes, submitModal } from '../../state/actions/Sitemap';
 import List from '../../components/List';
 import ModalForm from '../../components/ModalForm';
-import Wrapper from '../../components/Wrapper';
 
 const CollectionURLs = () => {
   const state = useSelector((store) => store.get('sitemap', Map()));
@@ -50,15 +46,6 @@ const CollectionURLs = () => {
         openModal={(editId) => handleModalOpen(editId)}
         onDelete={(key) => dispatch(deleteContentType(key))}
       />
-      <Wrapper>
-        <Button
-          color="secondary"
-          icon={<FontAwesomeIcon icon={faPlus} />}
-          label={formatMessage({ id: 'sitemap.Button.Add' })}
-          onClick={() => setModalOpen(!modalOpen)}
-          hidden={state.getIn(['settings', 'contentTypes']).size}
-        />
-      </Wrapper>
       <ModalForm
         contentTypes={state.get('contentTypes')}
         modifiedState={state.get('modifiedContentTypes')}

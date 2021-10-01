@@ -1,16 +1,10 @@
 import React, { useState, useEffect } from 'react';
-
-import { Button, AttributeIcon } from '@buffetjs/core';
 import { useIntl } from 'react-intl';
 
-import {
-  HeaderModal,
-  HeaderModalTitle,
-  Modal,
-  ModalBody,
-  ModalFooter,
-  request,
-} from '@strapi/helper-plugin';
+import { request } from '@strapi/helper-plugin';
+import { ModalLayout, ModalFooter, ModalBody, ModalHeader } from '@strapi/parts/ModalLayout';
+import { ButtonText } from '@strapi/parts/Text';
+import { Button } from '@strapi/parts/Button';
 
 import CustomForm from './Custom';
 import CollectionForm from './Collection';
@@ -39,12 +33,9 @@ const ModalForm = (props) => {
     }
   }, [isOpen]);
 
-  // Styles
-  const modalBodyStyle = {
-    paddingTop: '0.5rem',
-    paddingBottom: '3rem',
-    position: 'relative',
-  };
+  if (!isOpen) {
+    return null;
+  }
 
   const submitForm = async (e) => {
     if (type === 'collection') {
@@ -74,42 +65,34 @@ const ModalForm = (props) => {
   };
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onClosed={() => onCancel()}
-      onToggle={() => onCancel()}
-      withoverflow="displayName"
+    <ModalLayout
+      onClose={() => onCancel()}
+      labelledBy="title"
     >
-      <HeaderModal>
-        <section style={{ alignItems: 'center' }}>
-          <AttributeIcon type="enum" />
-          <HeaderModalTitle style={{ marginLeft: 15 }}>
-            {formatMessage({ id: 'sitemap.Modal.HeaderTitle' })} - {type}
-          </HeaderModalTitle>
-        </section>
-      </HeaderModal>
-      <ModalBody style={modalBodyStyle}>
+      <ModalHeader>
+        <ButtonText textColor="neutral800" as="h2" id="title">
+          {formatMessage({ id: 'sitemap.Modal.HeaderTitle' })} - {type}
+        </ButtonText>
+      </ModalHeader>
+      <ModalBody>
         {form()}
       </ModalBody>
-      <ModalFooter>
-        <section style={{ alignItems: 'center' }}>
-          <Button
-            color="cancel"
-            onClick={() => onCancel()}
-          >
+      <ModalFooter
+        startActions={(
+          <Button onClick={() => onCancel()} variant="tertiary">
             {formatMessage({ id: 'sitemap.Button.Cancel' })}
           </Button>
+        )}
+        endActions={(
           <Button
-            color="primary"
-            style={{ marginLeft: 'auto' }}
-            disabled={!uid}
             onClick={submitForm}
+            disabled={!uid}
           >
             {formatMessage({ id: 'sitemap.Button.Save' })}
           </Button>
-        </section>
-      </ModalFooter>
-    </Modal>
+        )}
+      />
+    </ModalLayout>
   );
 };
 

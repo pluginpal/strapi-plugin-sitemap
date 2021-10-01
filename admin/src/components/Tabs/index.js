@@ -1,9 +1,9 @@
 import React from 'react';
 import { Tabs, Tab, TabGroup, TabPanels, TabPanel } from '@strapi/parts/Tabs';
 import { Box } from '@strapi/parts/Box';
-import CollectionURLs from '../../screens/CollectionURLs';
-import CustomURLs from '../../screens/CustomURLs';
-import Settings from '../../screens/Settings';
+import CollectionURLs from '../../tabs/CollectionURLs';
+import CustomURLs from '../../tabs/CustomURLs';
+import Settings from '../../tabs/Settings';
 
 const SitemapTabs = () => {
   return (
@@ -17,12 +17,12 @@ const SitemapTabs = () => {
         <TabPanels>
           <TabPanel>
             <Box padding={4} background="neutral0">
-              1
+              <CollectionURLs />
             </Box>
           </TabPanel>
           <TabPanel>
             <Box padding={4} background="neutral0">
-              2
+              <CustomURLs />
             </Box>
           </TabPanel>
           <TabPanel>

@@ -1,15 +1,11 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useIntl } from 'react-intl';
-import { Button } from '@buffetjs/core';
 import { Map } from 'immutable';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
 import { discardModifiedContentTypes, onChangeCustomEntry, submitModal, deleteCustomEntry } from '../../state/actions/Sitemap';
 import List from '../../components/List';
 import ModalForm from '../../components/ModalForm';
-import Wrapper from '../../components/Wrapper';
 
 const CustomURLs = () => {
   const state = useSelector((store) => store.get('sitemap', Map()));
@@ -51,15 +47,6 @@ const CustomURLs = () => {
         onDelete={(key) => dispatch(deleteCustomEntry(key))}
         prependSlash
       />
-      <Wrapper>
-        <Button
-          color="primary"
-          icon={<FontAwesomeIcon icon={faPlus} />}
-          label={formatMessage({ id: 'sitemap.Button.AddURL' })}
-          onClick={() => setModalOpen(!modalOpen)}
-          hidden={state.getIn(['settings', 'customEntries']).size}
-        />
-      </Wrapper>
       <ModalForm
         modifiedState={state.get('modifiedCustomEntries')}
         isOpen={modalOpen}
