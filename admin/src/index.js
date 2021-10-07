@@ -2,6 +2,7 @@ import { prefixPluginTranslations } from '@strapi/helper-plugin';
 import pluginPkg from '../../package.json';
 import pluginId from './helpers/pluginId';
 import pluginLogo from './assets/images/logo.svg';
+import CMEditViewExclude from './components/CMEditViewExclude';
 // import pluginPermissions from './permissions';
 // import getTrad from './helpers/getTrad';
 
@@ -10,6 +11,16 @@ const pluginDescription = pluginPkg.strapi.description || pluginPkg.description;
 
 export default {
   register(app) {
+    app.registerPlugin({
+      description: pluginDescription,
+      icon,
+      id: pluginId,
+      isReady: true,
+      isRequired: pluginPkg.strapi.required || false,
+      name,
+      pluginLogo,
+    });
+
     app.addMenuLink({
       to: `/plugins/${pluginId}`,
       icon,
@@ -26,18 +37,13 @@ export default {
       },
       permissions: [], // TODO: Add permission to view settings page.
     });
-
-    app.registerPlugin({
-      description: pluginDescription,
-      icon,
-      id: pluginId,
-      isReady: true,
-      isRequired: pluginPkg.strapi.required || false,
-      name,
-      pluginLogo,
+  },
+  bootstrap(app) {
+    app.injectContentManagerComponent('editView', 'informations', {
+      name: 'sitemap-exclude-filter-edit-view',
+      Component: CMEditViewExclude,
     });
   },
-  bootstrap() {},
   async registerTrads({ locales }) {
     const importedTrads = await Promise.all(
       locales.map((locale) => {

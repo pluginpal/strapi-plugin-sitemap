@@ -24,7 +24,7 @@ module.exports = {
   },
 
   hasSitemap: async (ctx) => {
-    const hasSitemap = fs.existsSync('public/sitemap.xml');
+    const hasSitemap = fs.existsSync('public/sitemap/index.xml');
     ctx.send({ main: hasSitemap });
   },
 
@@ -55,6 +55,36 @@ module.exports = {
         name: 'sitemap',
       })
       .set({ key: 'settings', value: ctx.request.body });
+
+    ctx.send({ ok: true });
+  },
+
+  excludeEntry: async (ctx) => {
+    const { model, id } = ctx.request.body;
+
+    const configService = getService('config');
+    const config = await configService.getConfig();
+
+    if (!config.contentTypes[model].excluded) {
+      config.contentTypes[model].excluded = [];
+    }
+
+    if (config.contentTypes[model].excluded.includes(id)) {
+      const index = config.contentTypes[model].excluded.indexOf(id);
+      if (index !== -1) {
+        config.contentTypes[model].excluded.splice(index, 1);
+      }
+    } else {
+      config.contentTypes[model].excluded.push(id);
+    }
+
+    await strapi
+      .store({
+        environment: '',
+        type: 'plugin',
+        name: 'sitemap',
+      })
+      .set({ key: 'settings', value: config });
 
     ctx.send({ ok: true });
   },

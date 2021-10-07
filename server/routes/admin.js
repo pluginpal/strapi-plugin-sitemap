@@ -36,6 +36,14 @@ module.exports = {
       },
     },
     {
+      method: "PUT",
+      path: "/settings/exclude",
+      handler: "sitemap.excludeEntry",
+      config: {
+        policies: [],
+      },
+    },
+    {
       method: "GET",
       path: "/pattern/allowed-fields",
       handler: "sitemap.allowedFields",
