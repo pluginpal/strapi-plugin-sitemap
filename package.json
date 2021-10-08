@@ -14,13 +14,14 @@
     "eslint": "eslint --max-warnings=0 './**/*.{js,jsx}'",
     "eslint:fix": "eslint --fix './**/*.{js,jsx}'",
     "test:unit": "jest --verbose",
-    "postinstall": "install-peers"
+    "postinstall": "if test \"$NODE_ENV\" = \"ci\" ; then install-peers ; fi "
   },
   "dependencies": {
     "redux-thunk": "^2.3.0",
     "sitemap": "boazpoolman/sitemap.js#build"
   },
   "peerDependencies": {
+    "@strapi/helper-plugin": "4.0.0-beta.2",
     "@strapi/icons": "^0.0.1-alpha.42",
     "@strapi/parts": "^0.0.1-alpha.42",
     "immutable": "^4.0.0-rc.14",
