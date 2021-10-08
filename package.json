@@ -1,6 +1,6 @@
 {
   "name": "strapi-plugin-sitemap",
-  "version": "2.0.0-beta.0",
+  "version": "2.0.0-beta.1",
   "description": "A plugin for Strapi to create a customizable sitemap.",
   "strapi": {
     "displayName": "Sitemap",
@@ -42,14 +42,6 @@
     "@strapi/helper-plugin": "4.0.0-beta.2",
     "@strapi/icons": "^0.0.1-alpha.42",
     "@strapi/parts": "^0.0.1-alpha.42",
-    "immutable": "^4.0.0-rc.14",
-    "lodash": "^4.17.11",
-    "react": "^16.8.6",
-    "react-intl": "^5.20.12",
-    "react-redux": "^7.2.2",
-    "redux": "^4.0.5",
-    "redux-immutable": "^4.0.0",
-    "styled-components": "^5.2.3",
     "babel-eslint": "9.0.0",
     "codecov": "^3.8.3",
     "eslint": "^5.16.0",
@@ -63,9 +55,17 @@
     "eslint-plugin-jsx-a11y": "^6.4.1",
     "eslint-plugin-react": "^7.21.5",
     "eslint-plugin-react-hooks": "^2.3.0",
+    "immutable": "^4.0.0-rc.14",
     "jest": "^26.0.1",
     "jest-cli": "^26.0.1",
-    "jest-styled-components": "^7.0.2"
+    "jest-styled-components": "^7.0.2",
+    "lodash": "^4.17.11",
+    "react": "^16.8.6",
+    "react-intl": "^5.20.12",
+    "react-redux": "^7.2.2",
+    "redux": "^4.0.5",
+    "redux-immutable": "^4.0.0",
+    "styled-components": "^5.2.3"
   },
   "bugs": {
     "url": "https://github.com/boazpoolman/strapi-plugin-sitemap/issues"
