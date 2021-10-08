@@ -35,6 +35,7 @@ const CollectionForm = (props) => {
     Object.keys(form).map((input) => {
       onChange(contentType, input, form[input].value);
     });
+    onChange(contentType, 'excluded', []);
   };
 
   const patternHint = () => {

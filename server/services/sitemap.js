@@ -76,12 +76,17 @@ const createSitemapEntries = async () => {
   // Collection entries.
   await Promise.all(Object.keys(config.contentTypes).map(async (contentType) => {
     const excludeDrafts = config.excludeDrafts && strapi.contentTypes[contentType].options.draftAndPublish;
-    let pages = await strapi.query(contentType).findMany({ _limit: -1 });
-
-    // Remove draft pages.
-    if (excludeDrafts) {
-      pages = pages.filter((page) => page.publishedAt);
-    }
+    const pages = await strapi.query(contentType).findMany({
+      where: {
+        id: {
+          $notIn: config.contentTypes[contentType].excluded,
+        },
+        publishedAt: {
+          $notNull: excludeDrafts,
+        },
+      },
+      limit: 0,
+    });
 
     // Add formatted sitemap page data to the array.
     await Promise.all(pages.map(async (page) => {
