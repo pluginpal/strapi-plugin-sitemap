@@ -108,7 +108,7 @@ const createSitemapEntries = async () => {
   if (config.includeHomepage) {
     const hasHomePage = !isEmpty(sitemapEntries.filter((entry) => entry.url === ''));
 
-    // Only add it when no other '/' entry in present.
+    // Only add it when no other '/' entry is present.
     if (!hasHomePage) {
       sitemapEntries.push({
         url: '/',
@@ -125,7 +125,7 @@ const createSitemapEntries = async () => {
  * Write the sitemap xml file in the public folder.
  *
  * @param {string} filename - The file name.
- * @param {object} sitemap - The SitemapStream instance.
+ * @param {SitemapStream} sitemap - The SitemapStream instance.
  *
  * @returns {void}
  */
