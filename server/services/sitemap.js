@@ -20,17 +20,29 @@ const fs = require('fs');
  * @returns {array} The language links.
  */
 const getLanguageLinks = async (page, contentType, pattern, defaultURL, excludeDrafts) => {
+  const config = await strapi.plugins.sitemap.services.config.getConfig();
   if (!page.localizations) return null;
 
   const links = [];
   links.push({ lang: page.locale, url: defaultURL });
 
   await Promise.all(page.localizations.map(async (translation) => {
-    const translationEntity = await strapi.query(contentType).findOne({ id: translation.id });
-    const translationUrl = await strapi.plugins.sitemap.services.pattern.resolvePattern(pattern, translationEntity);
+    const translationEntity = await strapi.query(contentType).findOne({
+      where: {
+        $and: [
+          { id: translation.id },
+          { id: { $notIn: config.contentTypes[contentType].excluded } },
+        ],
+        id: translation.id,
+        publishedAt: {
+          $notNull: excludeDrafts,
+        },
+      },
+      populate: ['localizations'],
+    });
 
-    // Exclude draft translations.
-    if (excludeDrafts && !translation.publishedAt) return null;
+    if (!translationEntity) return null;
+    const translationUrl = await strapi.plugins.sitemap.services.pattern.resolvePattern(pattern, translationEntity);
 
     links.push({
       lang: translationEntity.locale,
@@ -85,6 +97,7 @@ const createSitemapEntries = async () => {
           $notNull: excludeDrafts,
         },
       },
+      populate: ['localizations'],
       limit: 0,
     });
 
