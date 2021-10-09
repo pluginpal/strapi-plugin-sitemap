@@ -51,7 +51,7 @@ export default function sitemapReducer(state = initialState, action) {
           .updateIn(['settings', 'contentTypes'], () => fromJS(action.settings.get('contentTypes')));
     case ON_CHANGE_CONTENT_TYPES:
       return state
-        .updateIn(['modifiedContentTypes', action.contentType, action.key], () => action.value);
+        .updateIn(['modifiedContentTypes', action.contentType, action.lang, action.key], () => action.value);
     case ON_CHANGE_CUSTOM_ENTRY:
       return state
         .updateIn(['modifiedCustomEntries', action.url, action.key], () => action.value);
@@ -73,8 +73,8 @@ export default function sitemapReducer(state = initialState, action) {
         .updateIn(['settings', 'customEntries'], () => state.get('modifiedCustomEntries'));
     case DELETE_CONTENT_TYPE:
       return state
-        .deleteIn(['settings', 'contentTypes', action.key])
-        .deleteIn(['modifiedContentTypes', action.key]);
+        .deleteIn(['settings', 'contentTypes', action.key, action.lang])
+        .deleteIn(['modifiedContentTypes', action.key, action.lang]);
     case DELETE_CUSTOM_ENTRY:
       return state
         .deleteIn(['settings', 'customEntries', action.key])

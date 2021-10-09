@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Map } from 'immutable';
 
 import { discardModifiedContentTypes, onChangeCustomEntry, submitModal, deleteCustomEntry } from '../../state/actions/Sitemap';
-import List from '../../components/List';
+import List from '../../components/List/Custom';
 import ModalForm from '../../components/ModalForm';
 
 const CustomURLs = () => {

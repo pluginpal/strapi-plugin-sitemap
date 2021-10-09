@@ -11,6 +11,7 @@ import CollectionForm from './Collection';
 
 const ModalForm = (props) => {
   const [uid, setUid] = useState('');
+  const [langcode, setLangcode] = useState('und');
   const [patternInvalid, setPatternInvalid] = useState({ invalid: false });
   const { formatMessage } = useIntl();
 
@@ -19,8 +20,10 @@ const ModalForm = (props) => {
     onCancel,
     isOpen,
     id,
+    lang,
     type,
     modifiedState,
+    contentTypes,
   } = props;
 
   useEffect(() => {
@@ -31,6 +34,12 @@ const ModalForm = (props) => {
     } else {
       setUid('');
     }
+    if (lang && langcode === 'und') {
+      setLangcode(lang);
+    } else {
+      setLangcode('und');
+    }
+
   }, [isOpen]);
 
   if (!isOpen) {
@@ -42,7 +51,7 @@ const ModalForm = (props) => {
       const response = await request('/sitemap/pattern/validate-pattern', {
         method: 'POST',
         body: {
-          pattern: modifiedState.getIn([uid, 'pattern'], null),
+          pattern: modifiedState.getIn([uid, langcode, 'pattern'], null),
           modelName: uid,
         },
       });
@@ -56,7 +65,7 @@ const ModalForm = (props) => {
   const form = () => {
     switch (type) {
       case 'collection':
-        return <CollectionForm uid={uid} setUid={setUid} setPatternInvalid={setPatternInvalid} patternInvalid={patternInvalid} {...props} />;
+        return <CollectionForm uid={uid} setUid={setUid} langcode={langcode} setLangcode={setLangcode} setPatternInvalid={setPatternInvalid} patternInvalid={patternInvalid} {...props} />;
       case 'custom':
         return <CustomForm uid={uid} setUid={setUid} {...props} />;
       default:
@@ -86,7 +95,7 @@ const ModalForm = (props) => {
         endActions={(
           <Button
             onClick={submitForm}
-            disabled={!uid}
+            disabled={!uid || (contentTypes[uid].locales && langcode === 'und')}
           >
             {formatMessage({ id: 'sitemap.Button.Save' })}
           </Button>

@@ -1,7 +1,7 @@
 {
   "name": "strapi-plugin-sitemap",
   "version": "2.0.0-beta.1",
-  "description": "A plugin for Strapi to create a customizable sitemap.",
+  "description": "A plugin for Strapi to create a customizable sitemap XML.",
   "strapi": {
     "displayName": "Sitemap",
     "name": "sitemap",
@@ -42,6 +42,7 @@
     "@strapi/helper-plugin": "4.0.0-beta.2",
     "@strapi/icons": "^0.0.1-alpha.42",
     "@strapi/parts": "^0.0.1-alpha.42",
+    "@strapi/utils": "4.0.0-beta.2",
     "babel-eslint": "9.0.0",
     "codecov": "^3.8.3",
     "eslint": "^5.16.0",

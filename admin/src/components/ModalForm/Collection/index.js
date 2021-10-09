@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { useIntl } from 'react-intl';
 
@@ -10,6 +10,7 @@ import { Tabs, Tab, TabGroup, TabPanels, TabPanel } from '@strapi/parts/Tabs';
 import SelectContentTypes from '../../SelectContentTypes';
 
 import form from '../mapper';
+import SelectLanguage from '../../SelectLanguage';
 
 const CollectionForm = (props) => {
   const { formatMessage } = useIntl();
@@ -23,25 +24,31 @@ const CollectionForm = (props) => {
     modifiedState,
     uid,
     setUid,
+    langcode,
+    setLangcode,
     patternInvalid,
     setPatternInvalid,
   } = props;
 
-  const handleSelectChange = (contentType) => {
+  console.log(id);
+
+  const handleSelectChange = (contentType, lang = 'und') => {
+    setLangcode(lang);
     setUid(contentType);
+
+    console.log('contentType', contentType);
 
     // Set initial values
     onCancel(false);
     Object.keys(form).map((input) => {
-      onChange(contentType, input, form[input].value);
+      onChange(contentType, lang, input, form[input].value);
     });
-    onChange(contentType, 'excluded', []);
+    onChange(contentType, lang, 'excluded', []);
   };
 
   const patternHint = () => {
     const base = 'Create a dynamic URL pattern';
     let suffix = '';
-    console.log(allowedFields[uid]);
     if (allowedFields[uid]) {
       suffix = ' using ';
       allowedFields[uid].map((fieldName, i) => {
@@ -74,6 +81,11 @@ const CollectionForm = (props) => {
               disabled={id}
               modifiedContentTypes={modifiedState}
             />
+            <SelectLanguage
+              contentType={contentTypes[uid]}
+              onChange={(value) => handleSelectChange(uid, value)}
+              value={langcode}
+            />
           </GridItem>
           <GridItem col={6} s={12}>
             <TabPanels>
@@ -82,14 +94,14 @@ const CollectionForm = (props) => {
                   <TextInput
                     label={formatMessage({ id: 'sitemap.Settings.Field.Pattern.Label' })}
                     name="pattern"
-                    value={modifiedState.getIn([uid, 'pattern'], '')}
+                    value={modifiedState.getIn([uid, langcode, 'pattern'], '')}
                     hint={patternHint()}
-                    disabled={!uid}
+                    disabled={!uid || (contentTypes[uid].locales && langcode === 'und')}
                     error={patternInvalid.invalid ? patternInvalid.message : ''}
                     placeholder="/en/pages/[id]"
                     onChange={async (e) => {
                       if (e.target.value.match(/^[A-Za-z0-9-_.~[\]/]*$/)) {
-                        onChange(uid, 'pattern', e.target.value);
+                        onChange(uid, langcode, 'pattern', e.target.value);
                         setPatternInvalid({ invalid: false });
                       }
                     }}
@@ -102,9 +114,9 @@ const CollectionForm = (props) => {
                     name={input}
                     key={input}
                     {...form[input]}
-                    disabled={!uid}
-                    onChange={(value) => onChange(uid, input, value)}
-                    value={modifiedState.getIn([uid, input], form[input].value)}
+                    disabled={!uid || (contentTypes[uid].locales && langcode === 'und')}
+                    onChange={(value) => onChange(uid, langcode, input, value)}
+                    value={modifiedState.getIn([uid, langcode, input], form[input].value)}
                   >
                     {form[input].options.map((option) => (
                       <Option value={option} key={option}>{option}</Option>

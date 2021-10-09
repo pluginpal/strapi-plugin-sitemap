@@ -1,6 +1,7 @@
 'use strict';
 
 const fs = require('fs');
+const _ = require('lodash');
 
 const { getService } = require('../utils');
 
@@ -10,6 +11,14 @@ const { getService } = require('../utils');
  * @description: A set of functions called "actions" of the `sitemap` plugin.
  */
 
+const typesToExclude = [
+  'admin::permission',
+  'admin::role',
+  'admin::api-token',
+  'plugin::i18n.locale',
+  'plugin::users-permissions.permission',
+  'plugin::users-permissions.role',
+];
 
 module.exports = {
   buildSitemap: async (ctx) => {
@@ -38,11 +47,21 @@ module.exports = {
   getContentTypes: async (ctx) => {
     const contentTypes = {};
 
-    Object.values(strapi.contentTypes).map(async (contentType) => {
+    await Promise.all(Object.values(strapi.contentTypes).reverse().map(async (contentType) => {
+      if (typesToExclude.includes(contentType.uid)) return;
       contentTypes[contentType.uid] = {
         displayName: contentType.globalId,
       };
-    });
+
+      if (_.get(contentType, 'pluginOptions.i18n.localized')) {
+        const locales = await strapi.query('plugin::i18n.locale').findMany();
+        contentTypes[contentType.uid].locales = {};
+
+        await locales.map((locale) => {
+          contentTypes[contentType.uid].locales[locale.code] = locale.name;
+        });
+      }
+    }));
 
     ctx.send(contentTypes);
   },
