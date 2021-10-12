@@ -13,13 +13,12 @@ const fs = require('fs');
  *
  * @param {object} page - The entity.
  * @param {string} contentType - The model of the entity.
- * @param {string} pattern - The pattern of the model.
  * @param {string} defaultURL - The default URL of the different languages.
  * @param {bool} excludeDrafts - whether to exclude drafts.
  *
  * @returns {array} The language links.
  */
-const getLanguageLinks = async (page, contentType, pattern, defaultURL, excludeDrafts) => {
+const getLanguageLinks = async (page, contentType, defaultURL, excludeDrafts) => {
   const config = await strapi.plugins.sitemap.services.config.getConfig();
   if (!page.localizations) return null;
 
@@ -31,7 +30,7 @@ const getLanguageLinks = async (page, contentType, pattern, defaultURL, excludeD
       where: {
         $and: [
           { id: translation.id },
-          { id: { $notIn: config.contentTypes[contentType].excluded } },
+          { id: { $notIn: config.contentTypes[contentType].excluded || [] } },
         ],
         id: translation.id,
         publishedAt: {
@@ -42,6 +41,11 @@ const getLanguageLinks = async (page, contentType, pattern, defaultURL, excludeD
     });
 
     if (!translationEntity) return null;
+
+    const { locale } = translationEntity;
+    if (!config.contentTypes[contentType]['languages'][locale]) return null;
+
+    const { pattern } = config.contentTypes[contentType]['languages'][locale];
     const translationUrl = await strapi.plugins.sitemap.services.pattern.resolvePattern(pattern, translationEntity);
 
     links.push({
@@ -63,16 +67,20 @@ const getLanguageLinks = async (page, contentType, pattern, defaultURL, excludeD
  * @returns {object} The sitemap entry data.
  */
 const getSitemapPageData = async (page, contentType, excludeDrafts) => {
+  const locale = page.locale || 'und';
   const config = await strapi.plugins.sitemap.services.config.getConfig();
-  const { pattern } = config.contentTypes[contentType];
+
+  if (!config.contentTypes[contentType]['languages'][locale]) return null;
+
+  const { pattern } = config.contentTypes[contentType]['languages'][locale];
   const url = await strapi.plugins.sitemap.services.pattern.resolvePattern(pattern, page);
 
   return {
     lastmod: page.updatedAt,
     url: url,
-    links: await getLanguageLinks(page, contentType, pattern, url, excludeDrafts),
-    changefreq: config.contentTypes[contentType].changefreq,
-    priority: parseFloat(config.contentTypes[contentType].priority),
+    links: await getLanguageLinks(page, contentType, url, excludeDrafts),
+    changefreq: config.contentTypes[contentType]['languages'][locale].changefreq || 'monthly',
+    priority: parseFloat(config.contentTypes[contentType]['languages'][locale].priority) || 0.5,
   };
 };
 
@@ -91,9 +99,9 @@ const createSitemapEntries = async () => {
     const pages = await strapi.query(contentType).findMany({
       where: {
         id: {
-          $notIn: config.contentTypes[contentType].excluded,
+          $notIn: config.contentTypes[contentType].excluded || [],
         },
-        publishedAt: {
+        published_at: {
           $notNull: excludeDrafts,
         },
       },
@@ -104,7 +112,7 @@ const createSitemapEntries = async () => {
     // Add formatted sitemap page data to the array.
     await Promise.all(pages.map(async (page) => {
       const pageData = await getSitemapPageData(page, contentType, excludeDrafts);
-      sitemapEntries.push(pageData);
+      if (pageData) sitemapEntries.push(pageData);
     }));
   }));
 

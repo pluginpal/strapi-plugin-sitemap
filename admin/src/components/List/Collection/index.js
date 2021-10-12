@@ -17,7 +17,7 @@ const ListComponent = (props) => {
   }
 
   items.map((item, key) => {
-    item.map((langItem, langKey) => {
+    item.get('languages').map((langItem, langKey) => {
       if (langKey === 'excluded') return;
 
       const formattedItem = {};

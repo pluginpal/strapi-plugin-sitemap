@@ -51,7 +51,7 @@ const ModalForm = (props) => {
       const response = await request('/sitemap/pattern/validate-pattern', {
         method: 'POST',
         body: {
-          pattern: modifiedState.getIn([uid, langcode, 'pattern'], null),
+          pattern: modifiedState.getIn([uid, 'languages', langcode, 'pattern'], null),
           modelName: uid,
         },
       });

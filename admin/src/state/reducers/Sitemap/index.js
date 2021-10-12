@@ -50,8 +50,13 @@ export default function sitemapReducer(state = initialState, action) {
           .update('modifiedContentTypes', () => fromJS(action.settings.get('contentTypes')))
           .updateIn(['settings', 'contentTypes'], () => fromJS(action.settings.get('contentTypes')));
     case ON_CHANGE_CONTENT_TYPES:
-      return state
-        .updateIn(['modifiedContentTypes', action.contentType, action.lang, action.key], () => action.value);
+      if (action.lang) {
+        return state
+          .updateIn(['modifiedContentTypes', action.contentType, 'languages', action.lang, action.key], () => action.value);
+      } else {
+        return state
+          .updateIn(['modifiedContentTypes', action.contentType, action.key], () => action.value);
+      }
     case ON_CHANGE_CUSTOM_ENTRY:
       return state
         .updateIn(['modifiedCustomEntries', action.url, action.key], () => action.value);
@@ -72,9 +77,15 @@ export default function sitemapReducer(state = initialState, action) {
         .updateIn(['settings', 'contentTypes'], () => state.get('modifiedContentTypes'))
         .updateIn(['settings', 'customEntries'], () => state.get('modifiedCustomEntries'));
     case DELETE_CONTENT_TYPE:
-      return state
-        .deleteIn(['settings', 'contentTypes', action.key, action.lang])
-        .deleteIn(['modifiedContentTypes', action.key, action.lang]);
+      if (state.getIn(['settings', 'contentTypes', action.key, 'languages']).size > 1) {
+        return state
+          .deleteIn(['settings', 'contentTypes', action.key, 'languages', action.lang])
+          .deleteIn(['modifiedContentTypes', action.key, 'languages', action.lang]);
+      } else {
+        return state
+          .deleteIn(['settings', 'contentTypes', action.key])
+          .deleteIn(['modifiedContentTypes', action.key]);
+      }
     case DELETE_CUSTOM_ENTRY:
       return state
         .deleteIn(['settings', 'customEntries', action.key])

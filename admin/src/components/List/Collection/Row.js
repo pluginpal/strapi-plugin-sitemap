@@ -28,7 +28,7 @@ const CustomRow = ({ openModal, entry }) => {
         <Text textColor="neutral800">{contentTypes[entry.name] && contentTypes[entry.name].displayName}</Text>
       </Td>
       <Td>
-        <Text textColor="neutral800">{entry.langcode}</Text>
+        <Text textColor="neutral800">{entry.langcode === 'und' ? 'N/A' : entry.langcode}</Text>
       </Td>
       <Td>
         <Text textColor="neutral800">{entry.pattern}</Text>
