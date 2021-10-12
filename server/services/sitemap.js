@@ -7,6 +7,8 @@
 const { SitemapStream, streamToPromise } = require('sitemap');
 const { isEmpty } = require('lodash');
 const fs = require('fs');
+const { getAbsoluteServerUrl } = require('@strapi/utils');
+const { logMessage } = require('../utils');
 
 /**
  * Get a formatted array of different language URLs of a single page.
@@ -154,10 +156,12 @@ const writeSitemapFile = (filename, sitemap) => {
   streamToPromise(sitemap)
     .then((sm) => {
       fs.writeFile(`public/sitemap/${filename}`, sm.toString(), (err) => {
-        if (err) throw err;
+        if (err) strapi.log.error(logMessage(`Something went wrong while trying to write the sitemap XML file to your public folder. ${err}`));
       });
     })
-    .catch(() => console.error);
+    .catch((err) => {
+      strapi.log.error(logMessage(`Something went wrong while trying to build the sitemap with streamToPromise. ${err}`));
+    });
 };
 
 /**
@@ -166,19 +170,23 @@ const writeSitemapFile = (filename, sitemap) => {
  * @returns {void}
  */
 const createSitemap = async () => {
-  const config = await strapi.plugins.sitemap.services.config.getConfig();
-  const sitemap = new SitemapStream({
-    hostname: config.hostname,
-    xslUrl: "xsl/sitemap.xsl",
-  });
+  try {
+    const config = await strapi.plugins.sitemap.services.config.getConfig();
+    const sitemap = new SitemapStream({
+      hostname: config.hostname,
+      xslUrl: "xsl/sitemap.xsl",
+    });
 
-  const sitemapEntries = await createSitemapEntries();
-  sitemapEntries.map((sitemapEntry) => sitemap.write(sitemapEntry));
-  sitemap.end();
+    const sitemapEntries = await createSitemapEntries();
+    sitemapEntries.map((sitemapEntry) => sitemap.write(sitemapEntry));
+    sitemap.end();
 
-  strapi.log.info('Sitemap has been generated');
+    await writeSitemapFile('index.xml', sitemap);
 
-  await writeSitemapFile('index.xml', sitemap);
+    strapi.log.info(logMessage(`The sitemap XML has been generated. It can be accessed on ${getAbsoluteServerUrl(strapi.config)}/sitemap/index.xml.`));
+  } catch (err) {
+    strapi.log.error(logMessage(`Something went wrong while trying to build the SitemapStream. ${err}`));
+  }
 };
 
 module.exports = () => ({
