@@ -48,17 +48,6 @@ const Settings = () => {
           onChange={(e) => dispatch(onChangeSettings('excludeDrafts', e.target.checked))}
         />
       </GridItem>
-      <GridItem col={12} s={12}>
-        <ToggleInput
-          hint={formatMessage({ id: 'sitemap.Settings.Field.AutoGenerate.Description' })}
-          label={formatMessage({ id: 'sitemap.Settings.Field.AutoGenerate.Label' })}
-          name="autoGenerate"
-          onLabel="on"
-          offLabel="off"
-          checked={settings.get('autoGenerate')}
-          onChange={(e) => dispatch(onChangeSettings('autoGenerate', e.target.checked))}
-        />
-      </GridItem>
     </Grid>
   );
 };

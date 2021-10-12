@@ -48,7 +48,7 @@ module.exports = {
     const contentTypes = {};
 
     await Promise.all(Object.values(strapi.contentTypes).reverse().map(async (contentType) => {
-      if (typesToExclude.includes(contentType.uid)) return;
+      if (strapi.config.get('plugin.sitemap.excludedTypes').includes(contentType.uid)) return;
       contentTypes[contentType.uid] = {
         displayName: contentType.globalId,
       };

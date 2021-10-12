@@ -4,8 +4,6 @@
  * Pattern service.
  */
 
-const allowedFields = ['id', 'uid'];
-
 /**
  * Get all field names allowed in the URL of a given content type.
  *
@@ -15,7 +13,7 @@ const allowedFields = ['id', 'uid'];
  */
 const getAllowedFields = async (contentType) => {
   const fields = [];
-  allowedFields.map((fieldType) => {
+  strapi.config.get('plugin.sitemap.allowedFields').map((fieldType) => {
     Object.entries(contentType.attributes).map(([fieldName, field]) => {
       if (field.type === fieldType) {
         fields.push(fieldName);

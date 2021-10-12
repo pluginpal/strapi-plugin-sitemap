@@ -13,7 +13,7 @@ module.exports = () => ({
     const sitemapService = await getService('sitemap');
 
     // Loop over configured contentTypes from store.
-    if (config.contentTypes && config.autoGenerate) {
+    if (config.contentTypes && strapi.config.get('plugin.sitemap.autoGenerate')) {
       Object.keys(config.contentTypes).map(async (contentType) => {
         if (strapi.contentTypes[contentType]) {
           await strapi.db.lifecycles.subscribe({
