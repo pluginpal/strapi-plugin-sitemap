@@ -11,15 +11,6 @@ const { getService } = require('../utils');
  * @description: A set of functions called "actions" of the `sitemap` plugin.
  */
 
-const typesToExclude = [
-  'admin::permission',
-  'admin::role',
-  'admin::api-token',
-  'plugin::i18n.locale',
-  'plugin::users-permissions.permission',
-  'plugin::users-permissions.role',
-];
-
 module.exports = {
   buildSitemap: async (ctx) => {
     const sitemapService = getService('sitemap');
