@@ -1,28 +1,29 @@
 import React from 'react';
 import { Select, Option } from '@strapi/parts/Select';
 
-const SelectContentTypes = (props) => {
+const SelectLanguage = (props) => {
   const {
-    contentTypes,
+    contentType,
     onChange,
-    disabled,
     value,
   } = props;
+
+  if (!contentType) return null;
+  if (!contentType.locales) return null;
 
   return (
     <Select
       name="select"
-      label="Content Type"
-      hint="Select a content type."
-      disabled={disabled}
+      label="Language"
+      hint="Select a language."
       onChange={(newValue) => onChange(newValue)}
       value={value}
     >
-      {Object.entries(contentTypes).map(([uid, { displayName }]) => {
+      {Object.entries(contentType.locales).map(([uid, displayName]) => {
         return <Option value={uid} key={uid}>{displayName}</Option>;
       })}
     </Select>
   );
 };
 
-export default SelectContentTypes;
+export default SelectLanguage;

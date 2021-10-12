@@ -46,10 +46,11 @@ export function getSettingsSucceeded(settings) {
   };
 }
 
-export function onChangeContentTypes(contentType, key, value) {
+export function onChangeContentTypes(contentType, lang, key, value) {
   return {
     type: ON_CHANGE_CONTENT_TYPES,
     contentType,
+    lang,
     key,
     value,
   };
@@ -145,10 +146,11 @@ export function submitModal() {
   };
 }
 
-export function deleteContentType(key) {
+export function deleteContentType(key, lang) {
   return {
     type: DELETE_CONTENT_TYPE,
     key,
+    lang,
   };
 }
 
