@@ -15,7 +15,7 @@ const Settings = () => {
   const settings = useSelector((state) => state.getIn(['sitemap', 'settings'], Map()));
 
   return (
-    <Grid gap={6}>
+    <Grid gap={4}>
       <GridItem col={6} s={12}>
         <TextInput
           placeholder="https://www.strapi.io"

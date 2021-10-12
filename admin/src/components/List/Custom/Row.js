@@ -7,11 +7,8 @@ import { Row } from '@strapi/parts/Row';
 import { Tr, Td } from '@strapi/parts/Table';
 import { Text } from '@strapi/parts/Text';
 import { IconButton } from '@strapi/parts/IconButton';
-import { useSelector } from 'react-redux';
 
 const CustomRow = ({ openModal, entry }) => {
-  const contentTypes = useSelector((store) => store.getIn(['sitemap', 'contentTypes'], {}));
-
   const handleEditClick = (e) => {
     openModal(entry.name);
     e.stopPropagation();
