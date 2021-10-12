@@ -25,7 +25,7 @@ const CustomRow = ({ openModal, entry }) => {
   return (
     <Tr key={entry.id}>
       <Td>
-        <Text textColor="neutral800">{contentTypes[entry.name] && contentTypes[entry.name].displayName}</Text>
+        <Text textColor="neutral800">{entry.name}</Text>
       </Td>
       <Td>
         <Text textColor="neutral800">{entry.priority}</Text>

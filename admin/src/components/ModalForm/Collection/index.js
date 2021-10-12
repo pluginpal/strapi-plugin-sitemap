@@ -32,12 +32,7 @@ const CollectionForm = (props) => {
   const handleSelectChange = (contentType, lang = 'und') => {
     setLangcode(lang);
     setUid(contentType);
-
-    // Set initial values
     onCancel(false);
-    // Object.keys(form).map((input) => {
-    //   onChange(contentType, lang, input, form[input].value);
-    // });
   };
 
   const patternHint = () => {

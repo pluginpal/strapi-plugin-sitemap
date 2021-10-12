@@ -95,7 +95,7 @@ const ModalForm = (props) => {
         endActions={(
           <Button
             onClick={submitForm}
-            disabled={!uid || (contentTypes[uid].locales && langcode === 'und')}
+            disabled={!uid || (contentTypes && contentTypes[uid].locales && langcode === 'und')}
           >
             {formatMessage({ id: 'sitemap.Button.Save' })}
           </Button>
