@@ -15,7 +15,7 @@ const Settings = () => {
   const settings = useSelector((state) => state.getIn(['sitemap', 'settings'], Map()));
 
   return (
-    <Grid gap={6}>
+    <Grid gap={4}>
       <GridItem col={6} s={12}>
         <TextInput
           placeholder="https://www.strapi.io"
@@ -46,17 +46,6 @@ const Settings = () => {
           offLabel="off"
           checked={settings.get('excludeDrafts')}
           onChange={(e) => dispatch(onChangeSettings('excludeDrafts', e.target.checked))}
-        />
-      </GridItem>
-      <GridItem col={12} s={12}>
-        <ToggleInput
-          hint={formatMessage({ id: 'sitemap.Settings.Field.AutoGenerate.Description' })}
-          label={formatMessage({ id: 'sitemap.Settings.Field.AutoGenerate.Label' })}
-          name="autoGenerate"
-          onLabel="on"
-          offLabel="off"
-          checked={settings.get('autoGenerate')}
-          onChange={(e) => dispatch(onChangeSettings('autoGenerate', e.target.checked))}
         />
       </GridItem>
     </Grid>

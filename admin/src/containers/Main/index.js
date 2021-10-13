@@ -8,20 +8,23 @@
 import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 
+import { useNotification } from '@strapi/helper-plugin';
+
 import Tabs from '../../components/Tabs';
 import Header from '../../components/Header';
 import Info from '../../components/Info';
 
-import { getAllowedFields, getContentTypes, getSettings, hasSitemap } from '../../state/actions/Sitemap';
+import { getAllowedFields, getContentTypes, getSettings, getSitemapInfo } from '../../state/actions/Sitemap';
 
 const App = () => {
   const dispatch = useDispatch();
+  const toggleNotification = useNotification();
 
   useEffect(() => {
-    dispatch(getSettings());
-    dispatch(getContentTypes());
-    dispatch(hasSitemap());
-    dispatch(getAllowedFields());
+    dispatch(getSettings(toggleNotification));
+    dispatch(getContentTypes(toggleNotification));
+    dispatch(getSitemapInfo(toggleNotification));
+    dispatch(getAllowedFields(toggleNotification));
   }, [dispatch]);
 
   return (

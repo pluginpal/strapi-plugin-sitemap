@@ -1,10 +1,11 @@
 import React from 'react';
 
+import { NoContent } from '@strapi/helper-plugin';
 import AddIcon from '@strapi/icons/AddIcon';
-import { Box } from '@strapi/parts/Box';
 import { VisuallyHidden } from '@strapi/parts/VisuallyHidden';
 import { Table, Thead, Tbody, Tr, Th, TFooter } from '@strapi/parts/Table';
 import { TableLabel } from '@strapi/parts/Text';
+import { Button } from '@strapi/parts/Button';
 
 import CustomRow from './Row';
 
@@ -28,32 +29,43 @@ const ListComponent = (props) => {
     });
   });
 
+  if (items.size === 0) {
+    return (
+      <NoContent
+        content={{
+          id: 'emptyState',
+          defaultMessage:
+            'No URL bundles have been configured yet.',
+        }}
+        action={<Button onClick={() => openModal()}>Add the first URL bundle</Button>}
+      />
+    );
+  }
+
   return (
-    <Box padding={8} background="neutral100">
-      <Table colCount={4} rowCount={formattedItems.length + 1} footer={<TFooter onClick={() => openModal()} icon={<AddIcon />}>Add another field to this collection type</TFooter>}>
-        <Thead>
-          <Tr>
-            <Th>
-              <TableLabel>Type</TableLabel>
-            </Th>
-            <Th>
-              <TableLabel>Langcode</TableLabel>
-            </Th>
-            <Th>
-              <TableLabel>Pattern</TableLabel>
-            </Th>
-            <Th>
-              <VisuallyHidden>Actions</VisuallyHidden>
-            </Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-          {formattedItems.map((item) => (
-            <CustomRow key={item.name} entry={item} openModal={openModal} />
-          ))}
-        </Tbody>
-      </Table>
-    </Box>
+    <Table colCount={4} rowCount={formattedItems.length + 1} footer={<TFooter onClick={() => openModal()} icon={<AddIcon />}>Add another URL bundle</TFooter>}>
+      <Thead>
+        <Tr>
+          <Th>
+            <TableLabel>Type</TableLabel>
+          </Th>
+          <Th>
+            <TableLabel>Langcode</TableLabel>
+          </Th>
+          <Th>
+            <TableLabel>Pattern</TableLabel>
+          </Th>
+          <Th>
+            <VisuallyHidden>Actions</VisuallyHidden>
+          </Th>
+        </Tr>
+      </Thead>
+      <Tbody>
+        {formattedItems.map((item) => (
+          <CustomRow key={item.name} entry={item} openModal={openModal} />
+        ))}
+      </Tbody>
+    </Table>
   );
 };
 

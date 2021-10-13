@@ -50,20 +50,23 @@ const CustomForm = (props) => {
           />
         </GridItem>
         <GridItem col={6} s={12}>
-          {Object.keys(form).map((input) => (
-            <Select
-              name={input}
-              key={input}
-              {...form[input]}
-              disabled={!uid}
-              onChange={(value) => onChange(uid, input, value)}
-              value={modifiedState.getIn([uid, input], form[input].value)}
-            >
-              {form[input].options.map((option) => (
-                <Option value={option} key={option}>{option}</Option>
-              ))}
-            </Select>
-          ))}
+          <Grid gap={4}>
+            {Object.keys(form).map((input) => (
+              <GridItem col={12} key={input}>
+                <Select
+                  name={input}
+                  {...form[input]}
+                  disabled={!uid}
+                  onChange={(value) => onChange(uid, input, value)}
+                  value={modifiedState.getIn([uid, input], form[input].value)}
+                >
+                  {form[input].options.map((option) => (
+                    <Option value={option} key={option}>{option}</Option>
+                  ))}
+                </Select>
+              </GridItem>
+            ))}
+          </Grid>
         </GridItem>
       </Grid>
     </form>

@@ -1,6 +1,6 @@
 'use strict';
 
-const { getService } = require('../utils');
+const { getService, logMessage } = require('../utils');
 
 /**
  * Gets lifecycle service
@@ -9,12 +9,12 @@ const { getService } = require('../utils');
  */
 module.exports = () => ({
   async loadLifecycleMethods() {
-    const config = await getService('config').getConfig();
-    const sitemapService = await getService('sitemap');
+    const settings = await getService('settings').getConfig();
+    const sitemapService = await getService('core');
 
     // Loop over configured contentTypes from store.
-    if (config.contentTypes && config.autoGenerate) {
-      Object.keys(config.contentTypes).map(async (contentType) => {
+    if (settings.contentTypes && strapi.config.get('plugin.sitemap.autoGenerate')) {
+      Object.keys(settings.contentTypes).map(async (contentType) => {
         if (strapi.contentTypes[contentType]) {
           await strapi.db.lifecycles.subscribe({
             models: [contentType],
@@ -44,7 +44,7 @@ module.exports = () => ({
             },
           });
         } else {
-          strapi.log.error(`Sitemap plugin bootstrap failed. Could not load lifecycles on model '${contentType}'`);
+          strapi.log.error(logMessage(`Bootstrap failed. Could not load lifecycles on model '${contentType}'`));
         }
       });
     }

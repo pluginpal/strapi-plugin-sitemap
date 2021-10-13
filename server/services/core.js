@@ -7,6 +7,8 @@
 const { SitemapStream, streamToPromise } = require('sitemap');
 const { isEmpty } = require('lodash');
 const fs = require('fs');
+const { getAbsoluteServerUrl } = require('@strapi/utils');
+const { logMessage, getService } = require('../utils');
 
 /**
  * Get a formatted array of different language URLs of a single page.
@@ -19,7 +21,7 @@ const fs = require('fs');
  * @returns {array} The language links.
  */
 const getLanguageLinks = async (page, contentType, defaultURL, excludeDrafts) => {
-  const config = await strapi.plugins.sitemap.services.config.getConfig();
+  const config = await getService('settings').getConfig();
   if (!page.localizations) return null;
 
   const links = [];
@@ -68,7 +70,7 @@ const getLanguageLinks = async (page, contentType, defaultURL, excludeDrafts) =>
  */
 const getSitemapPageData = async (page, contentType, excludeDrafts) => {
   const locale = page.locale || 'und';
-  const config = await strapi.plugins.sitemap.services.config.getConfig();
+  const config = await getService('settings').getConfig();
 
   if (!config.contentTypes[contentType]['languages'][locale]) return null;
 
@@ -90,7 +92,7 @@ const getSitemapPageData = async (page, contentType, excludeDrafts) => {
  * @returns {array} The entries.
  */
 const createSitemapEntries = async () => {
-  const config = await strapi.plugins.sitemap.services.config.getConfig();
+  const config = await getService('settings').getConfig();
   const sitemapEntries = [];
 
   // Collection entries.
@@ -154,10 +156,16 @@ const writeSitemapFile = (filename, sitemap) => {
   streamToPromise(sitemap)
     .then((sm) => {
       fs.writeFile(`public/sitemap/${filename}`, sm.toString(), (err) => {
-        if (err) throw err;
+        if (err) {
+          strapi.log.error(logMessage(`Something went wrong while trying to write the sitemap XML file to your public folder. ${err}`));
+          throw new Error();
+        }
       });
     })
-    .catch(() => console.error);
+    .catch((err) => {
+      strapi.log.error(logMessage(`Something went wrong while trying to build the sitemap with streamToPromise. ${err}`));
+      throw new Error();
+    });
 };
 
 /**
@@ -166,19 +174,24 @@ const writeSitemapFile = (filename, sitemap) => {
  * @returns {void}
  */
 const createSitemap = async () => {
-  const config = await strapi.plugins.sitemap.services.config.getConfig();
-  const sitemap = new SitemapStream({
-    hostname: config.hostname,
-    xslUrl: "xsl/sitemap.xsl",
-  });
+  try {
+    const config = await getService('settings').getConfig();
+    const sitemap = new SitemapStream({
+      hostname: config.hostname,
+      xslUrl: "xsl/sitemap.xsl",
+    });
 
-  const sitemapEntries = await createSitemapEntries();
-  sitemapEntries.map((sitemapEntry) => sitemap.write(sitemapEntry));
-  sitemap.end();
+    const sitemapEntries = await createSitemapEntries();
+    sitemapEntries.map((sitemapEntry) => sitemap.write(sitemapEntry));
+    sitemap.end();
 
-  strapi.log.info('Sitemap has been generated');
+    await writeSitemapFile('index.xml', sitemap);
 
-  await writeSitemapFile('index.xml', sitemap);
+    strapi.log.info(logMessage(`The sitemap XML has been generated. It can be accessed on ${getAbsoluteServerUrl(strapi.config)}/sitemap/index.xml.`));
+  } catch (err) {
+    strapi.log.error(logMessage(`Something went wrong while trying to build the SitemapStream. ${err}`));
+    throw new Error();
+  }
 };
 
 module.exports = () => ({
