@@ -14,7 +14,7 @@ See the [Strapi docs](https://github.com/strapi/strapi#getting-started) on how t
 #### 2. Clone from your repository into the plugins folder
 
 ```bash
-cd YOUR_STRAPI_PROJECT/plugins
+cd YOUR_STRAPI_PROJECT/src/plugins
 git clone git@github.com:YOUR_USERNAME/strapi-plugin-sitemap.git sitemap
 ```
 
@@ -23,7 +23,7 @@ git clone git@github.com:YOUR_USERNAME/strapi-plugin-sitemap.git sitemap
 Go to the plugin and install it's dependencies.
 
 ```bash
-cd YOUR_STRAPI_PROJECT/plugins/sitemap/ && yarn install
+cd YOUR_STRAPI_PROJECT/src/plugins/sitemap/ && yarn install
 ```
 
 #### 4. Rebuild your Strapi project
@@ -65,8 +65,8 @@ We use [ESLint](https://eslint.org/) for linting and formatting the code, and [J
 
 The `package.json` file contains various scripts for common tasks:
 
-- `yarn lint`: lint files with ESLint.
-- `yarn lint:fix`: auto-fix ESLint issues.
+- `yarn eslint`: lint files with ESLint.
+- `yarn eslint:fix`: auto-fix ESLint issues.
 - `yarn test:unit`: run unit tests with Jest.
 
 ### Sending a pull request
@@ -75,6 +75,7 @@ The `package.json` file contains various scripts for common tasks:
 
 When you're sending a pull request:
 
+- Preferably create the pull request to merge in to the `develop` branch
 - Prefer small pull requests focused on one change.
 - Verify that linters and tests are passing.
 - Review the documentation to make sure it looks good.
