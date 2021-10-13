@@ -22,7 +22,9 @@ const getAllowedFields = async (contentType) => {
   });
 
   // Add id field manually because it is not on the attributes object of a content type.
-  // fields.push('id');
+  if (strapi.config.get('plugin.sitemap.allowedFields').includes('id')) {
+    fields.push('id');
+  }
 
   return fields;
 };
