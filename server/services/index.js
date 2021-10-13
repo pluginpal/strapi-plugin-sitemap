@@ -1,13 +1,13 @@
 'use strict';
 
-const config = require('./config');
+const core = require('./core');
+const settings = require('./settings');
 const pattern = require('./pattern');
-const sitemap = require('./sitemap');
 const lifecycle = require('./lifecycle');
 
 module.exports = {
-  config,
-  sitemap,
+  core,
+  settings,
   pattern,
   lifecycle,
 };

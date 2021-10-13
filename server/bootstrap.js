@@ -1,6 +1,7 @@
 'use strict';
 
 const fs = require('fs');
+const { logMessage } = require('./utils');
 const copyDir = require('./utils/copyDir');
 
 module.exports = async () => {
@@ -21,6 +22,6 @@ module.exports = async () => {
       }
     }
   } catch (error) {
-    strapi.log.error(`Sitemap plugin bootstrap failed with error "${error.message}".`);
+    strapi.log.error(logMessage(`Bootstrap failed with error "${error.message}".`));
   }
 };

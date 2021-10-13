@@ -1,7 +1,7 @@
 {
   "name": "strapi-plugin-sitemap",
   "version": "2.0.0-beta.1",
-  "description": "A plugin for Strapi to create a customizable sitemap XML.",
+  "description": "Create a highly customizable sitemap XML in Strapi CMS.",
   "strapi": {
     "displayName": "Sitemap",
     "name": "sitemap",
@@ -17,7 +17,8 @@
   },
   "dependencies": {
     "redux-thunk": "^2.3.0",
-    "sitemap": "boazpoolman/sitemap.js#build"
+    "sitemap": "boazpoolman/sitemap.js#build",
+    "xml2js": "^0.4.23"
   },
   "author": {
     "name": "Boaz Poolman",

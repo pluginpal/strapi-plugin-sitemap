@@ -6,55 +6,15 @@ module.exports = {
     {
       method: "GET",
       path: "/",
-      handler: "sitemap.buildSitemap",
+      handler: "core.buildSitemap",
       config: {
         policies: [],
       },
     },
     {
       method: "GET",
-      path: "/presence",
-      handler: "sitemap.hasSitemap",
-      config: {
-        policies: [],
-      },
-    },
-    {
-      method: "GET",
-      path: "/settings",
-      handler: "sitemap.getSettings",
-      config: {
-        policies: [],
-      },
-    },
-    {
-      method: "PUT",
-      path: "/settings",
-      handler: "sitemap.updateSettings",
-      config: {
-        policies: [],
-      },
-    },
-    {
-      method: "PUT",
-      path: "/settings/exclude",
-      handler: "sitemap.excludeEntry",
-      config: {
-        policies: [],
-      },
-    },
-    {
-      method: "GET",
-      path: "/pattern/allowed-fields",
-      handler: "sitemap.allowedFields",
-      config: {
-        policies: [],
-      },
-    },
-    {
-      method: "POST",
-      path: "/pattern/validate-pattern",
-      handler: "sitemap.validatePattern",
+      path: "/info",
+      handler: "core.info",
       config: {
         policies: [],
       },
@@ -62,7 +22,47 @@ module.exports = {
     {
       method: "GET",
       path: "/content-types",
-      handler: "sitemap.getContentTypes",
+      handler: "core.getContentTypes",
+      config: {
+        policies: [],
+      },
+    },
+    {
+      method: "GET",
+      path: "/settings",
+      handler: "settings.getSettings",
+      config: {
+        policies: [],
+      },
+    },
+    {
+      method: "PUT",
+      path: "/settings",
+      handler: "settings.updateSettings",
+      config: {
+        policies: [],
+      },
+    },
+    {
+      method: "PUT",
+      path: "/settings/exclude",
+      handler: "settings.excludeEntry",
+      config: {
+        policies: [],
+      },
+    },
+    {
+      method: "GET",
+      path: "/pattern/allowed-fields",
+      handler: "pattern.allowedFields",
+      config: {
+        policies: [],
+      },
+    },
+    {
+      method: "POST",
+      path: "/pattern/validate-pattern",
+      handler: "pattern.validatePattern",
       config: {
         policies: [],
       },

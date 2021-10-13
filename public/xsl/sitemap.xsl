@@ -61,13 +61,13 @@
         <xsl:value-of select="count(sitemap:urlset/sitemap:url)"/>
       </p>
     </div>
-    <table class="sitemap">
+    <table class="sitemap sortable">
       <thead>
         <tr>
           <th>URL location</th>
           <th>Last modification date</th>
           <th>Change frequency</th>
-          <th>Priority</th>
+          <th id="default-sort">Priority</th>
           <!-- Show this header only if xhtml:link elements are present -->
           <xsl:if test="sitemap:urlset/sitemap:url/xhtml:link">
             <th>Translation set</th>
@@ -115,7 +115,7 @@
       <td>
         <xsl:value-of select="sitemap:lastmod"/>
       </td>
-      <td>
+      <td class="changefreq">
         <xsl:value-of select="sitemap:changefreq"/>
       </td>
       <td>

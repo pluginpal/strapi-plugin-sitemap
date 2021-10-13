@@ -20,7 +20,7 @@
   DISCARD_ALL_CHANGES,
   DISCARD_MODIFIED_CONTENT_TYPES,
   UPDATE_SETTINGS,
-  HAS_SITEMAP_SUCCEEDED,
+  GET_SITEMAP_INFO_SUCCEEDED,
   ON_CHANGE_CUSTOM_ENTRY,
   GET_ALLOWED_FIELDS_SUCCEEDED,
 } from '../../config/constants';
@@ -28,13 +28,13 @@
 import getTrad from '../../helpers/getTrad';
 
 // Get initial settings
-export function getSettings() {
+export function getSettings(toggleNotification) {
   return async function(dispatch) {
     try {
       const settings = await request('/sitemap/settings/', { method: 'GET' });
       dispatch(getSettingsSucceeded(Map(settings)));
     } catch (err) {
-      strapi.notification.toggle({ type: 'warning', message: { id: 'notification.error' } });
+      toggleNotification({ type: 'warning', message: { id: 'notification.error' } });
     }
   };
 }
@@ -92,25 +92,25 @@ export function discardModifiedContentTypes() {
   };
 }
 
-export function generateSitemap() {
+export function generateSitemap(toggleNotification) {
   return async function(dispatch) {
     try {
       const { message } = await request('/sitemap', { method: 'GET' });
-      dispatch(hasSitemap());
-      strapi.notification.toggle({ type: 'success', message });
+      dispatch(getSitemapInfo());
+      toggleNotification({ type: 'success', message });
     } catch (err) {
-      strapi.notification.toggle({ type: 'warning', message: { id: 'notification.error' } });
+      toggleNotification({ type: 'warning', message: { id: 'notification.error' } });
     }
   };
 }
 
-export function getContentTypes() {
+export function getContentTypes(toggleNotification) {
   return async function(dispatch) {
     try {
       const contentTypes = await request('/sitemap/content-types/', { method: 'GET' });
       dispatch(getContentTypesSucceeded(contentTypes));
     } catch (err) {
-      strapi.notification.toggle({ type: 'warning', message: { id: 'notification.error' } });
+      toggleNotification({ type: 'warning', message: { id: 'notification.error' } });
     }
   };
 }
@@ -122,14 +122,14 @@ export function getContentTypesSucceeded(contentTypes) {
   };
 }
 
-export function submit(settings) {
+export function submit(settings, toggleNotification) {
   return async function(dispatch) {
     try {
       await request('/sitemap/settings/', { method: 'PUT', body: settings });
       dispatch(onSubmitSucceeded());
-      strapi.notification.toggle({ type: 'success', message: { id: getTrad('notification.success.submit') } });
+      toggleNotification({ type: 'success', message: { id: getTrad('notification.success.submit') } });
     } catch (err) {
-      strapi.notification.toggle({ type: 'warning', message: { id: 'notification.error' } });
+      toggleNotification({ type: 'warning', message: { id: 'notification.error' } });
     }
   };
 }
@@ -161,31 +161,31 @@ export function deleteCustomEntry(key) {
   };
 }
 
-export function hasSitemap() {
+export function getSitemapInfo(toggleNotification) {
   return async function(dispatch) {
     try {
-      const { main } = await request('/sitemap/presence', { method: 'GET' });
-      dispatch(hasSitemapSucceeded(main));
+      const info = await request('/sitemap/info', { method: 'GET' });
+      dispatch(getSitemapInfoSucceeded(info));
     } catch (err) {
-      strapi.notification.toggle({ type: 'warning', message: { id: 'notification.error' } });
+      toggleNotification({ type: 'warning', message: { id: 'notification.error' } });
     }
   };
 }
 
-export function hasSitemapSucceeded(main) {
+export function getSitemapInfoSucceeded(info) {
   return {
-    type: HAS_SITEMAP_SUCCEEDED,
-    hasSitemap: main,
+    type: GET_SITEMAP_INFO_SUCCEEDED,
+    info,
   };
 }
 
-export function getAllowedFields() {
+export function getAllowedFields(toggleNotification) {
   return async function(dispatch) {
     try {
       const fields = await request('/sitemap/pattern/allowed-fields/', { method: 'GET' });
       dispatch(getAllowedFieldsSucceeded(fields));
     } catch (err) {
-      strapi.notification.toggle({ type: 'warning', message: { id: 'notification.error' } });
+      toggleNotification({ type: 'warning', message: { id: 'notification.error' } });
     }
   };
 }
