@@ -1,5 +1,5 @@
 <div align="center">
-<h1>Strapi sitemap plugin</h1>
+<h1>🔌 Strapi sitemap plugin</h1>
 	
 <p style="margin-top: 0;">Create a highly customizable sitemap XML in Strapi CMS.</p>
 	
