@@ -171,7 +171,7 @@ You might want to disable this setting if your experiencing performance issues. 
 ```
 // Generate the sitemap every 12 hours
 '0 */12 * * *': () => {
-	strapi.plugin('sitemap').service('sitemap').createSitemap();
+  strapi.plugin('sitemap').service('sitemap').createSitemap();
 },
 ```
 
