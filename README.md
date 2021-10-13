@@ -25,6 +25,7 @@
 - **Auto-updating** (Uses lifecycle methods to keep the sitemap XML up-to-date)
 - **URL bundles** (Bundle URLs by type and add them to the sitemap XML)
 - **Dynamic paths** (Implements URL patterns in which you can inject dynamic fields)
+- **Exclude URLs** (Exclude 1 or more URLs in a URL bundle from the sitemap)
 - **Custom URLs** (URLs of pages which are not managed in Strapi)
 - **Styled with XSL** (Human readable XML styling)
 
@@ -171,7 +172,7 @@ You might want to disable this setting if your experiencing performance issues. 
 ```
 // Generate the sitemap every 12 hours
 '0 */12 * * *': () => {
-  strapi.plugin('sitemap').service('sitemap').createSitemap();
+  strapi.plugin('sitemap').service('core').createSitemap();
 },
 ```
 
