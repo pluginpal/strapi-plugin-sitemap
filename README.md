@@ -1,32 +1,32 @@
-<h1 style="text-align: center;">
-	Strapi sitemap plugin
-</h1>
-
-<p style="text-align: center; margin-top: 0;">Create a highly customizable sitemap XML in Strapi CMS.</p>
-
-<p style="text-align: center;">
-  <a href="https://www.npmjs.org/package/strapi-plugin-sitemap">
-    <img src="https://img.shields.io/npm/v/strapi-plugin-sitemap/latest.svg" alt="NPM Version" />
-  </a>
-  <a href="https://www.npmjs.org/package/strapi-plugin-sitemap">
-    <img src="https://img.shields.io/npm/dm/strapi-plugin-sitemap" alt="Monthly download on NPM" />
-  </a>
-  <a href="https://codecov.io/gh/boazpoolman/strapi-plugin-sitemap">
-    <img src="https://img.shields.io/github/workflow/status/boazpoolman/strapi-plugin-sitemap/Tests/master" alt="CI build status" />
-  </a>
-  <a href="https://codecov.io/gh/boazpoolman/strapi-plugin-sitemap">
-    <img src="https://codecov.io/gh/boazpoolman/strapi-plugin-sitemap/coverage.svg?branch=master" alt="codecov.io" />
-  </a>
-</p>
+<div align="center">
+	<h1>Strapi sitemap plugin</h1>
+	
+	<p style="margin-top: 0;">Create a highly customizable sitemap XML in Strapi CMS.</p>
+	
+	<p>
+	  <a href="https://www.npmjs.org/package/strapi-plugin-sitemap">
+	    <img src="https://img.shields.io/npm/v/strapi-plugin-sitemap/latest.svg" alt="NPM Version" />
+	  </a>
+	  <a href="https://www.npmjs.org/package/strapi-plugin-sitemap">
+	    <img src="https://img.shields.io/npm/dm/strapi-plugin-sitemap" alt="Monthly download on NPM" />
+	  </a>
+	  <a href="https://codecov.io/gh/boazpoolman/strapi-plugin-sitemap">
+	    <img src="https://img.shields.io/github/workflow/status/boazpoolman/strapi-plugin-sitemap/Tests/master" alt="CI build status" />
+	  </a>
+	  <a href="https://codecov.io/gh/boazpoolman/strapi-plugin-sitemap">
+	    <img src="https://codecov.io/gh/boazpoolman/strapi-plugin-sitemap/coverage.svg?branch=master" alt="codecov.io" />
+	  </a>
+	</p>
+</div>
 
 ## ✨ Features
 
-- 🌍 **Multilingual** (Implements `rel="alternate"` for the translations of a page)
-- ♻️ **Auto-updating** (Uses lifecycle methods to keep the sitemap XML up-to-date)
-- 🗃️ **URL bundles** (Bundle URLs by type and add them to the sitemap XML)
-- 🎉 **Dynamic paths** (Implements URL patterns in which you can inject dynamic fields)
-- ⚙️ **Custom URLs** (URLs of pages which are not managed in Strapi)
-- 💅 **Styled with XSL** (Human readable XML styling)
+- **Multilingual** (Implements `rel="alternate"` for the translations of a page)
+- **Auto-updating** (Uses lifecycle methods to keep the sitemap XML up-to-date)
+- **URL bundles** (Bundle URLs by type and add them to the sitemap XML)
+- **Dynamic paths** (Implements URL patterns in which you can inject dynamic fields)
+- **Custom URLs** (URLs of pages which are not managed in Strapi)
+- **Styled with XSL** (Human readable XML styling)
 
 ## ⏳ Installation
 
