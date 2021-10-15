@@ -4,7 +4,7 @@
   "description": "A plugin for Strapi to create a customizable sitemap.",
   "strapi": {
     "name": "Sitemap",
-    "icon": "list",
+    "icon": "sitemap",
     "description": "A plugin for Strapi to create a customizable sitemap."
   },
   "dependencies": {
