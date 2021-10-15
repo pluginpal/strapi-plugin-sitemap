@@ -7,46 +7,58 @@ const { getService, logMessage } = require('../utils');
  *
  * @returns {object} - Lifecycle service
  */
+
+const subscribeLifecycleMethods = async (modelName) => {
+  const sitemapService = await getService('core');
+
+  if (strapi.contentTypes[modelName]) {
+    await strapi.db.lifecycles.subscribe({
+      models: [modelName],
+
+      async afterCreate(event) {
+        await sitemapService.createSitemap();
+      },
+
+      async afterCreateMany(event) {
+        await sitemapService.createSitemap();
+      },
+
+      async afterUpdate(event) {
+        await sitemapService.createSitemap();
+      },
+
+      async afterUpdateMany(event) {
+        await sitemapService.createSitemap();
+      },
+
+      async afterDelete(event) {
+        await sitemapService.createSitemap();
+      },
+
+      async afterDeleteMany(event) {
+        await sitemapService.createSitemap();
+      },
+    });
+  } else {
+    strapi.log.error(logMessage(`Could not load lifecycles on model '${modelName}'`));
+  }
+};
+
 module.exports = () => ({
-  async loadLifecycleMethods() {
+  async loadAllLifecycleMethods() {
     const settings = await getService('settings').getConfig();
-    const sitemapService = await getService('core');
 
     // Loop over configured contentTypes from store.
     if (settings.contentTypes && strapi.config.get('plugin.sitemap.autoGenerate')) {
       Object.keys(settings.contentTypes).map(async (contentType) => {
-        if (strapi.contentTypes[contentType]) {
-          await strapi.db.lifecycles.subscribe({
-            models: [contentType],
-
-            async afterCreate(event) {
-              await sitemapService.createSitemap();
-            },
-
-            async afterCreateMany(event) {
-              await sitemapService.createSitemap();
-            },
-
-            async afterUpdate(event) {
-              await sitemapService.createSitemap();
-            },
-
-            async afterUpdateMany(event) {
-              await sitemapService.createSitemap();
-            },
-
-            async afterDelete(event) {
-              await sitemapService.createSitemap();
-            },
-
-            async afterDeleteMany(event) {
-              await sitemapService.createSitemap();
-            },
-          });
-        } else {
-          strapi.log.error(logMessage(`Bootstrap failed. Could not load lifecycles on model '${contentType}'`));
-        }
+        await subscribeLifecycleMethods(contentType);
       });
+    }
+  },
+
+  async loadLifecycleMethod(modelName) {
+    if (strapi.config.get('plugin.sitemap.autoGenerate')) {
+      await subscribeLifecycleMethods(modelName);
     }
   },
 });

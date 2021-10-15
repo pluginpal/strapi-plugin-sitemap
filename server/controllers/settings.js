@@ -16,6 +16,9 @@ module.exports = {
   },
 
   updateSettings: async (ctx) => {
+    const config = await getService('settings').getConfig();
+    const newContentTypes = Object.keys(ctx.request.body.contentTypes).filter((x) => !Object.keys(config.contentTypes).includes(x));
+
     await strapi
       .store({
         environment: '',
@@ -23,6 +26,11 @@ module.exports = {
         name: 'sitemap',
       })
       .set({ key: 'settings', value: ctx.request.body });
+
+    // Load lifecycle methods for auto generation of sitemap.
+    await newContentTypes.map(async (contentType) => {
+      await getService('lifecycle').loadLifecycleMethod(contentType);
+    });
 
     ctx.send({ ok: true });
   },

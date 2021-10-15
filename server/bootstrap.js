@@ -9,7 +9,7 @@ module.exports = async () => {
 
   try {
     // Load lifecycle methods for auto generation of sitemap.
-    await sitemap.service('lifecycle').loadLifecycleMethods();
+    await sitemap.service('lifecycle').loadAllLifecycleMethods();
 
     // Copy the plugins /public folder to the /public/sitemap/ folder in the root of your project.
     if (!fs.existsSync('public/sitemap/')) {
