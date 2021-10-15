@@ -25,7 +25,7 @@
 - **Auto-updating** (Uses lifecycle methods to keep the sitemap XML up-to-date)
 - **URL bundles** (Bundle URLs by type and add them to the sitemap XML)
 - **Dynamic paths** (Implements URL patterns in which you can inject dynamic fields)
-- **Exclude URLs** (Exclude 1 or more URLs in a URL bundle from the sitemap)
+- **Exclude URLs** (Exclude specified URLs from the sitemap)
 - **Custom URLs** (URLs of pages which are not managed in Strapi)
 - **Styled with XSL** (Human readable XML styling)
 
@@ -102,7 +102,7 @@ To create dynamic URLs this plugin uses **URL patterns**. A URL pattern is used 
 
 Fields can be injected in the pattern by escaping them with `[]`.
 
-The following fields types are by default allowed in a pattern:
+The following field types are by default allowed in a pattern:
 
 - id
 - uid
@@ -167,7 +167,7 @@ module.exports = ({ env }) => ({
 
 When adding URL bundles to your sitemap XML, and auto generate is set to true, the plugin will utilize the lifecycle methods to regenerate the sitemap  on `create`, `update` and `delete` for pages of the URL bundles type. This way your sitemap will always be up-to-date when making content changes.
 
-You might want to disable this setting if your experiencing performance issues. You could alternatively create a cronjob in which you generate the sitemap XML periodically. Like so:
+You might want to disable this setting if you're experiencing performance issues. You could alternatively create a cronjob in which you generate the sitemap XML periodically. Like so:
 
 ```
 // Generate the sitemap every 12 hours

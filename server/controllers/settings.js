@@ -61,5 +61,9 @@ module.exports = {
       .set({ key: 'settings', value: config });
 
     ctx.send({ ok: true });
+
+    if (strapi.config.get('plugin.sitemap.autoGenerate')) {
+      await getService('core').createSitemap();
+    }
   },
 };
