@@ -119,6 +119,16 @@ For each localization of a page the `<url>` in the sitemap XML will get an extra
 
 This implementation is based on [Google's guidelines](https://developers.google.com/search/docs/advanced/crawling/localized-versions) on localized sitemaps.
 
+## 🤖 Robots.txt
+
+To make sure search engines know where to find the sitemap XML you would have to make a `robots.txt` file in the front-end of your website and include the following line:
+
+```
+Sitemap: https://your-strapi-domain.com/sitemap/index.xml
+```
+
+*Read more about `robots.txt` files [here](https://developers.google.com/search/docs/advanced/robots/create-robots-txt).*
+
 ## ⚙️ Settings
 Settings can be changed in the admin section of the plugin. In the last tab (Settings) you will find the settings as described below.
 
