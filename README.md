@@ -19,16 +19,6 @@
 </p>
 </div>
 
-## ✨ Features
-
-- **Multilingual** (Implements `rel="alternate"` for the translations of a page)
-- **Auto-updating** (Uses lifecycle methods to keep the sitemap XML up-to-date)
-- **URL bundles** (Bundle URLs by type and add them to the sitemap XML)
-- **Dynamic paths** (Implements URL patterns in which you can inject dynamic fields)
-- **Exclude URLs** (Exclude specified URLs from the sitemap)
-- **Custom URLs** (URLs of pages which are not managed in Strapi)
-- **Styled with XSL** (Human readable XML styling)
-
 ## ⏳ Installation
 
 Install the plugin in your Strapi project.
@@ -70,6 +60,16 @@ Complete installation requirements are the exact same as for Strapi itself and c
 (This plugin may work with older Strapi versions, but these are not tested nor officially supported at this time.)
 
 **We recommend always using the latest version of Strapi to start your new projects**.
+
+## ✨ Features
+
+- **Multilingual** (Implements `rel="alternate"` for the translations of a page)
+- **Auto-updating** (Uses lifecycle methods to keep the sitemap XML up-to-date)
+- **URL bundles** (Bundle URLs by type and add them to the sitemap XML)
+- **Dynamic paths** (Implements URL patterns in which you can inject dynamic fields)
+- **Exclude URLs** (Exclude specified URLs from the sitemap)
+- **Custom URLs** (URLs of pages which are not managed in Strapi)
+- **Styled with XSL** (Human readable XML styling)
 
 ## 💡 Usage
 With this plugin you have full control over which URLs you add to your sitemap XML. Go to the admin section of the plugin and start adding URLs. Here you will find that there are two ways to add URLs to the sitemap. With **URL bundles** and **Custom URLs**.
@@ -121,13 +121,13 @@ This implementation is based on [Google's guidelines](https://developers.google.
 
 ## 🤖 Robots.txt
 
-To make sure search engines know where to find the sitemap XML you would have to make a `robots.txt` file in the front-end of your website and include the following line:
+To make sure search engines are able to find the sitemap XML create a `robots.txt` file in the front-end of your website and add the following line:
 
 ```
 Sitemap: https://your-strapi-domain.com/sitemap/index.xml
 ```
 
-*Read more about `robots.txt` files [here](https://developers.google.com/search/docs/advanced/robots/create-robots-txt).*
+Read more about the `robots.txt` file [here](https://developers.google.com/search/docs/advanced/robots/create-robots-txt).
 
 ## ⚙️ Settings
 Settings can be changed in the admin section of the plugin. In the last tab (Settings) you will find the settings as described below.
