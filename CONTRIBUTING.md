@@ -58,8 +58,10 @@ We follow the [conventional commits specification](https://www.conventionalcommi
 ### Linting and tests
 
 [ESLint](https://eslint.org/)
+[Yamllint](https://github.com/adrienverge/yamllint)
+[Jest](https://jestjs.io/)
 
-We use [ESLint](https://eslint.org/) for linting and formatting the code, and [Jest](https://jestjs.io/) for testing.
+We use [ESLint](https://eslint.org/) for linting and formatting js code, [Yamllint](https://github.com/adrienverge/yamllint) for linting and formatting yaml code, and [Jest](https://jestjs.io/) for testing.
 
 ### Scripts
 
