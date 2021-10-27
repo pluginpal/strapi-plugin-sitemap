@@ -1,7 +1,7 @@
 import React from 'react';
 
-import EditIcon from '@strapi/icons/EditIcon';
-import DeleteIcon from '@strapi/icons/DeleteIcon';
+import EditIcon from '@strapi/icons/Edit';
+import DeleteIcon from '@strapi/icons/Delete';
 import { Box } from '@strapi/design-system/Box';
 import { Flex } from '@strapi/design-system/Flex';
 import { Tr, Td } from '@strapi/design-system/Table';

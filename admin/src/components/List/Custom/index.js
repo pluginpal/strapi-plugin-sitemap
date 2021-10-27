@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { NoContent } from '@strapi/helper-plugin';
-import AddIcon from '@strapi/icons/AddIcon';
+import AddIcon from '@strapi/icons/Add';
 import { VisuallyHidden } from '@strapi/design-system/VisuallyHidden';
 import { Table, Thead, Tbody, Tr, Th, TFooter } from '@strapi/design-system/Table';
 import { TableLabel } from '@strapi/design-system/Text';

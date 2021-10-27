@@ -6,7 +6,7 @@ import { useIntl } from 'react-intl';
 import { useNotification } from '@strapi/helper-plugin';
 import { HeaderLayout } from '@strapi/design-system/Layout';
 import { Box } from '@strapi/design-system/Box';
-import CheckIcon from '@strapi/icons/CheckIcon';
+import CheckIcon from '@strapi/icons/Check';
 import { Button } from '@strapi/design-system/Button';
 
 import { discardAllChanges, submit } from '../../state/actions/Sitemap';
