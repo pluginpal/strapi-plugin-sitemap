@@ -1,6 +1,6 @@
 import React from 'react';
-import { Tabs, Tab, TabGroup, TabPanels, TabPanel } from '@strapi/parts/Tabs';
-import { Box } from '@strapi/parts/Box';
+import { Tabs, Tab, TabGroup, TabPanels, TabPanel } from '@strapi/design-system/Tabs';
+import { Box } from '@strapi/design-system/Box';
 import CollectionURLs from '../../tabs/CollectionURLs';
 import CustomURLs from '../../tabs/CustomURLs';
 import Settings from '../../tabs/Settings';

@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
 
 import { useCMEditViewDataManager, request } from '@strapi/helper-plugin';
-import { Box } from '@strapi/parts/Box';
-import { Divider } from '@strapi/parts/Divider';
-import { TableLabel } from '@strapi/parts/Text';
-import { Stack } from '@strapi/parts/Stack';
-import { Checkbox } from '@strapi/parts/Checkbox';
+import { Box } from '@strapi/design-system/Box';
+import { Divider } from '@strapi/design-system/Divider';
+import { TableLabel } from '@strapi/design-system/Text';
+import { Stack } from '@strapi/design-system/Stack';
+import { Checkbox } from '@strapi/design-system/Checkbox';
 
 import getTrad from '../../helpers/getTrad';
 

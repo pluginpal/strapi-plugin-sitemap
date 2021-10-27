@@ -3,9 +3,9 @@ import { Map } from 'immutable';
 import { useDispatch, useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
 
-import { ToggleInput } from '@strapi/parts/ToggleInput';
-import { Grid, GridItem } from '@strapi/parts/Grid';
-import { TextInput } from '@strapi/parts/TextInput';
+import { ToggleInput } from '@strapi/design-system/ToggleInput';
+import { Grid, GridItem } from '@strapi/design-system/Grid';
+import { TextInput } from '@strapi/design-system/TextInput';
 
 import { onChangeSettings } from '../../state/actions/Sitemap';
 

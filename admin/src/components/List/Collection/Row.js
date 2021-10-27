@@ -2,11 +2,11 @@ import React from 'react';
 
 import EditIcon from '@strapi/icons/EditIcon';
 import DeleteIcon from '@strapi/icons/DeleteIcon';
-import { Box } from '@strapi/parts/Box';
-import { Row } from '@strapi/parts/Row';
-import { Tr, Td } from '@strapi/parts/Table';
-import { Text } from '@strapi/parts/Text';
-import { IconButton } from '@strapi/parts/IconButton';
+import { Box } from '@strapi/design-system/Box';
+import { Flex } from '@strapi/design-system/Flex';
+import { Tr, Td } from '@strapi/design-system/Table';
+import { Text } from '@strapi/design-system/Text';
+import { IconButton } from '@strapi/design-system/IconButton';
 import { useSelector } from 'react-redux';
 
 const CustomRow = ({ openModal, entry }) => {
@@ -34,12 +34,12 @@ const CustomRow = ({ openModal, entry }) => {
         <Text textColor="neutral800">{entry.pattern}</Text>
       </Td>
       <Td>
-        <Row>
+        <Flex>
           <IconButton onClick={handleEditClick} label="Edit" noBorder icon={<EditIcon />} />
           <Box paddingLeft={1}>
             <IconButton onClick={handleDeleteClick} label="Delete" noBorder icon={<DeleteIcon />} />
           </Box>
-        </Row>
+        </Flex>
       </Td>
     </Tr>
   );

@@ -2,10 +2,10 @@ import React from 'react';
 
 import { NoContent } from '@strapi/helper-plugin';
 import AddIcon from '@strapi/icons/AddIcon';
-import { VisuallyHidden } from '@strapi/parts/VisuallyHidden';
-import { Table, Thead, Tbody, Tr, Th, TFooter } from '@strapi/parts/Table';
-import { TableLabel } from '@strapi/parts/Text';
-import { Button } from '@strapi/parts/Button';
+import { VisuallyHidden } from '@strapi/design-system/VisuallyHidden';
+import { Table, Thead, Tbody, Tr, Th, TFooter } from '@strapi/design-system/Table';
+import { TableLabel } from '@strapi/design-system/Text';
+import { Button } from '@strapi/design-system/Button';
 
 import CustomRow from './Row';
 

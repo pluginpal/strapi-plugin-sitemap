@@ -1,5 +1,5 @@
 import React from 'react';
-import { Select, Option } from '@strapi/parts/Select';
+import { Select, Option } from '@strapi/design-system/Select';
 
 const SelectContentTypes = (props) => {
   const {

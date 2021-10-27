@@ -5,11 +5,11 @@ import { useIntl } from 'react-intl';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { useNotification } from '@strapi/helper-plugin';
-import { Text, H3 } from '@strapi/parts/Text';
-import { Box } from '@strapi/parts/Box';
-import { Button } from '@strapi/parts/Button';
-import { Link } from '@strapi/parts/Link';
-import { TextInput } from '@strapi/parts/TextInput';
+import { Text, H3 } from '@strapi/design-system/Text';
+import { Box } from '@strapi/design-system/Box';
+import { Button } from '@strapi/design-system/Button';
+import { Link } from '@strapi/design-system/Link';
+import { TextInput } from '@strapi/design-system/TextInput';
 
 import { generateSitemap, onChangeSettings } from '../../state/actions/Sitemap';
 import { formatTime } from '../../helpers/timeFormat';
