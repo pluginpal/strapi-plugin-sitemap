@@ -1,29 +1,27 @@
 import { prefixPluginTranslations } from '@strapi/helper-plugin';
 import pluginPkg from '../../package.json';
 import pluginId from './helpers/pluginId';
-import pluginLogo from './assets/images/logo.svg';
+import pluginIcon from './components/PluginIcon';
 import CMEditViewExclude from './components/CMEditViewExclude';
 // import pluginPermissions from './permissions';
 // import getTrad from './helpers/getTrad';
 
 const pluginDescription = pluginPkg.strapi.description || pluginPkg.description;
-  const { icon, name } = pluginPkg.strapi;
+  const { name } = pluginPkg.strapi;
 
 export default {
   register(app) {
     app.registerPlugin({
       description: pluginDescription,
-      icon,
       id: pluginId,
       isReady: true,
       isRequired: pluginPkg.strapi.required || false,
       name,
-      pluginLogo,
     });
 
     app.addMenuLink({
       to: `/plugins/${pluginId}`,
-      icon,
+      icon: pluginIcon,
       intlLabel: {
         id: `${pluginId}.plugin.name`,
         defaultMessage: 'Sitemap',
