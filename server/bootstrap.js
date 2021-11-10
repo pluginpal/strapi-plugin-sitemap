@@ -21,6 +21,24 @@ module.exports = async () => {
         await copyPublicFolder('./node_modules/strapi-plugin-sitemap/public/', 'public/sitemap/');
       }
     }
+
+    // Register permission actions.
+    const actions = [
+      {
+        section: 'plugins',
+        displayName: 'Access the plugin settings',
+        uid: 'settings.read',
+        pluginName: 'sitemap',
+      },
+      {
+        section: 'plugins',
+        displayName: 'Link to plugin settings from the main menu',
+        uid: 'menu-item',
+        pluginName: 'sitemap',
+      },
+    ];
+    await strapi.admin.services.permission.actionProvider.registerMany(actions);
+
   } catch (error) {
     strapi.log.error(logMessage(`Bootstrap failed with error "${error.message}".`));
   }
