@@ -33,7 +33,7 @@ export default {
 
         return component;
       },
-      permissions: pluginPermissions['menu-item'],
+      permissions: pluginPermissions['menu-link'],
     });
   },
   bootstrap(app) {
