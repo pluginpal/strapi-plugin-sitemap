@@ -8,7 +8,10 @@ import Settings from '../../tabs/Settings';
 const SitemapTabs = () => {
   return (
     <Box padding={8}>
-      <TabGroup id="tabs">
+      <TabGroup
+        id="tabs"
+        label="Main tabs"
+      >
         <Tabs>
           <Tab>URL bundles</Tab>
           <Tab>Custom URLs</Tab>
