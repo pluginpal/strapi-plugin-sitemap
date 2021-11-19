@@ -744,19 +744,19 @@
   dependencies:
     "@sinonjs/commons" "^1.7.0"
 
-"@strapi/design-system@0.0.1-alpha.64":
-  version "0.0.1-alpha.64"
-  resolved "https://registry.yarnpkg.com/@strapi/design-system/-/design-system-0.0.1-alpha.64.tgz#07ff58d2b2b713424cc8b9624e9a88e58e91cdd3"
-  integrity sha512-myCOoOUFrJPATcWtG268BBQmR23+7lay2gVN01HZh2wiTAqhOUOVNQo9yvjvsC4lUOH/brSbBEPwmW4kQ5S5iw==
+"@strapi/design-system@0.0.1-alpha.67":
+  version "0.0.1-alpha.67"
+  resolved "https://registry.yarnpkg.com/@strapi/design-system/-/design-system-0.0.1-alpha.67.tgz#38fc39836a49b239afc6e178d2edd7b06851f806"
+  integrity sha512-0nkRWKEBHx/O0tQZ70WD1201XUmryhDylZptxT1TBKBaUdO/7vwbViF7HKZi77jHBYF9xN5w5AeUVY8yOqWXBQ==
   dependencies:
     "@internationalized/number" "^3.0.2"
     compute-scroll-into-view "^1.0.17"
     prop-types "^15.7.2"
 
-"@strapi/helper-plugin@4.0.0-beta.12":
-  version "4.0.0-beta.12"
-  resolved "https://registry.yarnpkg.com/@strapi/helper-plugin/-/helper-plugin-4.0.0-beta.12.tgz#99c24ecd9da7afa2bbbe38354af6d08be5411904"
-  integrity sha512-hyeZdI8d3HK37tXgrGHSOlZ80OJ1cRo+cEqOZhmPhh82igHEcYyMXZLQBylnUIcLLqHfs0Iunun402Hj7U0KGA==
+"@strapi/helper-plugin@4.0.0-beta.14":
+  version "4.0.0-beta.14"
+  resolved "https://registry.yarnpkg.com/@strapi/helper-plugin/-/helper-plugin-4.0.0-beta.14.tgz#099193138459cc9fabbd1f698ccac0c79d49b69a"
+  integrity sha512-h8lclRdU8cCnISutVVPYWKkoV+7P2ozj/dGlhl4VrkyUhBI6RTmiLYFLkGUJlvSYFX5+RxLV0ZpT5VaaQBVkGw==
   dependencies:
     "@fortawesome/fontawesome-free" "^5.15.2"
     "@fortawesome/fontawesome-svg-core" "^1.2.35"
@@ -781,15 +781,15 @@
     styled-components "^5.2.3"
     whatwg-fetch "^3.6.2"
 
-"@strapi/icons@0.0.1-alpha.64":
-  version "0.0.1-alpha.64"
-  resolved "https://registry.yarnpkg.com/@strapi/icons/-/icons-0.0.1-alpha.64.tgz#4fc04e62fb37f5f02411281b4932460893498092"
-  integrity sha512-wMkdbx1115nC2pGuIM/xGc4HqkrZPDje/pqnI3Zv9RHtfl5mOVpvmC4rBAKy3EOg2dbmeVy6JPLOvah8GYaEkw==
+"@strapi/icons@0.0.1-alpha.67":
+  version "0.0.1-alpha.67"
+  resolved "https://registry.yarnpkg.com/@strapi/icons/-/icons-0.0.1-alpha.67.tgz#797bd7bbff4107006c93e20edb4e2736c1bc564b"
+  integrity sha512-t2BjpQpXLoX3Tc4f+HxfoQifx1Z9uSVDjwLxld360Aq3zVXknpdUiU+kJsxl8BHj/8H6PB/KS5vB2lcjl4/7Vg==
 
-"@strapi/utils@4.0.0-beta.12":
-  version "4.0.0-beta.12"
-  resolved "https://registry.yarnpkg.com/@strapi/utils/-/utils-4.0.0-beta.12.tgz#8f9085ddb47c07e64a880757fcb34f71bb61a4c0"
-  integrity sha512-nRAUUp7ZIIqSR1kWPu952omy+DZ8HxZNQ2pGkAZTsgrz6IEYMQ/lE14u3m9k9f/XhwGo5gYwH98fTERrT2n9/w==
+"@strapi/utils@4.0.0-beta.14":
+  version "4.0.0-beta.14"
+  resolved "https://registry.yarnpkg.com/@strapi/utils/-/utils-4.0.0-beta.14.tgz#e586bd52308075bdce8991af4ac9303e9c2addd3"
+  integrity sha512-s0vUbfX4JL5xmFq8ah/Sfuhq5UdVspmKKfMzuSDQExZX2c028L72RzQ+N0K4QYd/kWzUrEWnvP4qdRLqKstvlg==
   dependencies:
     "@sindresorhus/slugify" "1.1.0"
     date-fns "2.24.0"

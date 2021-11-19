@@ -1,7 +1,7 @@
 import React from 'react';
 
-import EditIcon from '@strapi/icons/Edit';
-import DeleteIcon from '@strapi/icons/Delete';
+import Pencil from '@strapi/icons/Pencil';
+import Trash from '@strapi/icons/Trash';
 import { Box } from '@strapi/design-system/Box';
 import { Flex } from '@strapi/design-system/Flex';
 import { Tr, Td } from '@strapi/design-system/Table';
@@ -32,9 +32,9 @@ const CustomRow = ({ openModal, entry }) => {
       </Td>
       <Td>
         <Flex>
-          <IconButton onClick={handleEditClick} label="Edit" noBorder icon={<EditIcon />} />
+          <IconButton onClick={handleEditClick} label="Edit" noBorder icon={<Pencil />} />
           <Box paddingLeft={1}>
-            <IconButton onClick={handleDeleteClick} label="Delete" noBorder icon={<DeleteIcon />} />
+            <IconButton onClick={handleDeleteClick} label="Delete" noBorder icon={<Trash />} />
           </Box>
         </Flex>
       </Td>

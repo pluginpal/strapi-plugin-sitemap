@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { NoContent } from '@strapi/helper-plugin';
-import AddIcon from '@strapi/icons/Add';
+import Plus from '@strapi/icons/Plus';
 import { VisuallyHidden } from '@strapi/design-system/VisuallyHidden';
 import { Table, Thead, Tbody, Tr, Th, TFooter } from '@strapi/design-system/Table';
 import { TableLabel } from '@strapi/design-system/Text';
@@ -41,7 +41,7 @@ const ListComponent = (props) => {
   }
 
   return (
-    <Table colCount={4} rowCount={formattedItems.length + 1} footer={<TFooter onClick={() => openModal()} icon={<AddIcon />}>Add another URL</TFooter>}>
+    <Table colCount={4} rowCount={formattedItems.length + 1} footer={<TFooter onClick={() => openModal()} icon={<Plus />}>Add another URL</TFooter>}>
       <Thead>
         <Tr>
           <Th>
