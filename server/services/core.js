@@ -182,6 +182,11 @@ const createSitemap = async () => {
     });
 
     const sitemapEntries = await createSitemapEntries();
+    if (isEmpty(sitemapEntries)) {
+      strapi.log.info(logMessage(`No sitemap XML was generated because there were 0 URLs configured.`));
+      return;
+    }
+
     sitemapEntries.map((sitemapEntry) => sitemap.write(sitemapEntry));
     sitemap.end();
 
