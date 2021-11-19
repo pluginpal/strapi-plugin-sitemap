@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { useIntl } from 'react-intl';
+import { isEmpty } from 'lodash/fp';
 
 import { Grid, GridItem } from '@strapi/design-system/Grid';
 import { TextInput } from '@strapi/design-system/TextInput';
@@ -64,7 +65,7 @@ const CollectionForm = (props) => {
                 contentTypes={contentTypes}
                 onChange={(value) => handleSelectChange(value)}
                 value={uid}
-                disabled={id}
+                disabled={!isEmpty(id)}
                 modifiedContentTypes={modifiedState}
               />
             </GridItem>
