@@ -63,9 +63,9 @@ Complete installation requirements are the exact same as for Strapi itself and c
 
 **Supported Strapi versions**:
 
-- Strapi v4.0.0-beta.2 (recently tested)
-- Strapi v4.x
-- Strapi v3.6.x (use `strapi-plugin-sitemap@1.2.5`)
+- Strapi ^4.0.0-beta.14 (recently tested)
+- Strapi ^4.x
+- Strapi ^3.4.x (use `strapi-plugin-sitemap@1.2.5`)
 
 (This plugin may work with older Strapi versions, but these are not tested nor officially supported at this time.)
 
@@ -162,6 +162,7 @@ You can overwrite the config like so:
 
 ```
 module.exports = ({ env }) => ({
+  // ...
   'sitemap': {
     enabled: true,
     config: {
