@@ -21,6 +21,7 @@ export const GET_SETTINGS = 'Sitemap/ConfigPage/GET_SETTINGS';
 export const GET_SETTINGS_SUCCEEDED = 'Sitemap/ConfigPage/GET_SETTINGS_SUCCEEDED';
 export const GET_CONTENT_TYPES = 'Sitemap/ConfigPage/GET_CONTENT_TYPES';
 export const GET_CONTENT_TYPES_SUCCEEDED = 'Sitemap/ConfigPage/GET_CONTENT_TYPES_SUCCEEDED';
+export const GET_LANGUAGES_SUCCEEDED = 'Sitemap/ConfigPage/GET_LANGUAGES_SUCCEEDED';
 export const HAS_SITEMAP = 'Sitemap/ConfigPage/HAS_SITEMAP';
 export const GET_SITEMAP_INFO_SUCCEEDED = 'Sitemap/ConfigPage/GET_SITEMAP_INFO_SUCCEEDED';
 export const ON_CHANGE_CUSTOM_ENTRY = 'Sitemap/ConfigPage/ON_CHANGE_CUSTOM_ENTRY';

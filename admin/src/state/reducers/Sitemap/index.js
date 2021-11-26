@@ -11,6 +11,7 @@ import {
   ON_CHANGE_CONTENT_TYPES,
   SUBMIT_MODAL,
   GET_CONTENT_TYPES_SUCCEEDED,
+  GET_LANGUAGES_SUCCEEDED,
   DELETE_CONTENT_TYPE,
   DELETE_CUSTOM_ENTRY,
   DISCARD_ALL_CHANGES,
@@ -28,6 +29,7 @@ const initialState = fromJS({
   allowedFields: {},
   settings: Map({}),
   contentTypes: {},
+  languages: [],
   initialData: Map({}),
   modifiedContentTypes: Map({}),
   modifiedCustomEntries: Map({}),
@@ -93,6 +95,9 @@ export default function sitemapReducer(state = initialState, action) {
     case GET_CONTENT_TYPES_SUCCEEDED:
       return state
         .update('contentTypes', () => action.contentTypes);
+    case GET_LANGUAGES_SUCCEEDED:
+      return state
+        .update('languages', () => action.languages);
     case ON_SUBMIT_SUCCEEDED:
       return state
         .update('initialData', () => state.get('settings'));
