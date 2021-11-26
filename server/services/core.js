@@ -52,7 +52,7 @@ const getLanguageLinks = async (page, contentType, defaultURL, excludeDrafts) =>
 
     links.push({
       lang: translationEntity.locale,
-      url: translationUrl,
+      url: `${config.hostname_overrides[locale] || ''}${translationUrl}`,
     });
   }));
 
@@ -75,7 +75,8 @@ const getSitemapPageData = async (page, contentType, excludeDrafts) => {
   if (!config.contentTypes[contentType]['languages'][locale]) return null;
 
   const { pattern } = config.contentTypes[contentType]['languages'][locale];
-  const url = await strapi.plugins.sitemap.services.pattern.resolvePattern(pattern, page);
+  const path = await strapi.plugins.sitemap.services.pattern.resolvePattern(pattern, page);
+  const url = `${config.hostname_overrides[locale] || ''}${path}`;
 
   return {
     lastmod: page.updatedAt,
