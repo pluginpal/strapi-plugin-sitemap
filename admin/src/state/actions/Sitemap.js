@@ -14,6 +14,7 @@
   ON_CHANGE_SETTINGS,
   GET_SETTINGS_SUCCEEDED,
   GET_CONTENT_TYPES_SUCCEEDED,
+  GET_LANGUAGES_SUCCEEDED,
   ON_SUBMIT_SUCCEEDED,
   DELETE_CONTENT_TYPE,
   DELETE_CUSTOM_ENTRY,
@@ -119,6 +120,24 @@ export function getContentTypesSucceeded(contentTypes) {
   return {
     type: GET_CONTENT_TYPES_SUCCEEDED,
     contentTypes,
+  };
+}
+
+export function getLanguages(toggleNotification) {
+  return async function(dispatch) {
+    try {
+      const languages = await request('/sitemap/languages/', { method: 'GET' });
+      dispatch(getLanguagesSucceeded(languages));
+    } catch (err) {
+      toggleNotification({ type: 'warning', message: { id: 'notification.error' } });
+    }
+  };
+}
+
+export function getLanguagesSucceeded(languages) {
+  return {
+    type: GET_LANGUAGES_SUCCEEDED,
+    languages,
   };
 }
 

@@ -52,6 +52,11 @@ module.exports = {
     ctx.send(contentTypes);
   },
 
+  getLanguages: async (ctx) => {
+    const locales = await strapi.query('plugin::i18n.locale').findMany();
+    ctx.send(locales);
+  },
+
   info: async (ctx) => {
     const sitemapInfo = {};
     const hasSitemap = fs.existsSync('public/sitemap/index.xml');
