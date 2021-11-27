@@ -140,6 +140,21 @@ The hostname is the URL of your website. It will be used as the base URL of all 
 
 > `required:` YES | `type:` string | `default:` ''
 
+### Hostname overrides
+
+If you are using this plugin in a multilingual Strapi project you will be presented with a 'Hostname overrides' setting.
+With this setting you can set a specific hostname per language.
+
+This is handy for when you have a URL structure like this:
+
+- https://en.domain.com (english domain)
+- https://nl.domain.com (dutch domain)
+- https://de.domain.com (german domain)
+
+###### Key: `hostname_overrides`
+
+> `required:` NO | `type:` object | `default:` {}
+
 ### Exclude drafts
 
 When using the draft/publish functionality in Strapi this setting will make sure that all draft pages are excluded from the sitemap. If you want to have the draft pages in the sitemap anyways you can disable this setting.
