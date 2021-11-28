@@ -34,5 +34,7 @@
   "Modal.CustomDescription": "Specify the relative path of the page you want to add to the sitemap.",
 
   "notification.success.submit": "Settings have been updated",
-  "notification.success.generate": "Sitemap has been generated"
+  "notification.success.generate": "Sitemap has been generated",
+
+  "plugin.name": "Sitemap"
 }
