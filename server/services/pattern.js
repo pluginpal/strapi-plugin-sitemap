@@ -58,6 +58,7 @@ const resolvePattern = async (pattern, entity) => {
   });
 
   pattern = pattern.replace(/([^:]\/)\/+/g, "$1"); // Remove duplicate forward slashes.
+  pattern = pattern.startsWith('/') ? pattern : `/${pattern}`; // Add a starting slash.
   return pattern;
 };
 
