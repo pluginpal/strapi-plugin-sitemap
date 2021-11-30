@@ -1,6 +1,6 @@
 {
   "name": "strapi-plugin-sitemap",
-  "version": "2.0.0-beta.2",
+  "version": "2.0.0",
   "description": "Generate a highly customizable sitemap XML in Strapi CMS.",
   "strapi": {
     "displayName": "Sitemap",
@@ -42,10 +42,10 @@
   ],
   "devDependencies": {
     "@fortawesome/react-fontawesome": "^0.1.16",
-    "@strapi/design-system": "0.0.1-alpha.67",
-    "@strapi/helper-plugin": "4.0.0-beta.14",
-    "@strapi/icons": "0.0.1-alpha.67",
-    "@strapi/utils": "4.0.0-beta.14",
+    "@strapi/design-system": "0.0.1-alpha.70",
+    "@strapi/helper-plugin": "4.0.0",
+    "@strapi/icons": "0.0.1-alpha.70",
+    "@strapi/utils": "4.0.0",
     "babel-eslint": "9.0.0",
     "codecov": "^3.8.3",
     "eslint": "^5.16.0",

@@ -63,7 +63,7 @@ Complete installation requirements are the exact same as for Strapi itself and c
 
 **Supported Strapi versions**:
 
-- Strapi ^4.0.0-beta.14 (recently tested)
+- Strapi 4.0.0 (recently tested)
 - Strapi ^4.x
 - Strapi ^3.4.x (use `strapi-plugin-sitemap@1.2.5`)
 
