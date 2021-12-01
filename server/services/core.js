@@ -30,11 +30,10 @@ const getLanguageLinks = async (page, contentType, defaultURL, excludeDrafts) =>
   await Promise.all(page.localizations.map(async (translation) => {
     const translationEntity = await strapi.query(contentType).findOne({
       where: {
-        $and: [
-          { id: translation.id },
-          { id: { $notIn: config.contentTypes[contentType].excluded || [] } },
-        ],
         id: translation.id,
+        sitemap_exclude: {
+          $not: true,
+        },
         publishedAt: {
           $notNull: excludeDrafts,
         },
@@ -102,8 +101,8 @@ const createSitemapEntries = async () => {
     const excludeDrafts = config.excludeDrafts && strapi.contentTypes[contentType].options.draftAndPublish;
     const pages = await strapi.query(contentType).findMany({
       where: {
-        id: {
-          $notIn: config.contentTypes[contentType].excluded || [],
+        sitemap_exclude: {
+          $not: true,
         },
         published_at: {
           $notNull: excludeDrafts,

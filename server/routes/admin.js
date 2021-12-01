@@ -52,14 +52,6 @@ module.exports = {
       },
     },
     {
-      method: "PUT",
-      path: "/settings/exclude",
-      handler: "settings.excludeEntry",
-      config: {
-        policies: [],
-      },
-    },
-    {
       method: "GET",
       path: "/pattern/allowed-fields",
       handler: "pattern.allowedFields",

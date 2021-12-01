@@ -13,7 +13,7 @@ import getTrad from '../../helpers/getTrad';
 const CMEditViewExclude = () => {
   const [sitemapSettings, setSitemapSettings] = useState({});
   const { formatMessage } = useIntl();
-  const { slug, initialData } = useCMEditViewDataManager();
+  const { slug, modifiedData, onChange } = useCMEditViewDataManager();
 
   const getSitemapSettings = async () => {
     const settings = await request('/sitemap/settings/', { method: 'GET' });
@@ -27,19 +27,6 @@ const CMEditViewExclude = () => {
   if (!sitemapSettings.contentTypes) return null;
   if (!sitemapSettings.contentTypes[slug]) return null;
 
-  const excludeEntry = async () => {
-    await request(
-      '/sitemap/settings/exclude',
-      { method: 'PUT', body: { model: slug, id: initialData.id } },
-    );
-    getSitemapSettings();
-  };
-
-  const getExcludedValue = () => {
-    if (!sitemapSettings.contentTypes[slug].excluded) return false;
-    return sitemapSettings.contentTypes[slug].excluded.includes(initialData.id);
-  };
-
   return (
     <Box paddingTop={6}>
       <TableLabel textColor="neutral600">
@@ -51,10 +38,10 @@ const CMEditViewExclude = () => {
       <Stack size={2}>
         <Box>
           <Checkbox
-            onValueChange={() => {
-              excludeEntry();
+            onValueChange={(value) => {
+              onChange({ target: { name: 'sitemap_exclude', value } });
             }}
-            value={getExcludedValue()}
+            value={modifiedData.sitemap_exclude}
             name="exclude-from-sitemap"
           >
             Exclude from sitemap
