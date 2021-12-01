@@ -43,12 +43,24 @@ const getLanguageLinks = async (page, contentType, defaultURL, excludeDrafts) =>
 
     if (!translationEntity) return null;
 
-    const { locale } = translationEntity;
-    if (!config.contentTypes[contentType]['languages'][locale]) return null;
+    let { locale } = translationEntity;
+
+    // Return when there is no pattern for the page.
+    if (
+      !config.contentTypes[contentType]['languages'][locale]
+      && config.contentTypes[contentType]['languages']['und']
+    ) {
+      locale = 'und';
+    } else if (
+      !config.contentTypes[contentType]['languages'][locale]
+      && !config.contentTypes[contentType]['languages']['und']
+    ) {
+      return null;
+    }
 
     const { pattern } = config.contentTypes[contentType]['languages'][locale];
     const translationUrl = await strapi.plugins.sitemap.services.pattern.resolvePattern(pattern, translationEntity);
-    const hostnameOverride = config.hostname_overrides[locale]?.replace(/\/+$/, "") || '';
+    const hostnameOverride = config.hostname_overrides[translationEntity.locale]?.replace(/\/+$/, "") || '';
     links.push({
       lang: translationEntity.locale,
       url: `${hostnameOverride}${translationUrl}`,
@@ -68,14 +80,25 @@ const getLanguageLinks = async (page, contentType, defaultURL, excludeDrafts) =>
  * @returns {object} The sitemap entry data.
  */
 const getSitemapPageData = async (page, contentType, excludeDrafts) => {
-  const locale = page.locale || 'und';
+  let locale = page.locale || 'und';
   const config = await getService('settings').getConfig();
 
-  if (!config.contentTypes[contentType]['languages'][locale]) return null;
+  // Return when there is no pattern for the page.
+  if (
+    !config.contentTypes[contentType]['languages'][locale]
+    && config.contentTypes[contentType]['languages']['und']
+  ) {
+    locale = 'und';
+  } else if (
+    !config.contentTypes[contentType]['languages'][locale]
+    && !config.contentTypes[contentType]['languages']['und']
+  ) {
+    return null;
+  }
 
   const { pattern } = config.contentTypes[contentType]['languages'][locale];
   const path = await strapi.plugins.sitemap.services.pattern.resolvePattern(pattern, page);
-  const hostnameOverride = config.hostname_overrides[locale]?.replace(/\/+$/, "") || '';
+  const hostnameOverride = config.hostname_overrides[page.locale]?.replace(/\/+$/, "") || '';
   const url = `${hostnameOverride}${path}`;
 
   return {

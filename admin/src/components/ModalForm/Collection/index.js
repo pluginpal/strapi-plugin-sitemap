@@ -86,7 +86,7 @@ const CollectionForm = (props) => {
                 name="pattern"
                 value={modifiedState.getIn([uid, 'languages', langcode, 'pattern'], '')}
                 hint={patternHint()}
-                disabled={!uid || (contentTypes[uid].locales && langcode === 'und')}
+                disabled={!uid || (contentTypes[uid].locales && !langcode)}
                 error={patternInvalid.invalid ? patternInvalid.message : ''}
                 placeholder="/en/pages/[id]"
                 onChange={async (e) => {
@@ -102,7 +102,7 @@ const CollectionForm = (props) => {
                 <Select
                   name={input}
                   {...form[input]}
-                  disabled={!uid || (contentTypes[uid].locales && langcode === 'und')}
+                  disabled={!uid || (contentTypes[uid].locales && !langcode)}
                   onChange={(value) => onChange(uid, langcode, input, value)}
                   value={modifiedState.getIn([uid, 'languages', langcode, input], form[input].value)}
                 >
