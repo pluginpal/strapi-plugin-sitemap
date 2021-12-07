@@ -136,9 +136,7 @@ const CollectionForm = (props) => {
                         key={fieldName}
                         padding={2}
                         onClick={() => {
-                          console.log('set in pattern', fieldName);
                           const newPattern = `${modifiedState.getIn([uid, 'languages', langcode, 'pattern'], '')}${fieldName}]`;
-
                           onChange(uid, langcode, 'pattern', newPattern);
                         }}
                       >

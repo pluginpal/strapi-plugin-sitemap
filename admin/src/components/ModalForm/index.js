@@ -11,8 +11,6 @@ import CollectionForm from './Collection';
 
 const ModalForm = (props) => {
   const [uid, setUid] = useState('');
-  const [langcode, setLangcode] = useState('und');
-  const [patternInvalid, setPatternInvalid] = useState({ invalid: false });
   const { formatMessage } = useIntl();
 
   const {
@@ -25,6 +23,9 @@ const ModalForm = (props) => {
     modifiedState,
     contentTypes,
   } = props;
+
+  const [patternInvalid, setPatternInvalid] = useState({ invalid: false });
+  const [langcode, setLangcode] = useState((contentTypes[uid] && contentTypes[uid].locales) ? null : 'und');
 
   useEffect(() => {
     setPatternInvalid({ invalid: false });
