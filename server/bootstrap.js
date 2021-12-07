@@ -12,7 +12,7 @@ module.exports = async () => {
     await sitemap.service('lifecycle').loadAllLifecycleMethods();
 
     // Copy the plugins /public folder to the /public/sitemap/ folder in the root of your project.
-    if (!fs.existsSync('public/sitemap/')) {
+    if (!fs.existsSync('public/sitemap/xsl/')) {
       if (fs.existsSync('./src/extensions/sitemap/public/')) {
         await copyPublicFolder('./src/extensions/sitemap/public/', 'public/sitemap/');
       } else if (fs.existsSync('./src/plugins/sitemap/public/')) {
