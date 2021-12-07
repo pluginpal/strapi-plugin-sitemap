@@ -35,7 +35,7 @@ const ModalForm = (props) => {
     } else {
       setUid('');
     }
-    if (lang && langcode === 'und') {
+    if (lang && langcode === null) {
       setLangcode(lang);
     } else {
       setLangcode(null);
