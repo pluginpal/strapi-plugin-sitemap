@@ -38,7 +38,7 @@ const CollectionForm = (props) => {
     setPatternInvalid,
   } = props;
 
-  const handleSelectChange = (contentType, lang = 'und') => {
+  const handleSelectChange = (contentType, lang = null) => {
     setLangcode(lang);
     setUid(contentType);
     onCancel(false);

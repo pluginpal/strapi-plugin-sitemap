@@ -11,7 +11,7 @@ const CollectionURLs = () => {
   const dispatch = useDispatch();
   const [modalOpen, setModalOpen] = useState(false);
   const [uid, setUid] = useState(null);
-  const [langcode, setLangcode] = useState('und');
+  const [langcode, setLangcode] = useState(null);
 
   const handleModalSubmit = (e) => {
     e.preventDefault();
