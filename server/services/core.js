@@ -8,7 +8,7 @@ const { SitemapStream, streamToPromise } = require('sitemap');
 const { isEmpty } = require('lodash');
 const fs = require('fs');
 const { getAbsoluteServerUrl } = require('@strapi/utils');
-const { logMessage, getService } = require('../utils');
+const { logMessage, getService, noLimit } = require('../utils');
 
 /**
  * Get a formatted array of different language URLs of a single page.
@@ -122,7 +122,7 @@ const createSitemapEntries = async () => {
   // Collection entries.
   await Promise.all(Object.keys(config.contentTypes).map(async (contentType) => {
     const excludeDrafts = config.excludeDrafts && strapi.contentTypes[contentType].options.draftAndPublish;
-    const pages = await strapi.query(contentType).findMany({
+    const pages = await noLimit(strapi.query(contentType), {
       where: {
         sitemap_exclude: {
           $not: true,
@@ -132,7 +132,6 @@ const createSitemapEntries = async () => {
         },
       },
       populate: ['localizations'],
-      limit: 0,
     });
 
     // Add formatted sitemap page data to the array.
