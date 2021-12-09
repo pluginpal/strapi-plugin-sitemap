@@ -1,0 +1,90 @@
+body {
+  background-color: #fff;
+  font-family: Verdana, sans-serif;
+  font-size: 10pt;
+}
+
+h1 {
+  font-size: 1.25em;
+}
+
+table.sitemap {
+  background-color: #cdcdcd;
+  margin: 10px 0 15px;
+  font-size: 8pt;
+  width: 100%;
+  text-align: left;
+}
+
+table.sitemap thead tr th,
+table.sitemap tfoot tr th {
+  background-color: #e6eeee;
+  border: 1px solid #fff;
+  font-size: 8pt;
+  padding: 3px;
+}
+
+table.sitemap thead tr {
+  cursor: pointer;
+}
+
+table.sitemap thead tr th {
+  padding-right: 20px;
+}
+
+table.sitemap tbody tr:nth-child(odd) td {
+  background-color: #efefef;
+}
+
+table.sitemap tbody td {
+  color: #3d3d3d;
+  padding: 3px;
+  background-color: #fff;
+  vertical-align: top;
+}
+
+table.sitemap thead tr .dir-u,
+table.sitemap thead tr .dir-d {
+  background-color: #5050d3;
+  position: relative;
+  color: #fff;
+  font-style: italic;
+}
+
+table.sitemap thead tr .dir-u:after {
+  content: '\25b2';
+  position:absolute;
+  right: 5px;
+}
+
+table.sitemap thead tr .dir-d:after {
+  content: '\25bc';
+  position:absolute;
+  right: 5px;
+}
+
+table.sitemap tbody tr ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+table.sitemap tbody tr ul li:not(:first-of-type) {
+  margin-top: 5px;
+}
+
+table.sitemap tbody tr ul li span {
+  margin-right: 5px;
+}
+
+table.sitemap tbody tr ul li span:after {
+  content: ":";
+}
+
+table.sitemap tbody tr ul.translation-set li span {
+  text-transform: uppercase;
+}
+
+table.sitemap tbody tr ul.images li span {
+  font-style: italic;
+}

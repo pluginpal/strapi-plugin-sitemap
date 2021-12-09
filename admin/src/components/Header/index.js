@@ -1,69 +1,68 @@
-/*
- *
- * HeaderComponent
- *
- */
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Map } from 'immutable';
+import { useIntl } from 'react-intl';
 
-import React, { memo } from 'react';
-import { isEmpty } from 'lodash';
-import { Header } from '@buffetjs/custom';
-import { useGlobalContext } from 'strapi-helper-plugin';
-import openWithNewTab from '../../utils/openWithNewTab';
+import { useNotification } from '@strapi/helper-plugin';
+import { HeaderLayout } from '@strapi/design-system/Layout';
+import { Box } from '@strapi/design-system/Box';
+import CheckIcon from '@strapi/icons/Check';
+import { Button } from '@strapi/design-system/Button';
 
-const HeaderComponent = (props) => {
-  const disabled = 
-    JSON.stringify(props.settings) === JSON.stringify(props.initialData);
-  const settingsComplete = 
-    props.settings.hostname && !isEmpty(props.settings.contentTypes) ||
-    props.settings.hostname && !isEmpty(props.settings.customEntries) ||
-    props.settings.hostname && props.settings.includeHomepage;
+import { discardAllChanges, submit } from '../../state/actions/Sitemap';
 
-  const globalContext = useGlobalContext();
+const Header = () => {
+  const settings = useSelector((state) => state.getIn(['sitemap', 'settings'], Map()));
+  const initialData = useSelector((state) => state.getIn(['sitemap', 'initialData'], Map()));
+  const toggleNotification = useNotification();
 
-  const actions = [
-    {
-      label: globalContext.formatMessage({ id: 'sitemap.Button.Cancel' }),
-      onClick: props.onCancel,
-      color: 'cancel',
-      type: 'button',
-      hidden: disabled,
-    },
-    {
-      label: globalContext.formatMessage({ id: 'sitemap.Button.Save' }),
-      onClick: props.onSubmit,
-      color: 'success',
-      type: 'submit',
-      hidden: disabled
-    },
-    {
-      color: 'none',
-      label: globalContext.formatMessage({ id: 'sitemap.Header.Button.SitemapLink' }),
-      className: 'buttonOutline',
-      onClick: () => openWithNewTab('/sitemap.xml'),
-      type: 'button',
-      key: 'button-open',
-      hidden: !disabled || !settingsComplete || !props.sitemapPresence
-    },
-    {
-      label: globalContext.formatMessage({ id: 'sitemap.Header.Button.Generate' }),
-      onClick: props.generateSitemap,
-      color: 'primary',
-      type: 'button',
-      hidden: !disabled || !settingsComplete
-    },
-  ];
+  const dispatch = useDispatch();
+  const { formatMessage } = useIntl();
 
-  const headerProps = {
-    title: {
-      label: globalContext.formatMessage({ id: 'sitemap.Header.Title' }),
-    },
-    content: globalContext.formatMessage({ id: 'sitemap.Header.Description' }),
-    actions: actions,
+  const disabled = JSON.stringify(settings) === JSON.stringify(initialData);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    dispatch(submit(settings.toJS(), toggleNotification));
   };
-  
+
+  const handleCancel = (e) => {
+    e.preventDefault();
+    dispatch(discardAllChanges());
+  };
+
   return (
-    <Header {...headerProps} />
+    <Box background="neutral100">
+      <HeaderLayout
+        primaryAction={(
+          <Box style={{ display: "flex" }}>
+            <Button
+              onClick={handleCancel}
+              disabled={disabled}
+              type="cancel"
+              size="L"
+              variant="secondary"
+            >
+              {formatMessage({ id: 'sitemap.Button.Cancel' })}
+            </Button>
+            <Button
+              style={{ marginLeft: '10px' }}
+              onClick={handleSubmit}
+              disabled={disabled}
+              type="submit"
+              startIcon={<CheckIcon />}
+              size="L"
+            >
+              {formatMessage({ id: 'sitemap.Button.Save' })}
+            </Button>
+          </Box>
+        )}
+        title={formatMessage({ id: 'sitemap.Header.Title' })}
+        subtitle={formatMessage({ id: 'sitemap.Header.Description' })}
+        as="h2"
+      />
+    </Box>
   );
 };
 
-export default memo(HeaderComponent);
+export default Header;

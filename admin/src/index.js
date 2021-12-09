@@ -1,54 +1,68 @@
-import React from 'react';
+import { prefixPluginTranslations } from '@strapi/helper-plugin';
 import pluginPkg from '../../package.json';
-import pluginId from './pluginId';
-import App from './containers/App';
-import Initializer from './containers/Initializer';
-import trads from './translations';
+import pluginId from './helpers/pluginId';
+import pluginIcon from './components/PluginIcon';
+import CMEditViewExclude from './components/CMEditViewExclude';
+import pluginPermissions from './permissions';
+// import getTrad from './helpers/getTrad';
 
-function Comp(props) {
-  return <App {...props} />;
-}
+const pluginDescription = pluginPkg.strapi.description || pluginPkg.description;
+  const { name } = pluginPkg.strapi;
 
-export default strapi => {
-  const pluginDescription =
-    pluginPkg.strapi.description || pluginPkg.description;
+export default {
+  register(app) {
+    app.registerPlugin({
+      description: pluginDescription,
+      id: pluginId,
+      isReady: true,
+      isRequired: pluginPkg.strapi.required || false,
+      name,
+    });
 
-  const icon = pluginPkg.strapi.icon;
-  const name = pluginPkg.strapi.name;
+    app.addMenuLink({
+      to: `/plugins/${pluginId}`,
+      icon: pluginIcon,
+      intlLabel: {
+        id: `${pluginId}.plugin.name`,
+        defaultMessage: 'Sitemap',
+      },
+      Component: async () => {
+        const component = await import(
+          /* webpackChunkName: "sitemap-settings-page" */ './containers/App'
+        );
 
-  const plugin = {
-    icon,
-    name,
-    destination: `/plugins/${pluginId}`,
-    blockerComponent: null,
-    blockerComponentProps: {},
-    description: pluginDescription,
-    icon: pluginPkg.strapi.icon,
-    id: pluginId,
-    initializer: Initializer,
-    injectedComponents: [],
-    isReady: false,
-    layout: null,
-    leftMenuLinks: [],
-    leftMenuSections: [],
-    mainComponent: Comp,
-    name: pluginPkg.strapi.name,
-    preventComponentRendering: false,
-    trads,
-    menu: {
-      pluginsSectionLinks: [
-        {
-          destination: `/plugins/${pluginId}/collection-entries`, // Endpoint of the link
-          icon,
-          name,
-          label: {
-            id: `${pluginId}.plugin.name`, // Refers to a i18n
-            defaultMessage: 'Sitemap',
-          },
-        },
-      ],
-    },
-  };
+        return component;
+      },
+      permissions: pluginPermissions['menu-link'],
+    });
+  },
+  bootstrap(app) {
+    app.injectContentManagerComponent('editView', 'informations', {
+      name: 'sitemap-exclude-filter-edit-view',
+      Component: CMEditViewExclude,
+    });
+  },
+  async registerTrads({ locales }) {
+    const importedTrads = await Promise.all(
+      locales.map((locale) => {
+        return import(
+          /* webpackChunkName: "sitemap-translation-[request]" */ `./translations/${locale}.json`
+        )
+          .then(({ default: data }) => {
+            return {
+              data: prefixPluginTranslations(data, pluginId),
+              locale,
+            };
+          })
+          .catch(() => {
+            return {
+              data: {},
+              locale,
+            };
+          });
+      })
+    );
 
-  return strapi.registerPlugin(plugin);
+    return Promise.resolve(importedTrads);
+  },
 };

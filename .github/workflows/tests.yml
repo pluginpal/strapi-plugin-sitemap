@@ -1,0 +1,48 @@
+name: Tests
+
+on:
+  push:
+    branches:
+      - master
+      - develop
+  pull_request:
+
+jobs:
+  lint:
+    name: 'lint'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+          cache: 'yarn'
+      - name: Install dependencies
+        run: yarn --ignore-scripts --frozen-lockfile
+      - name: Run eslint
+        run: yarn run eslint
+      - name: Yaml lint
+        uses: ibiqlik/action-yamllint@v3
+        with:
+          config_file: .yamllint.yml
+  unit:
+    name: 'unit'
+    needs: [lint]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+          cache: 'yarn'
+      - name: Install dependencies
+        run: yarn --ignore-scripts --frozen-lockfile
+      - name: Run test
+        run: yarn run -s test:unit
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV }}
+          flags: unit
+          verbose: true
+          fail_ci_if_error: true
