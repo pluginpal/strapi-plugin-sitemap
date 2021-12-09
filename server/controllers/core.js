@@ -39,7 +39,7 @@ module.exports = {
         displayName: contentType.globalId,
       };
 
-      if (_.get(contentType, 'pluginOptions.i18n.localized')) {
+      if (strapi.plugin('i18n') && _.get(contentType, 'pluginOptions.i18n.localized')) {
         const locales = await strapi.query('plugin::i18n.locale').findMany();
         contentTypes[contentType.uid].locales = {};
 
@@ -53,8 +53,12 @@ module.exports = {
   },
 
   getLanguages: async (ctx) => {
-    const locales = await strapi.query('plugin::i18n.locale').findMany();
-    ctx.send(locales);
+    if (strapi.plugin('i18n')) {
+      const locales = await strapi.query('plugin::i18n.locale').findMany();
+      ctx.send(locales);
+    } else {
+      ctx.send([]);
+    }
   },
 
   info: async (ctx) => {
