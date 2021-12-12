@@ -1,1 +1,42 @@
-{}
+{
+  "Button.Save": "Speichern",
+  "Button.Cancel": "Abbrechen",
+  "Button.Add": "Hinzufügen",
+  "Button.AddURL": "URL hinzufügen",
+
+  "Header.Title": "Sitemap",
+  "Header.Description": "Einstellungen für sitemap.xml",
+  "Header.Button.Generate": "Sitemap generieren",
+  "Header.Button.SitemapLink": "Sitemap öffnen",
+
+  "popUpForm.navContainer.base": "Grundeinstellungen",
+  "popUpForm.navContainer.advanced": "Erweiterte Einstellungen",
+
+  "Settings.CollectionTitle": "URL-Format",
+  "Settings.CustomTitle": "Benutzerdefinierte URLs",
+  "Settings.CollectionDescription": "Hier kannst du Sammlungen und Einzel-Einträge mit mindestens einem UID-Feld hinzufügen. Die UID-Felder jeder Instanz des Typs werden abgerufen, welche dann der Sitemap hinzugefügt werden.",
+  "Settings.CustomDescription": "Hier kannst du jegliche URL der Sitemap hinzufügen",
+  "Settings.Field.Hostname.Label": "Hostname",
+  "Settings.Field.Hostname.Description": "Die URL deiner Anwendung",
+  "Settings.Field.IncludeHomepage.Label": "Startseite miteinbeziehen",
+  "Settings.Field.IncludeHomepage.Description": "Einen '/'-Eintrag hinzufügen, wenn keiner existiert.",
+  "Settings.Field.ExcludeDrafts.Label": "Entwürfe ausschließen",
+  "Settings.Field.ExcludeDrafts.Description": "Keine Einträge, die Entwürfe sind, in der Sitemap listen.",
+  "Settings.Field.URL.Label": "Slug",
+  "Settings.Field.URL.Description": "Dieses Feld erzwingt den UID-Regex",
+  "Settings.Field.Pattern.Label": "Format",
+  "Settings.Field.Pattern.Description": "Der dynamische Pfad für jeden Eintrag des Typs.",
+  "Settings.Field.Pattern.Error": "Das ist kein valides Format.",
+
+  "Modal.Title": "Konfiguration",
+  "Modal.HeaderTitle": "Sitemap-Einträge",
+  "Modal.CollectionDescription": "Stelle sicher, dass die Sammlung oder der Einzel-Eintrag mindestens ein UID-Feld hat.",
+  "Modal.CustomDescription": "Gib den relativen Pfad der Seite, die du der Sitemap hinzufügen willst, an.",
+
+  "EditView.ExcludeFromSitemap": "Von Sitemap ausschließen",
+
+  "notification.success.submit": "Einstellungen wurden gespeichert",
+  "notification.success.generate": "Sitemap wurde generiert",
+
+  "plugin.name": "Sitemap"
+}
