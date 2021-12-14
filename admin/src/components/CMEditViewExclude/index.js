@@ -44,7 +44,7 @@ const CMEditViewExclude = () => {
             value={modifiedData.sitemap_exclude}
             name="exclude-from-sitemap"
           >
-            Exclude from sitemap
+            {formatMessage({ id: getTrad('EditView.ExcludeFromSitemap'), defaultMessage: 'Exclude from sitemap' })}
           </Checkbox>
         </Box>
       </Stack>

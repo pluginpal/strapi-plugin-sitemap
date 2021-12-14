@@ -2,8 +2,11 @@ import React from 'react';
 import { Select, Option } from '@strapi/design-system/Select';
 import { Checkbox } from '@strapi/design-system/Checkbox';
 import { Box } from '@strapi/design-system/Box';
+import { useIntl } from 'react-intl';
 
 const SelectLanguage = (props) => {
+  const { formatMessage } = useIntl();
+
   const {
     contentType,
     onChange,
@@ -17,8 +20,8 @@ const SelectLanguage = (props) => {
     <div>
       <Select
         name="select"
-        label="Language"
-        hint="Select a language."
+        label={formatMessage({ id: 'sitemap.Settings.Field.SelectLanguage.Label' })}
+        hint={formatMessage({ id: 'sitemap.Settings.Field.SelectLanguage.Description' })}
         onChange={(newValue) => onChange(newValue)}
         value={value}
         disabled={value === 'und'}
@@ -37,9 +40,8 @@ const SelectLanguage = (props) => {
             }
           }}
           value={value === 'und'}
-          name="exclude-from-sitemap"
         >
-          Same for all languages
+          {formatMessage({ id: 'sitemap.Settings.Field.SelectLanguage.SameForAll' })}
         </Checkbox>
       </Box>
     </div>

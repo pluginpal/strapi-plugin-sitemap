@@ -39,7 +39,7 @@ const ModalForm = (props) => {
     >
       <ModalHeader>
         <ButtonText textColor="neutral800" as="h2" id="title">
-          Hostname overrides
+          {formatMessage({ id: 'sitemap.HostnameOverrides.Label' })}
         </ButtonText>
       </ModalHeader>
       <ModalBody>
@@ -51,7 +51,7 @@ const ModalForm = (props) => {
                 label={`${language.name} hostname`}
                 name="hostname"
                 value={hostnames[language.code]}
-                hint={`Set a hostname for URLs of the "${language.code}" locale`}
+                hint={formatMessage({ id: 'sitemap.HostnameOverrides.Description' }, { langcode: language.code })}
                 onChange={(e) => {
                   if (!e.target.value) {
                     delete hostnames[language.code];
