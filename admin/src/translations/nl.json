@@ -1,1 +1,68 @@
-{}
+{
+  "Button.Save": "Opslaan",
+  "Button.Cancel": "Annuleer",
+  "Button.Add": "Voeg toe",
+  "Button.AddURL": "Voeg URL toe",
+  "Button.AddURLBundle": "Voeg een URL bundle toe",
+  "Button.AddCustomUrl": "Voeg een URL toe",
+
+  "Header.Title": "Sitemap",
+  "Header.Description": "Instellingen voor de sitemap XML",
+  "Header.Button.Generate": "Genereer sitemap",
+  "Header.Button.SitemapLink": "Ga naar sitemap",
+
+  "Settings.CollectionTitle": "URL bundles",
+  "Settings.CustomTitle": "Custom URLs",
+  "Settings.SettingsTitle": "Instellingen",
+  "Settings.Field.Hostname.Label": "Hostname",
+  "Settings.Field.Hostname.Description": "De URL van je website",
+  "Settings.Field.HostnameOverrides.Label": "Hostname overschrijvingen",
+  "Settings.Field.HostnameOverrides.Button": "Configureer",
+  "Settings.Field.HostnameOverrides.Description": "Specificeer een hostname per taal",
+  "Settings.Field.IncludeHomepage.Label": "Standaard home page",
+  "Settings.Field.IncludeHomepage.Description": "Voegt een '/' entry aan de sitemap toe.",
+  "Settings.Field.ExcludeDrafts.Label": "Sluit drafts uit",
+  "Settings.Field.ExcludeDrafts.Description": "Haalt alle draft pagina's uit de sitemap.",
+  "Settings.Field.URL.Label": "Slug",
+  "Settings.Field.URL.Description": "Dit veld forceert de UID type regex",
+  "Settings.Field.Priority.Label": "Priority",
+  "Settings.Field.Priority.Description": "De priority van de pagina's.",
+  "Settings.Field.Changefreq.Label": "Changefreq",
+  "Settings.Field.Changefreq.Description": "De changefreq van de pagina's.",
+  "Settings.Field.Pattern.Label": "Patroon",
+  "Settings.Field.Pattern.DescriptionPart1": "Creëer een dynamisch URL patroon",
+  "Settings.Field.Pattern.DescriptionPart2": "met",
+  "Settings.Field.Pattern.DescriptionPart3": "en",
+  "Settings.Field.Pattern.Error": "Dit is geen valide patroon.",
+  "Settings.Field.SelectContentType.Label": "Content Type",
+  "Settings.Field.SelectContentType.Description": "Selecteer een content type.",
+  "Settings.Field.SelectLanguage.Label": "Taal",
+  "Settings.Field.SelectLanguage.Description": "Selecteer een taal.",
+  "Settings.Field.SelectLanguage.SameForAll": "Zelfde voor alle talen",
+
+  "Modal.HeaderTitle": "Sitemap entries",
+
+  "HostnameOverrides.Label": "Hostname overschrijvingen",
+  "HostnameOverrides.Description": "Specificeer een hostname voor URLs van de {langcode} locale",
+
+  "Info.NoHostname.Title": "Configureer je hostname",
+  "Info.NoHostname.Description": "Voordat je de sitemap kunt genereren moet je aangeven wat de hostname is van je website.",
+  "Info.NoSitemap.Title": "Geen sitemap XML aanwezig",
+  "Info.NoSitemap.Description": "Genereer je eerste sitemap XML met de knop hier onder.",
+  "Info.SitemapIsPresent.Title": "Sitemap XML is aanwezig",
+  "Info.SitemapIsPresent.LastUpdatedAt": "Laatst ge-update op:",
+  "Info.SitemapIsPresent.AmountOfURLs": "Aantal URLs:",
+
+  "EditView.ExcludeFromSitemap": "Sluit uit van de Sitemap",
+
+  "Empty.URLBundles.Description": "Er zijn nog geen URL bundles geconfigureerd.",
+  "Empty.URLBundles.Button": "Voeg de eerste URL bundle toe",
+
+  "Empty.CustomURLs.Description": "Er zijn nog geen custom URLs geconfigureerd.",
+  "Empty.CustomURLs.Button": "Voeg de eerste URL toe",
+
+  "notification.success.submit": "De instellingen zijn opgeslagen",
+  "notification.success.generate": "De sitemap is gegenereerd",
+
+  "plugin.name": "Sitemap"
+}
