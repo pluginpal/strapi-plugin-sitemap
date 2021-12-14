@@ -13,7 +13,7 @@
   "scripts": {
     "eslint": "eslint --max-warnings=0 './**/*.{js,jsx}'",
     "eslint:fix": "eslint --fix './**/*.{js,jsx}'",
-    "test:unit": "jest --verbose",
+    "test:unit": "jest --verbose"
   },
   "dependencies": {
     "redux-thunk": "^2.3.0",
