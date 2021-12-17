@@ -6,12 +6,14 @@ import { VisuallyHidden } from '@strapi/design-system/VisuallyHidden';
 import { Table, Thead, Tbody, Tr, Th, TFooter } from '@strapi/design-system/Table';
 import { TableLabel } from '@strapi/design-system/Text';
 import { Button } from '@strapi/design-system/Button';
+import { useIntl } from 'react-intl';
 
 import CustomRow from './Row';
 
 const ListComponent = (props) => {
   const { items, openModal } = props;
   const formattedItems = [];
+  const { formatMessage } = useIntl();
 
   if (!items) {
     return null;
@@ -30,18 +32,14 @@ const ListComponent = (props) => {
   if (items.size === 0) {
     return (
       <NoContent
-        content={{
-          id: 'emptyState',
-          defaultMessage:
-            'No custom URLs have been configured yet.',
-        }}
-        action={<Button onClick={() => openModal()}>Add the first URL</Button>}
+        content={{ id: 'sitemap.Empty.CustomURLs.Description' }}
+        action={<Button onClick={() => openModal()}>{formatMessage({ id: 'sitemap.Empty.CustomURLs.Button' })}</Button>}
       />
     );
   }
 
   return (
-    <Table colCount={4} rowCount={formattedItems.length + 1} footer={<TFooter onClick={() => openModal()} icon={<Plus />}>Add another URL</TFooter>}>
+    <Table colCount={4} rowCount={formattedItems.length + 1} footer={<TFooter onClick={() => openModal()} icon={<Plus />}>{formatMessage({ id: 'sitemap.Button.AddCustomURL' })}</TFooter>}>
       <Thead>
         <Tr>
           <Th>

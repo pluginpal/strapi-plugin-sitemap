@@ -1,1 +1,68 @@
-{}
+{
+  "Button.Save": "Speichern",
+  "Button.Cancel": "Abbrechen",
+  "Button.Add": "Hinzufügen",
+  "Button.AddURL": "URL hinzufügen",
+  "Button.AddURLBundle": "Weiteres URL-Format hinzufügen",
+  "Button.AddCustomUrl": "Weitere URL hinzufügen",
+
+  "Header.Title": "Sitemap",
+  "Header.Description": "Einstellungen für Sitemap-XML",
+  "Header.Button.Generate": "Sitemap generieren",
+  "Header.Button.SitemapLink": "Sitemap öffnen",
+
+  "Settings.CollectionTitle": "URL-Formate",
+  "Settings.CustomTitle": "Benutzerdefinierte URLs",
+  "Settings.SettingsTitle": "Einstellungen",
+  "Settings.Field.Hostname.Label": "Hostname",
+  "Settings.Field.Hostname.Description": "Die URL deiner Anwendung",
+  "Settings.Field.HostnameOverrides.Label": "Hostname overrides",
+  "Settings.Field.HostnameOverrides.Button": "Konfigurieren",
+  "Settings.Field.HostnameOverrides.Description": "Hostname je nach Sprache spezifizieren",
+  "Settings.Field.IncludeHomepage.Label": "Startseite miteinbeziehen",
+  "Settings.Field.IncludeHomepage.Description": "Einen '/'-Eintrag hinzufügen, wenn keiner existiert.",
+  "Settings.Field.ExcludeDrafts.Label": "Entwürfe ausschließen",
+  "Settings.Field.ExcludeDrafts.Description": "Keine Einträge, die Entwürfe sind, in der Sitemap listen.",
+  "Settings.Field.URL.Label": "Slug",
+  "Settings.Field.URL.Description": "Dieses Feld erzwingt den UID-Regex",
+  "Settings.Field.Priority.Label": "Priorität",
+  "Settings.Field.Priority.Description": "Die Priorität der Seiten.",
+  "Settings.Field.Changefreq.Label": "Changefreq",
+  "Settings.Field.Changefreq.Description": "Die changefreq der Seiten.",
+  "Settings.Field.Pattern.Label": "Format",
+  "Settings.Field.Pattern.DescriptionPart1": "Erstelle ein dynamisches URL-Format",
+  "Settings.Field.Pattern.DescriptionPart2": "mit",
+  "Settings.Field.Pattern.DescriptionPart3": "und",
+  "Settings.Field.Pattern.Error": "Das ist kein valides Format.",
+  "Settings.Field.SelectContentType.Label": "Inhalts-Typ",
+  "Settings.Field.SelectContentType.Description": "Wähle einen Inhalts-Typ.",
+  "Settings.Field.SelectLanguage.Label": "Sprache",
+  "Settings.Field.SelectLanguage.Description": "Wähle eine Sprache.",
+  "Settings.Field.SelectLanguage.SameForAll": "Für alle Sprachen gleich",
+
+  "Modal.HeaderTitle": "Sitemap-Einträge",
+
+  "HostnameOverrides.Label": "Hostname überschreiben",
+  "HostnameOverrides.Description": "Definiere einen Hostname für die URL der {langcode}-Sprache",
+
+  "Info.NoHostname.Title": "Setze deinen Hostname",
+  "Info.NoHostname.Description": "Bevor du die Sitemap generieren kannst, musst du den Hostname deiner Website definieren.",
+  "Info.NoSitemap.Title": "Kein Sitemap-XML verfügbar",
+  "Info.NoSitemap.Description": "Generiere dein erstes Sitemap-XML mit dem unten stehenden Button.",
+  "Info.SitemapIsPresent.Title": "Sitemap-XML ist verfügbar",
+  "Info.SitemapIsPresent.LastUpdatedAt": "Zuletzt aktualisiert:",
+  "Info.SitemapIsPresent.AmountOfURLs": "Anzahl URLs:",
+
+  "EditView.ExcludeFromSitemap": "Von Sitemap ausschließen",
+
+  "Empty.URLBundles.Description": "Noch keine URL-Formate konfiguriert.",
+  "Empty.URLBundles.Button": "Erstes URL-Format hinzufügen",
+
+  "Empty.CustomURLs.Description": "Noch keine benutzerdefinierten URLs definiert.",
+  "Empty.CustomURLs.Button": "Erste URL hinzufügen",
+
+  "notification.success.submit": "Einstellungen wurden gespeichert",
+  "notification.success.generate": "Sitemap wurde generiert",
+
+  "plugin.name": "Sitemap"
+}

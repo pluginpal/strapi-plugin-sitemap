@@ -1,11 +1,15 @@
 import React from 'react';
 import { Tabs, Tab, TabGroup, TabPanels, TabPanel } from '@strapi/design-system/Tabs';
 import { Box } from '@strapi/design-system/Box';
+import { useIntl } from 'react-intl';
+
 import CollectionURLs from '../../tabs/CollectionURLs';
 import CustomURLs from '../../tabs/CustomURLs';
 import Settings from '../../tabs/Settings';
 
 const SitemapTabs = () => {
+  const { formatMessage } = useIntl();
+
   return (
     <Box padding={8}>
       <TabGroup
@@ -13,9 +17,9 @@ const SitemapTabs = () => {
         label="Main tabs"
       >
         <Tabs>
-          <Tab>URL bundles</Tab>
-          <Tab>Custom URLs</Tab>
-          <Tab>Settings</Tab>
+          <Tab>{formatMessage({ id: 'sitemap.Settings.CollectionTitle' })}</Tab>
+          <Tab>{formatMessage({ id: 'sitemap.Settings.CustomTitle' })}</Tab>
+          <Tab>{formatMessage({ id: 'sitemap.Settings.SettingsTitle' })}</Tab>
         </Tabs>
         <TabPanels>
           <TabPanel>

@@ -35,11 +35,11 @@ const Info = () => {
       return (
         <div>
           <H3 style={{ marginBottom: '10px' }}>
-            Set your hostname
+            {formatMessage({ id: 'sitemap.Info.NoHostname.Title' })}
           </H3>
           <div>
             <Text>
-              Before you can generate the sitemap you have to specify the hostname of your website.
+              {formatMessage({ id: 'sitemap.Info.NoHostname.Description' })}
             </Text>
             <Box paddingTop={4}>
               <TextInput
@@ -57,11 +57,11 @@ const Info = () => {
       return (
         <div>
           <H3 style={{ marginBottom: '10px' }}>
-            No sitemap XML present
+            {formatMessage({ id: 'sitemap.Info.NoSitemap.Title' })}
           </H3>
           <div>
             <Text>
-              Generate your first sitemap XML with the button below.
+              {formatMessage({ id: 'sitemap.Info.NoSitemap.Description' })}
             </Text>
             <Button
               onClick={() => dispatch(generateSitemap(toggleNotification))}
@@ -77,11 +77,11 @@ const Info = () => {
       return (
         <div>
           <H3 style={{ marginBottom: '10px' }}>
-            Sitemap XML is present
+            {formatMessage({ id: 'sitemap.Info.SitemapIsPresent.Title' })}
           </H3>
           <div>
             <Text>
-              Last updated at:
+              {formatMessage({ id: 'sitemap.Info.SitemapIsPresent.LastUpdatedAt' })}
             </Text>
             <Text bold style={{ marginLeft: '5px' }}>
               {`${month}/${day}/${year} - ${time}`}
@@ -89,7 +89,7 @@ const Info = () => {
           </div>
           <div style={{ marginBottom: '15px' }}>
             <Text>
-              Amount of URLs:
+              {formatMessage({ id: 'sitemap.Info.SitemapIsPresent.AmountOfURLs' })}
             </Text>
             <Text bold style={{ marginLeft: '5px' }}>
               {sitemapInfo.get('urls')}
@@ -107,7 +107,7 @@ const Info = () => {
               href={sitemapInfo.get('location')}
               target="_blank"
             >
-              Go to the sitemap
+              {formatMessage({ id: 'sitemap.Header.Button.SitemapLink' })}
             </Link>
           </div>
         </div>

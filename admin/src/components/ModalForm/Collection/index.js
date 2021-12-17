@@ -56,17 +56,17 @@ const CollectionForm = (props) => {
   }, [modifiedState.getIn([uid, 'languages', langcode, 'pattern'], ''), activeElement]);
 
   const patternHint = () => {
-    const base = 'Create a dynamic URL pattern';
+    const base = formatMessage({ id: 'sitemap.Settings.Field.Pattern.DescriptionPart1' });
     let suffix = '';
     if (allowedFields[uid]) {
-      suffix = ' using ';
+      suffix = ` ${formatMessage({ id: 'sitemap.Settings.Field.Pattern.DescriptionPart2' })} `;
       allowedFields[uid].map((fieldName, i) => {
         if (i === 0) {
           suffix = `${suffix}[${fieldName}]`;
         } else if (allowedFields[uid].length !== i + 1) {
           suffix = `${suffix}, [${fieldName}]`;
         } else {
-          suffix = `${suffix} and [${fieldName}]`;
+          suffix = `${suffix} ${formatMessage({ id: 'sitemap.Settings.Field.Pattern.DescriptionPart3' })} [${fieldName}]`;
         }
       });
     }
@@ -136,9 +136,7 @@ const CollectionForm = (props) => {
                         key={fieldName}
                         padding={2}
                         onClick={() => {
-                          console.log('set in pattern', fieldName);
                           const newPattern = `${modifiedState.getIn([uid, 'languages', langcode, 'pattern'], '')}${fieldName}]`;
-
                           onChange(uid, langcode, 'pattern', newPattern);
                         }}
                       >
@@ -153,7 +151,8 @@ const CollectionForm = (props) => {
               <GridItem col={12} key={input}>
                 <Select
                   name={input}
-                  {...form[input]}
+                  label={formatMessage({ id: `sitemap.Settings.Field.${input.replace(/^\w/, (c) => c.toUpperCase())}.Label` })}
+                  hint={formatMessage({ id: `sitemap.Settings.Field.${input.replace(/^\w/, (c) => c.toUpperCase())}.Description` })}
                   disabled={!uid || (contentTypes[uid].locales && !langcode)}
                   onChange={(value) => onChange(uid, langcode, input, value)}
                   value={modifiedState.getIn([uid, 'languages', langcode, input], form[input].value)}

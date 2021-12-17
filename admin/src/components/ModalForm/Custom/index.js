@@ -55,7 +55,8 @@ const CustomForm = (props) => {
               <GridItem col={12} key={input}>
                 <Select
                   name={input}
-                  {...form[input]}
+                  label={formatMessage({ id: `sitemap.Settings.Field.${input.replace(/^\w/, (c) => c.toUpperCase())}.Label` })}
+                  hint={formatMessage({ id: `sitemap.Settings.Field.${input.replace(/^\w/, (c) => c.toUpperCase())}.Description` })}
                   disabled={!uid}
                   onChange={(value) => onChange(uid, input, value)}
                   value={modifiedState.getIn([uid, input], form[input].value)}
