@@ -1,7 +1,10 @@
 import React from 'react';
 import { Select, Option } from '@strapi/design-system/Select';
+import { useIntl } from 'react-intl';
 
 const SelectContentTypes = (props) => {
+  const { formatMessage } = useIntl();
+
   const {
     contentTypes,
     onChange,
@@ -12,8 +15,8 @@ const SelectContentTypes = (props) => {
   return (
     <Select
       name="select"
-      label="Content Type"
-      hint="Select a content type."
+      label={formatMessage({ id: 'sitemap.Settings.Field.SelectContentType.Label' })}
+      hint={formatMessage({ id: 'sitemap.Settings.Field.SelectContentType.Description' })}
       disabled={disabled}
       onChange={(newValue) => onChange(newValue)}
       value={value}

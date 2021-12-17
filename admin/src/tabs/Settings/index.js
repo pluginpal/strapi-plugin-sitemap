@@ -42,17 +42,17 @@ const Settings = () => {
       {languages.length > 1 && (
         <GridItem col={12} s={12}>
           <Typography variant="pi" fontWeight="bold">
-            Hostname overrides
+            {formatMessage({ id: 'sitemap.Settings.Field.HostnameOverrides.Label' })}
           </Typography>
           <Button
             onClick={() => setOpen(true)}
             variant="tertiary"
             style={{ marginTop: '5px', marginBottom: '3px' }}
           >
-            Configure
+            {formatMessage({ id: 'sitemap.Settings.Field.HostnameOverrides.Button' })}
           </Button>
           <Typography variant="pi" style={{ color: theme.colors.neutral600 }}>
-            Specify hostname per language
+            {formatMessage({ id: 'sitemap.Settings.Field.HostnameOverrides.Description' })}
           </Typography>
           <HostnameModal
             isOpen={open}
