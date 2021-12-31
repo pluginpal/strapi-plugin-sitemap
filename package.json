@@ -13,11 +13,12 @@
   "scripts": {
     "eslint": "eslint --max-warnings=0 './**/*.{js,jsx}'",
     "eslint:fix": "eslint --fix './**/*.{js,jsx}'",
-    "test:unit": "jest --verbose"
+    "test:unit": "jest --verbose",
+    "plugin:install": "yarn install && rm -rf node_modules/@strapi/helper-plugin"
   },
   "dependencies": {
     "redux-thunk": "^2.3.0",
-    "sitemap": "boazpoolman/sitemap.js#build",
+    "sitemap": "^7.1.0",
     "xml2js": "^0.4.23"
   },
   "author": {

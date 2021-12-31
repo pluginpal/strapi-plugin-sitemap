@@ -23,7 +23,7 @@ git clone git@github.com:YOUR_USERNAME/strapi-plugin-sitemap.git sitemap
 Go to the plugin and install it's dependencies.
 
 ```bash
-cd YOUR_STRAPI_PROJECT/src/plugins/sitemap/ && yarn install
+cd YOUR_STRAPI_PROJECT/src/plugins/sitemap/ && yarn plugin:install
 ```
 
 #### 4. Enable the plugin
