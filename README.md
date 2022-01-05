@@ -45,11 +45,11 @@ After successful installation you have to rebuild the admin UI so it'll include 
 
 ```bash
 # using yarn
-yarn build --clean
+yarn build
 yarn develop
 
 # using npm
-npm run build --clean
+npm run build
 npm run develop
 ```
 
@@ -63,8 +63,8 @@ Complete installation requirements are the exact same as for Strapi itself and c
 
 **Supported Strapi versions**:
 
-- Strapi 4.0.0 (recently tested)
-- Strapi ^4.x
+- Strapi 4.0.3 (recently tested)
+- Strapi ^4.x (use `strapi-plugin-sitemap@^2.0.0`)
 - Strapi ^3.4.x (use `strapi-plugin-sitemap@1.2.5`)
 
 (This plugin may work with older Strapi versions, but these are not tested nor officially supported at this time.)
