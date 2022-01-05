@@ -809,7 +809,7 @@
     compute-scroll-into-view "^1.0.17"
     prop-types "^15.7.2"
 
-"@strapi/helper-plugin@4.0.3":
+"@strapi/helper-plugin@^4.0.3":
   version "4.0.3"
   resolved "https://registry.yarnpkg.com/@strapi/helper-plugin/-/helper-plugin-4.0.3.tgz#87d5bce418371a7a2597eae682700a26f5173fee"
   integrity sha512-tZtj/+XcJxUiSHMr3mo2k55zcbvjw7Dlqv1zokUkx4U07NwqDW6d9H5XgF+roZfnWeQHaLJutuFZ2yiBk8/I0Q==
