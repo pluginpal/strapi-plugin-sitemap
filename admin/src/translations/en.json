@@ -10,6 +10,7 @@
   "Header.Description": "Settings for the sitemap XML",
   "Header.Button.Generate": "Generate sitemap",
   "Header.Button.SitemapLink": "Go to the sitemap",
+  "Header.Button.GoToSettings": "Go to settings",
 
   "Settings.CollectionTitle": "URL bundles",
   "Settings.CustomTitle": "Custom URLs",

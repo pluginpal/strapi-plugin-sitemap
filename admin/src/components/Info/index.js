@@ -9,13 +9,11 @@ import { Text, H3 } from '@strapi/design-system/Text';
 import { Box } from '@strapi/design-system/Box';
 import { Button } from '@strapi/design-system/Button';
 import { Link } from '@strapi/design-system/Link';
-import { TextInput } from '@strapi/design-system/TextInput';
 
-import { generateSitemap, onChangeSettings } from '../../state/actions/Sitemap';
+import { generateSitemap } from '../../state/actions/Sitemap';
 import { formatTime } from '../../helpers/timeFormat';
 
 const Info = () => {
-  const settings = useSelector((state) => state.getIn(['sitemap', 'settings'], Map()));
   const hasHostname = useSelector((state) => state.getIn(['sitemap', 'initialData', 'hostname'], Map()));
   const sitemapInfo = useSelector((state) => state.getIn(['sitemap', 'info'], Map()));
   const dispatch = useDispatch();
@@ -41,15 +39,16 @@ const Info = () => {
             <Text>
               {formatMessage({ id: 'sitemap.Info.NoHostname.Description' })}
             </Text>
-            <Box paddingTop={4}>
-              <TextInput
-                placeholder="https://www.strapi.io"
-                label={formatMessage({ id: 'sitemap.Settings.Field.Hostname.Label' })}
-                name="hostname"
-                value={settings.get('hostname')}
-                onChange={(e) => dispatch(onChangeSettings('hostname', e.target.value))}
-              />
-            </Box>
+            <Button
+              onClick={() => {
+                document.getElementById('tabs-2-tab').click();
+                setTimeout(() => document.querySelector('input[name="hostname"]').focus(), 0);
+              }}
+              variant="secondary"
+              style={{ marginTop: '15px' }}
+            >
+              {formatMessage({ id: 'sitemap.Header.Button.GoToSettings' })}
+            </Button>
           </div>
         </div>
       );
@@ -118,13 +117,13 @@ const Info = () => {
   return (
     <Box paddingLeft={8} paddingRight={8}>
       <Box
-        borderColor="secondary200"
-        background="secondary100"
+        background="neutral0"
         hasRadius
         paddingTop={4}
         paddingBottom={4}
         paddingLeft={5}
         paddingRight={5}
+        shadow="filterShadow"
       >
         {content()}
       </Box>

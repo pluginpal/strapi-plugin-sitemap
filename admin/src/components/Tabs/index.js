@@ -23,17 +23,13 @@ const SitemapTabs = () => {
         </Tabs>
         <TabPanels>
           <TabPanel>
-            <Box padding={6} background="neutral0">
-              <CollectionURLs />
-            </Box>
+            <CollectionURLs />
           </TabPanel>
           <TabPanel>
-            <Box padding={6} background="neutral0">
-              <CustomURLs />
-            </Box>
+            <CustomURLs />
           </TabPanel>
           <TabPanel>
-            <Box padding={6} background="neutral0">
+            <Box padding={6} background="neutral0" shadow="filterShadow">
               <Settings />
             </Box>
           </TabPanel>
