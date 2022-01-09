@@ -41,10 +41,10 @@ const CustomForm = (props) => {
       <Grid gap={6}>
         <GridItem col={6} s={12}>
           <TextInput
-            label={formatMessage({ id: 'sitemap.Settings.Field.URL.Label' })}
+            label={formatMessage({ id: 'sitemap.Settings.Field.URL.Label', defaultMessage: 'Slug' })}
             name="url"
             value={uid}
-            hint={formatMessage({ id: 'sitemap.Settings.Field.URL.Description' })}
+            hint={formatMessage({ id: 'sitemap.Settings.Field.URL.Description', defaultMessage: 'This field forces the UID type regex' })}
             disabled={id}
             onChange={(e) => handleCustomChange(e)}
           />
@@ -55,8 +55,8 @@ const CustomForm = (props) => {
               <GridItem col={12} key={input}>
                 <Select
                   name={input}
-                  label={formatMessage({ id: `sitemap.Settings.Field.${input.replace(/^\w/, (c) => c.toUpperCase())}.Label` })}
-                  hint={formatMessage({ id: `sitemap.Settings.Field.${input.replace(/^\w/, (c) => c.toUpperCase())}.Description` })}
+                  label={formatMessage({ id: `sitemap.Settings.Field.${input.replace(/^\w/, (c) => c.toUpperCase())}.Label`, defaultMessage: input.replace(/^\w/, (c) => c.toUpperCase()) })}
+                  hint={formatMessage({ id: `sitemap.Settings.Field.${input.replace(/^\w/, (c) => c.toUpperCase())}.Description`, defaultMessage: '' })}
                   disabled={!uid}
                   onChange={(value) => onChange(uid, input, value)}
                   value={modifiedState.getIn([uid, input], form[input].value)}

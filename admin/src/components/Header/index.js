@@ -43,7 +43,7 @@ const Header = () => {
               size="L"
               variant="secondary"
             >
-              {formatMessage({ id: 'sitemap.Button.Cancel' })}
+              {formatMessage({ id: 'sitemap.Button.Cancel', defaultMessage: 'Cancel' })}
             </Button>
             <Button
               style={{ marginLeft: '10px' }}
@@ -53,12 +53,12 @@ const Header = () => {
               startIcon={<CheckIcon />}
               size="L"
             >
-              {formatMessage({ id: 'sitemap.Button.Save' })}
+              {formatMessage({ id: 'sitemap.Button.Save', defaultMessage: 'Save' })}
             </Button>
           </Box>
         )}
-        title={formatMessage({ id: 'sitemap.Header.Title' })}
-        subtitle={formatMessage({ id: 'sitemap.Header.Description' })}
+        title={formatMessage({ id: 'sitemap.Header.Title', defaultMessage: 'Sitemap' })}
+        subtitle={formatMessage({ id: 'sitemap.Header.Description', defaultMessage: 'Settings for the sitemap XML' })}
         as="h2"
       />
     </Box>

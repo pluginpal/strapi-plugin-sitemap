@@ -34,14 +34,14 @@ const ListComponent = (props) => {
   if (items.size === 0) {
     return (
       <NoContent
-        content={{ id: 'sitemap.Empty.URLBundles.Description' }}
-        action={<Button onClick={() => openModal()}>{formatMessage({ id: 'sitemap.Empty.URLBundles.Button' })}</Button>}
+        content={{ id: 'sitemap.Empty.URLBundles.Description', defaultMessage: 'No URL bundles have been configured yet.' }}
+        action={<Button onClick={() => openModal()}>{formatMessage({ id: 'sitemap.Empty.URLBundles.Button', defaultMessage: 'Add the first URL bundle' })}</Button>}
       />
     );
   }
 
   return (
-    <Table colCount={4} rowCount={formattedItems.length + 1} footer={<TFooter onClick={() => openModal()} icon={<Plus />}>{formatMessage({ id: 'sitemap.Button.AddURLBundle' })}</TFooter>}>
+    <Table colCount={4} rowCount={formattedItems.length + 1} footer={<TFooter onClick={() => openModal()} icon={<Plus />}>{formatMessage({ id: 'sitemap.Button.AddURLBundle', defaultMessage: 'Add another URL bundle' })}</TFooter>}>
       <Thead>
         <Tr>
           <Th>

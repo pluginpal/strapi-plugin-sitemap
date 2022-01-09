@@ -56,17 +56,17 @@ const CollectionForm = (props) => {
   }, [modifiedState.getIn([uid, 'languages', langcode, 'pattern'], ''), activeElement]);
 
   const patternHint = () => {
-    const base = formatMessage({ id: 'sitemap.Settings.Field.Pattern.DescriptionPart1' });
+    const base = formatMessage({ id: 'sitemap.Settings.Field.Pattern.DescriptionPart1', defaultMessage: 'Create a dynamic URL pattern' });
     let suffix = '';
     if (allowedFields[uid]) {
-      suffix = ` ${formatMessage({ id: 'sitemap.Settings.Field.Pattern.DescriptionPart2' })} `;
+      suffix = ` ${formatMessage({ id: 'sitemap.Settings.Field.Pattern.DescriptionPart2', defaultMessage: 'using' })} `;
       allowedFields[uid].map((fieldName, i) => {
         if (i === 0) {
           suffix = `${suffix}[${fieldName}]`;
         } else if (allowedFields[uid].length !== i + 1) {
           suffix = `${suffix}, [${fieldName}]`;
         } else {
-          suffix = `${suffix} ${formatMessage({ id: 'sitemap.Settings.Field.Pattern.DescriptionPart3' })} [${fieldName}]`;
+          suffix = `${suffix} ${formatMessage({ id: 'sitemap.Settings.Field.Pattern.DescriptionPart3', defaultMessage: 'and' })} [${fieldName}]`;
         }
       });
     }
@@ -109,7 +109,7 @@ const CollectionForm = (props) => {
             <GridItem col={12}>
               <div ref={patternRef}>
                 <TextInput
-                  label={formatMessage({ id: 'sitemap.Settings.Field.Pattern.Label' })}
+                  label={formatMessage({ id: 'sitemap.Settings.Field.Pattern.Label', defaultMessage: 'Pattern' })}
                   name="pattern"
                   value={modifiedState.getIn([uid, 'languages', langcode, 'pattern'], '')}
                   hint={patternHint()}
@@ -151,8 +151,8 @@ const CollectionForm = (props) => {
               <GridItem col={12} key={input}>
                 <Select
                   name={input}
-                  label={formatMessage({ id: `sitemap.Settings.Field.${input.replace(/^\w/, (c) => c.toUpperCase())}.Label` })}
-                  hint={formatMessage({ id: `sitemap.Settings.Field.${input.replace(/^\w/, (c) => c.toUpperCase())}.Description` })}
+                  label={formatMessage({ id: `sitemap.Settings.Field.${input.replace(/^\w/, (c) => c.toUpperCase())}.Label`, defaultMessage: input.replace(/^\w/, (c) => c.toUpperCase()) })}
+                  hint={formatMessage({ id: `sitemap.Settings.Field.${input.replace(/^\w/, (c) => c.toUpperCase())}.Description`, defaultMessage: '' })}
                   disabled={!uid || (contentTypes[uid].locales && !langcode)}
                   onChange={(value) => onChange(uid, langcode, input, value)}
                   value={modifiedState.getIn([uid, 'languages', langcode, input], form[input].value)}

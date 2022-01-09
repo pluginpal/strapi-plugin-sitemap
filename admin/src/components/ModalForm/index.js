@@ -80,7 +80,7 @@ const ModalForm = (props) => {
     >
       <ModalHeader>
         <ButtonText textColor="neutral800" as="h2" id="title">
-          {formatMessage({ id: 'sitemap.Modal.HeaderTitle' })} - {type}
+          {formatMessage({ id: 'sitemap.Modal.HeaderTitle', defaultMessage: 'Sitemap entries' })} - {type}
         </ButtonText>
       </ModalHeader>
       <ModalBody>
@@ -89,7 +89,7 @@ const ModalForm = (props) => {
       <ModalFooter
         startActions={(
           <Button onClick={() => onCancel()} variant="tertiary">
-            {formatMessage({ id: 'sitemap.Button.Cancel' })}
+            {formatMessage({ id: 'sitemap.Button.Cancel', defaultMessage: 'Cancel' })}
           </Button>
         )}
         endActions={(
@@ -97,7 +97,7 @@ const ModalForm = (props) => {
             onClick={submitForm}
             disabled={!uid || (contentTypes && contentTypes[uid].locales && !langcode)}
           >
-            {formatMessage({ id: 'sitemap.Button.Save' })}
+            {formatMessage({ id: 'sitemap.Button.Save', defaultMessage: 'Save' })}
           </Button>
         )}
       />

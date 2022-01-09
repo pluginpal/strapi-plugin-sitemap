@@ -33,11 +33,11 @@ const Info = () => {
       return (
         <div>
           <H3 style={{ marginBottom: '10px' }}>
-            {formatMessage({ id: 'sitemap.Info.NoHostname.Title' })}
+            {formatMessage({ id: 'sitemap.Info.NoHostname.Title', defaultMessage: 'Set your hostname' })}
           </H3>
           <div>
             <Text>
-              {formatMessage({ id: 'sitemap.Info.NoHostname.Description' })}
+              {formatMessage({ id: 'sitemap.Info.NoHostname.Description', defaultMessage: 'Before you can generate the sitemap you have to specify the hostname of your website.' })}
             </Text>
             <Button
               onClick={() => {
@@ -47,7 +47,7 @@ const Info = () => {
               variant="secondary"
               style={{ marginTop: '15px' }}
             >
-              {formatMessage({ id: 'sitemap.Header.Button.GoToSettings' })}
+              {formatMessage({ id: 'sitemap.Header.Button.GoToSettings', defaultMessage: 'Go to settings' })}
             </Button>
           </div>
         </div>
@@ -56,18 +56,18 @@ const Info = () => {
       return (
         <div>
           <H3 style={{ marginBottom: '10px' }}>
-            {formatMessage({ id: 'sitemap.Info.NoSitemap.Title' })}
+            {formatMessage({ id: 'sitemap.Info.NoSitemap.Title', defaultMessage: 'No sitemap XML present' })}
           </H3>
           <div>
             <Text>
-              {formatMessage({ id: 'sitemap.Info.NoSitemap.Description' })}
+              {formatMessage({ id: 'sitemap.Info.NoSitemap.Description', defaultMessage: 'Generate your first sitemap XML with the button below.' })}
             </Text>
             <Button
               onClick={() => dispatch(generateSitemap(toggleNotification))}
               variant="secondary"
               style={{ marginTop: '15px' }}
             >
-              {formatMessage({ id: 'sitemap.Header.Button.Generate' })}
+              {formatMessage({ id: 'sitemap.Header.Button.Generate', defaultMessage: 'Generate sitemap' })}
             </Button>
           </div>
         </div>
@@ -76,11 +76,11 @@ const Info = () => {
       return (
         <div>
           <H3 style={{ marginBottom: '10px' }}>
-            {formatMessage({ id: 'sitemap.Info.SitemapIsPresent.Title' })}
+            {formatMessage({ id: 'sitemap.Info.SitemapIsPresent.Title', defaultMessage: 'Sitemap XML is present' })}
           </H3>
           <div>
             <Text>
-              {formatMessage({ id: 'sitemap.Info.SitemapIsPresent.LastUpdatedAt' })}
+              {formatMessage({ id: 'sitemap.Info.SitemapIsPresent.LastUpdatedAt', defaultMessage: 'Last updated at:' })}
             </Text>
             <Text bold style={{ marginLeft: '5px' }}>
               {`${month}/${day}/${year} - ${time}`}
@@ -88,7 +88,7 @@ const Info = () => {
           </div>
           <div style={{ marginBottom: '15px' }}>
             <Text>
-              {formatMessage({ id: 'sitemap.Info.SitemapIsPresent.AmountOfURLs' })}
+              {formatMessage({ id: 'sitemap.Info.SitemapIsPresent.AmountOfURLs', defaultMessage: 'Amount of URLs:' })}
             </Text>
             <Text bold style={{ marginLeft: '5px' }}>
               {sitemapInfo.get('urls')}
@@ -100,13 +100,13 @@ const Info = () => {
               variant="secondary"
               style={{ marginRight: '10px' }}
             >
-              {formatMessage({ id: 'sitemap.Header.Button.Generate' })}
+              {formatMessage({ id: 'sitemap.Header.Button.Generate', defaultMessage: 'Generate sitemap' })}
             </Button>
             <Link
               href={sitemapInfo.get('location')}
               target="_blank"
             >
-              {formatMessage({ id: 'sitemap.Header.Button.SitemapLink' })}
+              {formatMessage({ id: 'sitemap.Header.Button.SitemapLink', defaultMessage: 'Go to the sitemap' })}
             </Link>
           </div>
         </div>

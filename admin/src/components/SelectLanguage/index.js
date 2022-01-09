@@ -20,8 +20,8 @@ const SelectLanguage = (props) => {
     <div>
       <Select
         name="select"
-        label={formatMessage({ id: 'sitemap.Settings.Field.SelectLanguage.Label' })}
-        hint={formatMessage({ id: 'sitemap.Settings.Field.SelectLanguage.Description' })}
+        label={formatMessage({ id: 'sitemap.Settings.Field.SelectLanguage.Label', defaultMessage: 'Language' })}
+        hint={formatMessage({ id: 'sitemap.Settings.Field.SelectLanguage.Description', defaultMessage: 'Select a language.' })}
         onChange={(newValue) => onChange(newValue)}
         value={value}
         disabled={value === 'und'}
@@ -41,7 +41,7 @@ const SelectLanguage = (props) => {
           }}
           value={value === 'und'}
         >
-          {formatMessage({ id: 'sitemap.Settings.Field.SelectLanguage.SameForAll' })}
+          {formatMessage({ id: 'sitemap.Settings.Field.SelectLanguage.SameForAll', defaultMessage: 'Same for all languages' })}
         </Checkbox>
       </Box>
     </div>

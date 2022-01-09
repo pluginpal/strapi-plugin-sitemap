@@ -17,9 +17,9 @@ const SitemapTabs = () => {
         label="Main tabs"
       >
         <Tabs>
-          <Tab>{formatMessage({ id: 'sitemap.Settings.CollectionTitle' })}</Tab>
-          <Tab>{formatMessage({ id: 'sitemap.Settings.CustomTitle' })}</Tab>
-          <Tab>{formatMessage({ id: 'sitemap.Settings.SettingsTitle' })}</Tab>
+          <Tab>{formatMessage({ id: 'sitemap.Settings.CollectionTitle', defaultMessage: 'URL bundles' })}</Tab>
+          <Tab>{formatMessage({ id: 'sitemap.Settings.CustomTitle', defaultMessage: 'Custom URLs' })}</Tab>
+          <Tab>{formatMessage({ id: 'sitemap.Settings.SettingsTitle', defaultMessage: 'Settings' })}</Tab>
         </Tabs>
         <TabPanels>
           <TabPanel>

@@ -15,8 +15,8 @@ const SelectContentTypes = (props) => {
   return (
     <Select
       name="select"
-      label={formatMessage({ id: 'sitemap.Settings.Field.SelectContentType.Label' })}
-      hint={formatMessage({ id: 'sitemap.Settings.Field.SelectContentType.Description' })}
+      label={formatMessage({ id: 'sitemap.Settings.Field.SelectContentType.Label', defaultMessage: 'Content Type' })}
+      hint={formatMessage({ id: 'sitemap.Settings.Field.SelectContentType.Description', defaultMessage: 'Select a content type.' })}
       disabled={disabled}
       onChange={(newValue) => onChange(newValue)}
       value={value}

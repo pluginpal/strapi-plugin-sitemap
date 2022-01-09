@@ -39,7 +39,7 @@ const ModalForm = (props) => {
     >
       <ModalHeader>
         <ButtonText textColor="neutral800" as="h2" id="title">
-          {formatMessage({ id: 'sitemap.HostnameOverrides.Label' })}
+          {formatMessage({ id: 'sitemap.HostnameOverrides.Label', defaultMessage: 'Hostname overrides' })}
         </ButtonText>
       </ModalHeader>
       <ModalBody>
@@ -51,7 +51,7 @@ const ModalForm = (props) => {
                 label={`${language.name} hostname`}
                 name="hostname"
                 value={hostnames[language.code]}
-                hint={formatMessage({ id: 'sitemap.HostnameOverrides.Description' }, { langcode: language.code })}
+                hint={formatMessage({ id: 'sitemap.HostnameOverrides.Description', defaultMessage: 'Specify hostname per language' }, { langcode: language.code })}
                 onChange={(e) => {
                   if (!e.target.value) {
                     delete hostnames[language.code];
@@ -69,7 +69,7 @@ const ModalForm = (props) => {
       <ModalFooter
         startActions={(
           <Button onClick={() => onCancel()} variant="tertiary">
-            {formatMessage({ id: 'sitemap.Button.Cancel' })}
+            {formatMessage({ id: 'sitemap.Button.Cancel', defaultMessage: 'Cancel' })}
           </Button>
         )}
         endActions={(
@@ -77,7 +77,7 @@ const ModalForm = (props) => {
             onClick={() => onSave(hostnames)}
             disabled={isEqual(hostnames, hostnameOverrides)}
           >
-            {formatMessage({ id: 'sitemap.Button.Save' })}
+            {formatMessage({ id: 'sitemap.Button.Save', defaultMessage: 'Save' })}
           </Button>
         )}
       />

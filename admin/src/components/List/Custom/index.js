@@ -32,14 +32,14 @@ const ListComponent = (props) => {
   if (items.size === 0) {
     return (
       <NoContent
-        content={{ id: 'sitemap.Empty.CustomURLs.Description' }}
-        action={<Button onClick={() => openModal()}>{formatMessage({ id: 'sitemap.Empty.CustomURLs.Button' })}</Button>}
+        content={{ id: 'sitemap.Empty.CustomURLs.Description', defaultMessage: 'No custom URLs have been configured yet.' }}
+        action={<Button onClick={() => openModal()}>{formatMessage({ id: 'sitemap.Empty.CustomURLs.Button', defaultMessage: 'Add the first URL' })}</Button>}
       />
     );
   }
 
   return (
-    <Table colCount={4} rowCount={formattedItems.length + 1} footer={<TFooter onClick={() => openModal()} icon={<Plus />}>{formatMessage({ id: 'sitemap.Button.AddCustomURL' })}</TFooter>}>
+    <Table colCount={4} rowCount={formattedItems.length + 1} footer={<TFooter onClick={() => openModal()} icon={<Plus />}>{formatMessage({ id: 'sitemap.Button.AddCustomURL', defaultMessage: 'Add another URL' })}</TFooter>}>
       <Thead>
         <Tr>
           <Th>
