@@ -182,6 +182,8 @@ const writeSitemapFile = (filename, sitemap) => {
         if (err) {
           strapi.log.error(logMessage(`Something went wrong while trying to write the sitemap XML file to your public folder. ${err}`));
           throw new Error();
+        } else {
+          strapi.log.info(logMessage(`The sitemap XML has been generated. It can be accessed on ${getAbsoluteServerUrl(strapi.config)}/sitemap/index.xml.`));
         }
       });
     })
@@ -213,9 +215,7 @@ const createSitemap = async () => {
     sitemapEntries.map((sitemapEntry) => sitemap.write(sitemapEntry));
     sitemap.end();
 
-    await writeSitemapFile('index.xml', sitemap);
-
-    strapi.log.info(logMessage(`The sitemap XML has been generated. It can be accessed on ${getAbsoluteServerUrl(strapi.config)}/sitemap/index.xml.`));
+    writeSitemapFile('index.xml', sitemap);
   } catch (err) {
     strapi.log.error(logMessage(`Something went wrong while trying to build the SitemapStream. ${err}`));
     throw new Error();
