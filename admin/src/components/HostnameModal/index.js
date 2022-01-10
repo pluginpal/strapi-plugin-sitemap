@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useIntl } from 'react-intl';
 
 import { ModalLayout, ModalFooter, ModalBody, ModalHeader } from '@strapi/design-system/ModalLayout';
-import { ButtonText } from '@strapi/design-system/Text';
+import { Typography } from '@strapi/design-system/Typography';
 import { Button } from '@strapi/design-system/Button';
 import { TextInput } from '@strapi/design-system/TextInput';
 import { Grid, GridItem } from '@strapi/design-system/Grid';
@@ -38,9 +38,9 @@ const ModalForm = (props) => {
       labelledBy="title"
     >
       <ModalHeader>
-        <ButtonText textColor="neutral800" as="h2" id="title">
+        <Typography textColor="neutral800" variant="omega" fontWeight="bold">
           {formatMessage({ id: 'sitemap.HostnameOverrides.Label', defaultMessage: 'Hostname overrides' })}
-        </ButtonText>
+        </Typography>
       </ModalHeader>
       <ModalBody>
         <Grid gap={4}>

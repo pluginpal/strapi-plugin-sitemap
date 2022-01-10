@@ -4,7 +4,7 @@ import { useIntl } from 'react-intl';
 import { useCMEditViewDataManager, request } from '@strapi/helper-plugin';
 import { Box } from '@strapi/design-system/Box';
 import { Divider } from '@strapi/design-system/Divider';
-import { TableLabel } from '@strapi/design-system/Text';
+import { Typography } from '@strapi/design-system/Typography';
 import { Stack } from '@strapi/design-system/Stack';
 import { Checkbox } from '@strapi/design-system/Checkbox';
 
@@ -29,9 +29,9 @@ const CMEditViewExclude = () => {
 
   return (
     <Box paddingTop={6}>
-      <TableLabel textColor="neutral600">
+      <Typography textColor="neutral600" variant="sigma">
         {formatMessage({ id: getTrad('plugin.name'), defaultMessage: 'Sitemap' })}
-      </TableLabel>
+      </Typography>
       <Box paddingTop={2} paddingBottom={6}>
         <Divider />
       </Box>

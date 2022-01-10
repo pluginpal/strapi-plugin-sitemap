@@ -4,7 +4,7 @@ import { NoContent } from '@strapi/helper-plugin';
 import Plus from '@strapi/icons/Plus';
 import { VisuallyHidden } from '@strapi/design-system/VisuallyHidden';
 import { Table, Thead, Tbody, Tr, Th, TFooter } from '@strapi/design-system/Table';
-import { TableLabel } from '@strapi/design-system/Text';
+import { Typography } from '@strapi/design-system/Typography';
 import { Button } from '@strapi/design-system/Button';
 import { useIntl } from 'react-intl';
 
@@ -43,13 +43,13 @@ const ListComponent = (props) => {
       <Thead>
         <Tr>
           <Th>
-            <TableLabel>URL</TableLabel>
+            <Typography variant="sigma">URL</Typography>
           </Th>
           <Th>
-            <TableLabel>Priority</TableLabel>
+            <Typography variant="sigma">Priority</Typography>
           </Th>
           <Th>
-            <TableLabel>ChangeFreq</TableLabel>
+            <Typography variant="sigma">ChangeFreq</Typography>
           </Th>
           <Th>
             <VisuallyHidden>Actions</VisuallyHidden>

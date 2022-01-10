@@ -5,7 +5,7 @@ import Trash from '@strapi/icons/Trash';
 import { Box } from '@strapi/design-system/Box';
 import { Flex } from '@strapi/design-system/Flex';
 import { Tr, Td } from '@strapi/design-system/Table';
-import { Text } from '@strapi/design-system/Text';
+import { Typography } from '@strapi/design-system/Typography';
 import { IconButton } from '@strapi/design-system/IconButton';
 
 const CustomRow = ({ openModal, entry }) => {
@@ -22,13 +22,13 @@ const CustomRow = ({ openModal, entry }) => {
   return (
     <Tr key={entry.id}>
       <Td>
-        <Text textColor="neutral800">{entry.name}</Text>
+        <Typography variant="omega" textColor="neutral800">{entry.name}</Typography>
       </Td>
       <Td>
-        <Text textColor="neutral800">{entry.priority}</Text>
+        <Typography variant="omega" textColor="neutral800">{entry.priority}</Typography>
       </Td>
       <Td>
-        <Text textColor="neutral800">{entry.changefreq}</Text>
+        <Typography variant="omega" textColor="neutral800">{entry.changefreq}</Typography>
       </Td>
       <Td>
         <Flex>

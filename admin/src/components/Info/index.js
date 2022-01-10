@@ -5,7 +5,7 @@ import { useIntl } from 'react-intl';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { useNotification } from '@strapi/helper-plugin';
-import { Text, H3 } from '@strapi/design-system/Text';
+import { Typography } from '@strapi/design-system/Typography';
 import { Box } from '@strapi/design-system/Box';
 import { Button } from '@strapi/design-system/Button';
 import { Link } from '@strapi/design-system/Link';
@@ -32,13 +32,13 @@ const Info = () => {
     if (!hasHostname) {
       return (
         <div>
-          <H3 style={{ marginBottom: '10px' }}>
+          <Typography variant="delta" style={{ marginBottom: '10px' }}>
             {formatMessage({ id: 'sitemap.Info.NoHostname.Title', defaultMessage: 'Set your hostname' })}
-          </H3>
+          </Typography>
           <div>
-            <Text>
+            <Typography variant="omega">
               {formatMessage({ id: 'sitemap.Info.NoHostname.Description', defaultMessage: 'Before you can generate the sitemap you have to specify the hostname of your website.' })}
-            </Text>
+            </Typography>
             <Button
               onClick={() => {
                 document.getElementById('tabs-2-tab').click();
@@ -55,13 +55,13 @@ const Info = () => {
     } else if (sitemapInfo.size === 0) {
       return (
         <div>
-          <H3 style={{ marginBottom: '10px' }}>
+          <Typography variant="delta" style={{ marginBottom: '10px' }}>
             {formatMessage({ id: 'sitemap.Info.NoSitemap.Title', defaultMessage: 'No sitemap XML present' })}
-          </H3>
+          </Typography>
           <div>
-            <Text>
+            <Typography variant="omega">
               {formatMessage({ id: 'sitemap.Info.NoSitemap.Description', defaultMessage: 'Generate your first sitemap XML with the button below.' })}
-            </Text>
+            </Typography>
             <Button
               onClick={() => dispatch(generateSitemap(toggleNotification))}
               variant="secondary"
@@ -75,24 +75,24 @@ const Info = () => {
     } else {
       return (
         <div>
-          <H3 style={{ marginBottom: '10px' }}>
+          <Typography variant="delta" style={{ marginBottom: '10px' }}>
             {formatMessage({ id: 'sitemap.Info.SitemapIsPresent.Title', defaultMessage: 'Sitemap XML is present' })}
-          </H3>
+          </Typography>
           <div>
-            <Text>
+            <Typography variant="omega">
               {formatMessage({ id: 'sitemap.Info.SitemapIsPresent.LastUpdatedAt', defaultMessage: 'Last updated at:' })}
-            </Text>
-            <Text bold style={{ marginLeft: '5px' }}>
+            </Typography>
+            <Typography variant="omega" fontWeight="bold" style={{ marginLeft: '5px' }}>
               {`${month}/${day}/${year} - ${time}`}
-            </Text>
+            </Typography>
           </div>
           <div style={{ marginBottom: '15px' }}>
-            <Text>
+            <Typography variant="omega">
               {formatMessage({ id: 'sitemap.Info.SitemapIsPresent.AmountOfURLs', defaultMessage: 'Amount of URLs:' })}
-            </Text>
-            <Text bold style={{ marginLeft: '5px' }}>
+            </Typography>
+            <Typography variant="omega" fontWeight="bold" style={{ marginLeft: '5px' }}>
               {sitemapInfo.get('urls')}
-            </Text>
+            </Typography>
           </div>
           <div style={{ display: 'flex', flexDirection: 'row' }}>
             <Button

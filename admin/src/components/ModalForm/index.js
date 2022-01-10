@@ -3,8 +3,8 @@ import { useIntl } from 'react-intl';
 
 import { request } from '@strapi/helper-plugin';
 import { ModalLayout, ModalFooter, ModalBody, ModalHeader } from '@strapi/design-system/ModalLayout';
-import { ButtonText } from '@strapi/design-system/Text';
 import { Button } from '@strapi/design-system/Button';
+import { Typography } from '@strapi/design-system/Typography';
 
 import CustomForm from './Custom';
 import CollectionForm from './Collection';
@@ -79,9 +79,9 @@ const ModalForm = (props) => {
       labelledBy="title"
     >
       <ModalHeader>
-        <ButtonText textColor="neutral800" as="h2" id="title">
+        <Typography textColor="neutral800" variant="omega" fontWeight="bold">
           {formatMessage({ id: 'sitemap.Modal.HeaderTitle', defaultMessage: 'Sitemap entries' })} - {type}
-        </ButtonText>
+        </Typography>
       </ModalHeader>
       <ModalBody>
         {form()}
