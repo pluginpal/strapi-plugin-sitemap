@@ -7,7 +7,6 @@
 const { SitemapStream, streamToPromise } = require('sitemap');
 const { isEmpty } = require('lodash');
 const fs = require('fs');
-const { getAbsoluteServerUrl } = require('@strapi/utils');
 const { logMessage, getService, noLimit } = require('../utils');
 
 /**
@@ -183,7 +182,7 @@ const writeSitemapFile = (filename, sitemap) => {
           strapi.log.error(logMessage(`Something went wrong while trying to write the sitemap XML file to your public folder. ${err}`));
           throw new Error();
         } else {
-          strapi.log.info(logMessage(`The sitemap XML has been generated. It can be accessed on ${getAbsoluteServerUrl(strapi.config)}/sitemap/index.xml.`));
+          strapi.log.info(logMessage(`The sitemap XML has been generated. It can be accessed on /sitemap/index.xml.`));
         }
       });
     })

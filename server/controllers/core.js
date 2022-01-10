@@ -3,7 +3,6 @@
 const fs = require('fs');
 const _ = require('lodash');
 const xml2js = require('xml2js');
-const { getAbsoluteServerUrl } = require('@strapi/utils');
 
 const { getService, logMessage } = require('../utils');
 
@@ -79,7 +78,7 @@ module.exports = {
       });
 
       sitemapInfo.updateTime = fileStats.mtime;
-      sitemapInfo.location = `${getAbsoluteServerUrl(strapi.config)}/sitemap/index.xml`;
+      sitemapInfo.location = '/sitemap/index.xml';
     }
 
     ctx.send(sitemapInfo);
