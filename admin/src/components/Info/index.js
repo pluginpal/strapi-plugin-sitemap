@@ -25,7 +25,7 @@ const Info = () => {
   // Format month, day and time.
   const month = updateDate.toLocaleString('en', { month: 'numeric' });
   const day = updateDate.toLocaleString('en', { day: 'numeric' });
-  const year = updateDate.getFullYear().toString().substr(-2);
+  const year = updateDate.getFullYear().toString().slice(2);
   const time = formatTime(updateDate, true);
 
   const content = () => {
