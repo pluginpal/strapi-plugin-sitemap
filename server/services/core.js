@@ -46,6 +46,7 @@ const getLanguageLinks = async (page, contentType, defaultURL, excludeDrafts) =>
           $notNull: excludeDrafts,
         },
       },
+      orderBy: 'id',
       populate: ['localizations'],
     });
 
