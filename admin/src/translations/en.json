@@ -4,7 +4,7 @@
   "Button.Add": "Add",
   "Button.AddURL": "Add URL",
   "Button.AddURLBundle": "Add another URL bundle",
-  "Button.AddCustomUrl": "Add another URL",
+  "Button.AddCustomURL": "Add another URL",
 
   "Header.Title": "Sitemap",
   "Header.Description": "Settings for the sitemap XML",
