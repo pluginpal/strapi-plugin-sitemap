@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 /**
  * Pattern service.
@@ -11,42 +11,39 @@
  *
  * @returns {string} The fields.
  */
-const getAllowedFields = async (contentType) => {
-  const fields = [];
-  strapi.config.get('plugin.sitemap.allowedFields').map((fieldType) => {
+const getAllowedFields = async contentType => {
+  const fields = []
+  strapi.config.get('plugin.sitemap.allowedFields').map(fieldType => {
     Object.entries(contentType.attributes).map(([fieldName, field]) => {
       if (field.type === fieldType) {
-        fields.push(fieldName);
+        fields.push(fieldName)
       }
-      if (field.type === 'relation'){
+      if (field.type === 'relation' && field.target) {
         const relation = strapi.contentTypes[field.target]
         Object.entries(relation.attributes).map(([fieldName, field]) => {
           if (field.type === fieldType) {
-            fields.push(fieldName);
+            fields.push(fieldName)
           }
         })
-
       }
-    });
-  });
+    })
+  })
 
   // Add id field manually because it is not on the attributes object of a content type.
   if (strapi.config.get('plugin.sitemap.allowedFields').includes('id')) {
-    fields.push('id');
+    fields.push('id')
   }
 
-  return fields;
-};
+  return fields
+}
 
-const recursiveMatch = (fields) => {
+const recursiveMatch = fields => {
   let result = {}
-  for(let o of fields){
-
-    let field = RegExp(/\[([\w\d\[\]]+)\]/g).exec(o)[1];
-    if(RegExp(/\[.*\]/g).test(field)){
+  for (let o of fields) {
+    let field = RegExp(/\[([\w\d\[\]]+)\]/g).exec(o)[1]
+    if (RegExp(/\[.*\]/g).test(field)) {
       let fieldName = RegExp(/[\w\d]+/g).exec(field)[0]
-      result[fieldName] = recursiveMatch(field.match(/\[([\w\d\[\]]+)\]/g));
-
+      result[fieldName] = recursiveMatch(field.match(/\[([\w\d\[\]]+)\]/g))
     } else {
       result[field] = {}
     }
@@ -61,11 +58,11 @@ const recursiveMatch = (fields) => {
  *
  * @returns {array} The fields.\[([\w\d\[\]]+)\]
  */
-const getFieldsFromPattern = (pattern) => {
-  let fields = pattern.match(/\[([\w\d\[\]]+)\]/g); // Get all substrings between [] as array.
-  fields = recursiveMatch(fields); // Strip [] from string.
-  return fields;
-};
+const getFieldsFromPattern = pattern => {
+  let fields = pattern.match(/\[([\w\d\[\]]+)\]/g) // Get all substrings between [] as array.
+  fields = recursiveMatch(fields) // Strip [] from string.
+  return fields
+}
 
 /**
  * Resolve a pattern string from pattern to path for a single entity.
@@ -76,30 +73,32 @@ const getFieldsFromPattern = (pattern) => {
  * @returns {string} The path.
  */
 
-
-
 const resolvePattern = async (pattern, entity) => {
-  const fields = getFieldsFromPattern(pattern);
+  const fields = getFieldsFromPattern(pattern)
 
-  Object.keys(fields).map((field) => {
-
-    if(!Object.keys(fields[field]).length){
-      pattern = pattern.replace(`[${field}]`, entity[field] || '');
+  Object.keys(fields).map(field => {
+    if (!Object.keys(fields[field]).length) {
+      pattern = pattern.replace(`[${field}]`, entity[field] || '')
     } else {
-      
       const subField = Object.keys(fields[field])[0]
-      if(Array.isArray(entity[field]) && entity[field][0]){
-        pattern = pattern.replace(`[${field}[${subField}]]`, entity[field][0][subField] || '');
+      if (Array.isArray(entity[field]) && entity[field][0]) {
+        pattern = pattern.replace(
+          `[${field}[${subField}]]`,
+          entity[field][0][subField] || ''
+        )
       } else {
-        pattern = pattern.replace(`[${field}[${subField}]]`, entity[field][subField] || '');
+        pattern = pattern.replace(
+          `[${field}[${subField}]]`,
+          entity[field][subField] || ''
+        )
       }
     }
-  });
+  })
 
-  pattern = pattern.replace(/([^:]\/)\/+/g, "$1"); // Remove duplicate forward slashes.
-  pattern = pattern.startsWith('/') ? pattern : `/${pattern}`; // Add a starting slash.
-  return pattern;
-};
+  pattern = pattern.replace(/([^:]\/)\/+/g, '$1') // Remove duplicate forward slashes.
+  pattern = pattern.startsWith('/') ? pattern : `/${pattern}` // Add a starting slash.
+  return pattern
+}
 
 /**
  * Validate if a pattern is correctly structured.
@@ -115,63 +114,64 @@ const validatePattern = async (pattern, allowedFieldNames) => {
   if (!pattern) {
     return {
       valid: false,
-      message: "Pattern can not be empty",
-    };
+      message: 'Pattern can not be empty'
+    }
   }
 
-  const preCharCount = pattern.split("[").length - 1;
-  const postCharount = pattern.split("]").length - 1;
+  const preCharCount = pattern.split('[').length - 1
+  const postCharount = pattern.split(']').length - 1
 
   if (preCharCount < 1 || postCharount < 1) {
     return {
       valid: false,
-      message: "Pattern should contain at least one field",
-    };
+      message: 'Pattern should contain at least one field'
+    }
   }
 
   if (preCharCount !== postCharount) {
     return {
       valid: false,
-      message: "Fields in the pattern are not escaped correctly",
-    };
+      message: 'Fields in the pattern are not escaped correctly'
+    }
   }
 
-  let fieldsAreAllowed = true;
-  const allowedFieldsRecursive = (fields) => {
-    Object.keys(fields).map((field) => {
-      try{
-        if(Object.keys(fields[field]) && Object.keys(fields[field]).length > 0){
+  let fieldsAreAllowed = true
+  const allowedFieldsRecursive = fields => {
+    Object.keys(fields).map(field => {
+      try {
+        if (
+          Object.keys(fields[field]) &&
+          Object.keys(fields[field]).length > 0
+        ) {
           allowedFieldsRecursive(fields[field])
         }
-      } catch(e) {
-        console.log("Failed!")
+      } catch (e) {
+        console.log('Failed!')
         console.log(e)
       }
-      
-      if (!allowedFieldNames.includes(field)) fieldsAreAllowed = false;
-      return true
-    });
 
+      if (!allowedFieldNames.includes(field)) fieldsAreAllowed = false
+      return true
+    })
   }
   allowedFieldsRecursive(getFieldsFromPattern(pattern))
-
 
   if (!fieldsAreAllowed) {
     return {
       valid: false,
-      message: "Pattern contains forbidden fields",
-    };
+      message: 'Pattern contains forbidden fields'
+    }
   }
-  
+
   return {
     valid: true,
-    message: "Valid pattern",
-  };
-};
+    message: 'Valid pattern'
+  }
+}
 
 module.exports = () => ({
   getAllowedFields,
   getFieldsFromPattern,
   resolvePattern,
-  validatePattern,
-});
+  validatePattern
+})
