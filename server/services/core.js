@@ -46,6 +46,7 @@ const getLanguageLinks = async (page, contentType, defaultURL, excludeDrafts) =>
           $notNull: excludeDrafts,
         },
       },
+      orderBy: 'id',
       populate: ['localizations'],
     });
 
@@ -158,6 +159,7 @@ const createSitemapEntries = async () => {
         },
       },
       populate,
+      orderBy: 'id'
     });
     // Add formatted sitemap page data to the array.
     await Promise.all(pages.map(async (page) => {
