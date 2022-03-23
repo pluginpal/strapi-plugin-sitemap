@@ -46,6 +46,7 @@ const getLanguageLinks = async (page, contentType, defaultURL, excludeDrafts) =>
           $notNull: excludeDrafts,
         },
       },
+      orderBy: 'id',
       populate: ['localizations'],
     });
 
@@ -148,6 +149,7 @@ const createSitemapEntries = async () => {
           $notNull: excludeDrafts,
         },
       },
+      orderBy: 'id',
       populate: ['localizations'],
     });
 
