@@ -90,7 +90,6 @@ const getLanguageLinks = async (page, contentType, defaultURL, excludeDrafts) =>
 const getSitemapPageData = async (page, contentType, excludeDrafts) => {
   let locale = page.locale || 'und';
   const config = await getService('settings').getConfig();
-
   // Return when there is no pattern for the page.
   if (
     !config.contentTypes[contentType]['languages'][locale]
@@ -130,6 +129,16 @@ const createSitemapEntries = async () => {
   // Collection entries.
   await Promise.all(Object.keys(config.contentTypes).map(async (contentType) => {
     const excludeDrafts = config.excludeDrafts && strapi.contentTypes[contentType].options.draftAndPublish;
+    
+    const populate = ['localizations'].concat(Object.keys(strapi.contentTypes[contentType].attributes).reduce((prev, current) => {
+      
+     
+      if(strapi.contentTypes[contentType].attributes[current].type == 'relation'){
+        prev.push(current)
+      }
+      return prev
+    }, []))
+
     const pages = await noLimit(strapi.query(contentType), {
       where: {
         $or: [
@@ -148,16 +157,15 @@ const createSitemapEntries = async () => {
           $notNull: excludeDrafts,
         },
       },
-      populate: ['localizations'],
+      populate,
     });
-
     // Add formatted sitemap page data to the array.
     await Promise.all(pages.map(async (page) => {
+    
       const pageData = await getSitemapPageData(page, contentType, excludeDrafts);
       if (pageData) sitemapEntries.push(pageData);
     }));
   }));
-
   // Custom entries.
   await Promise.all(Object.keys(config.customEntries).map(async (customEntry) => {
     sitemapEntries.push({
@@ -224,6 +232,7 @@ const createSitemap = async () => {
     });
 
     const sitemapEntries = await createSitemapEntries();
+
     if (isEmpty(sitemapEntries)) {
       strapi.log.info(logMessage(`No sitemap XML was generated because there were 0 URLs configured.`));
       return;

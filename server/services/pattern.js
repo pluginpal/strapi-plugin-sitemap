@@ -18,6 +18,15 @@ const getAllowedFields = async (contentType) => {
       if (field.type === fieldType) {
         fields.push(fieldName);
       }
+      if (field.type === 'relation'){
+        const relation = strapi.contentTypes[field.target]
+        Object.entries(relation.attributes).map(([fieldName, field]) => {
+          if (field.type === fieldType) {
+            fields.push(fieldName);
+          }
+        })
+
+      }
     });
   });
 
@@ -29,16 +38,32 @@ const getAllowedFields = async (contentType) => {
   return fields;
 };
 
+const recursiveMatch = (fields) => {
+  let result = {}
+  for(let o of fields){
+
+    let field = RegExp(/\[([\w\d\[\]]+)\]/g).exec(o)[1];
+    if(RegExp(/\[.*\]/g).test(field)){
+      let fieldName = RegExp(/[\w\d]+/g).exec(field)[0]
+      result[fieldName] = recursiveMatch(field.match(/\[([\w\d\[\]]+)\]/g));
+
+    } else {
+      result[field] = {}
+    }
+  }
+  return result
+}
+
 /**
  * Get all fields from a pattern.
  *
  * @param {string} pattern - The pattern.
  *
- * @returns {array} The fields.
+ * @returns {array} The fields.\[([\w\d\[\]]+)\]
  */
 const getFieldsFromPattern = (pattern) => {
-  let fields = pattern.match(/[[\w\d]+]/g); // Get all substrings between [] as array.
-  fields = fields.map((field) => RegExp(/(?<=\[)(.*?)(?=\])/).exec(field)[0]); // Strip [] from string.
+  let fields = pattern.match(/\[([\w\d\[\]]+)\]/g); // Get all substrings between [] as array.
+  fields = recursiveMatch(fields); // Strip [] from string.
   return fields;
 };
 
@@ -50,11 +75,25 @@ const getFieldsFromPattern = (pattern) => {
  *
  * @returns {string} The path.
  */
+
+
+
 const resolvePattern = async (pattern, entity) => {
   const fields = getFieldsFromPattern(pattern);
 
-  fields.map((field) => {
-    pattern = pattern.replace(`[${field}]`, entity[field] || '');
+  Object.keys(fields).map((field) => {
+
+    if(!Object.keys(fields[field]).length){
+      pattern = pattern.replace(`[${field}]`, entity[field] || '');
+    } else {
+      
+      const subField = Object.keys(fields[field])[0]
+      if(Array.isArray(entity[field]) && entity[field][0]){
+        pattern = pattern.replace(`[${field}[${subField}]]`, entity[field][0][subField] || '');
+      } else {
+        pattern = pattern.replace(`[${field}[${subField}]]`, entity[field][subField] || '');
+      }
+    }
   });
 
   pattern = pattern.replace(/([^:]\/)\/+/g, "$1"); // Remove duplicate forward slashes.
@@ -98,9 +137,24 @@ const validatePattern = async (pattern, allowedFieldNames) => {
   }
 
   let fieldsAreAllowed = true;
-  getFieldsFromPattern(pattern).map((field) => {
-    if (!allowedFieldNames.includes(field)) fieldsAreAllowed = false;
-  });
+  const allowedFieldsRecursive = (fields) => {
+    Object.keys(fields).map((field) => {
+      try{
+        if(Object.keys(fields[field]) && Object.keys(fields[field]).length > 0){
+          allowedFieldsRecursive(fields[field])
+        }
+      } catch(e) {
+        console.log("Failed!")
+        console.log(e)
+      }
+      
+      if (!allowedFieldNames.includes(field)) fieldsAreAllowed = false;
+      return true
+    });
+
+  }
+  allowedFieldsRecursive(getFieldsFromPattern(pattern))
+
 
   if (!fieldsAreAllowed) {
     return {
@@ -108,7 +162,7 @@ const validatePattern = async (pattern, allowedFieldNames) => {
       message: "Pattern contains forbidden fields",
     };
   }
-
+  
   return {
     valid: true,
     message: "Valid pattern",
