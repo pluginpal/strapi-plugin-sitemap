@@ -130,15 +130,15 @@ const createSitemapEntries = async () => {
   // Collection entries.
   await Promise.all(Object.keys(config.contentTypes).map(async (contentType) => {
     const excludeDrafts = config.excludeDrafts && strapi.contentTypes[contentType].options.draftAndPublish;
-    
+
     const populate = ['localizations'].concat(Object.keys(strapi.contentTypes[contentType].attributes).reduce((prev, current) => {
-      
-     
-      if(strapi.contentTypes[contentType].attributes[current].type == 'relation'){
-        prev.push(current)
+
+
+      if (strapi.contentTypes[contentType].attributes[current].type === 'relation') {
+        prev.push(current);
       }
-      return prev
-    }, []))
+      return prev;
+    }, []));
 
     const pages = await noLimit(strapi.query(contentType), {
       where: {
@@ -159,11 +159,11 @@ const createSitemapEntries = async () => {
         },
       },
       populate,
-      orderBy: 'id'
+      orderBy: 'id',
     });
     // Add formatted sitemap page data to the array.
     await Promise.all(pages.map(async (page) => {
-    
+
       const pageData = await getSitemapPageData(page, contentType, excludeDrafts);
       if (pageData) sitemapEntries.push(pageData);
     }));
