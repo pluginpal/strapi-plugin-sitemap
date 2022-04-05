@@ -69,7 +69,8 @@ const getLanguageLinks = async (page, contentType, defaultURL, excludeDrafts) =>
 
     const { pattern } = config.contentTypes[contentType]['languages'][locale];
     const translationUrl = await strapi.plugins.sitemap.services.pattern.resolvePattern(pattern, translationEntity);
-    const hostnameOverride = config.hostname_overrides[translationEntity.locale]?.replace(/\/+$/, "") || '';
+    let hostnameOverride = config.hostname_overrides[translationEntity.locale] || '';
+    hostnameOverride = hostnameOverride.replace(/\/+$/, "");
     links.push({
       lang: translationEntity.locale,
       url: `${hostnameOverride}${translationUrl}`,
@@ -107,7 +108,8 @@ const getSitemapPageData = async (page, contentType, excludeDrafts) => {
 
   const { pattern } = config.contentTypes[contentType]['languages'][locale];
   const path = await strapi.plugins.sitemap.services.pattern.resolvePattern(pattern, page);
-  const hostnameOverride = config.hostname_overrides[page.locale]?.replace(/\/+$/, "") || '';
+  let hostnameOverride = config.hostname_overrides[page.locale] || '';
+  hostnameOverride = hostnameOverride.replace(/\/+$/, "");
   const url = `${hostnameOverride}${path}`;
 
   return {
