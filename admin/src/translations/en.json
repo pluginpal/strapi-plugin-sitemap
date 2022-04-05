@@ -30,6 +30,8 @@
   "Settings.Field.Priority.Description": "The priority of the pages.",
   "Settings.Field.Changefreq.Label": "Changefreq",
   "Settings.Field.Changefreq.Description": "The changefreq of the pages.",
+  "Settings.Field.IncludeLastmod.Label": "Lastmod",
+  "Settings.Field.IncludeLastmod.Description": "Adds a <lastmod> tag to all the URLs of this type.",
   "Settings.Field.Pattern.Label": "Pattern",
   "Settings.Field.Pattern.DescriptionPart1": "Create a dynamic URL pattern",
   "Settings.Field.Pattern.DescriptionPart2": "using",

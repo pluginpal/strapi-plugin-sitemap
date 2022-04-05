@@ -112,13 +112,19 @@ const getSitemapPageData = async (page, contentType, excludeDrafts) => {
   hostnameOverride = hostnameOverride.replace(/\/+$/, "");
   const url = `${hostnameOverride}${path}`;
 
-  return {
+  const pageData = {
     lastmod: page.updatedAt,
     url: url,
     links: await getLanguageLinks(page, contentType, url, excludeDrafts),
     changefreq: config.contentTypes[contentType]['languages'][locale].changefreq || 'monthly',
     priority: parseFloat(config.contentTypes[contentType]['languages'][locale].priority) || 0.5,
   };
+
+  if (config.contentTypes[contentType]['languages'][locale].includeLastmod === false) {
+    delete pageData.lastmod;
+  }
+
+  return pageData;
 };
 
 /**
