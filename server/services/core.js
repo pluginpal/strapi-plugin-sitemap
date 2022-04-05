@@ -42,9 +42,9 @@ const getLanguageLinks = async (page, contentType, defaultURL, excludeDrafts) =>
           },
         ],
         id: translation.id,
-        publishedAt: {
-          $notNull: excludeDrafts,
-        },
+        published_at: excludeDrafts ? {
+          $notNull: true,
+        } : {},
       },
       orderBy: 'id',
       populate: ['localizations'],
@@ -145,9 +145,9 @@ const createSitemapEntries = async () => {
             },
           },
         ],
-        published_at: {
-          $notNull: excludeDrafts,
-        },
+        published_at: excludeDrafts ? {
+          $notNull: true,
+        } : {},
       },
       orderBy: 'id',
       populate: ['localizations'],
