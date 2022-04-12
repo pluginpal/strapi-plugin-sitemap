@@ -10,6 +10,7 @@ import { Select, Option } from '@strapi/design-system/Select';
 import { Popover } from '@strapi/design-system/Popover';
 import { Box } from '@strapi/design-system/Box';
 import { Stack } from '@strapi/design-system/Stack';
+import { Checkbox } from '@strapi/design-system/Checkbox';
 
 import SelectContentTypes from '../../SelectContentTypes';
 
@@ -163,6 +164,18 @@ const CollectionForm = (props) => {
                 </Select>
               </GridItem>
             ))}
+            <GridItem col={12}>
+              <Checkbox
+                onValueChange={(cbValue) => {
+                  onChange(uid, langcode, 'includeLastmod', cbValue);
+                }}
+                value={modifiedState.getIn([uid, 'languages', langcode, 'includeLastmod'], true)}
+                disabled={!uid || (contentTypes[uid].locales && !langcode)}
+                hint={formatMessage({ id: 'sitemap.Settings.Field.IncludeLastmod.Description', defaultMessage: 'Adds a <lastmod> tag to all the URLs of this type.' })}
+              >
+                {formatMessage({ id: 'sitemap.Settings.Field.IncludeLastmod.Label', defaultMessage: 'Lastmod' })}
+              </Checkbox>
+            </GridItem>
           </Grid>
         </GridItem>
       </Grid>
