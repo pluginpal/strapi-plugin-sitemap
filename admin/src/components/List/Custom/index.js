@@ -11,7 +11,7 @@ import { useIntl } from 'react-intl';
 import CustomRow from './Row';
 
 const ListComponent = (props) => {
-  const { items, openModal } = props;
+  const { items, openModal, onDelete } = props;
   const formattedItems = [];
   const { formatMessage } = useIntl();
 
@@ -24,7 +24,7 @@ const ListComponent = (props) => {
     formattedItem.name = key;
     formattedItem.priority = item.get('priority');
     formattedItem.changefreq = item.get('changefreq');
-    formattedItem.onDelete = props.onDelete;
+    formattedItem.onDelete = onDelete;
 
     formattedItems.push(formattedItem);
   });
