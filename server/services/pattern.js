@@ -15,16 +15,19 @@ const getAllowedFields = async (contentType) => {
   const fields = [];
   strapi.config.get('plugin.sitemap.allowedFields').map((fieldType) => {
     Object.entries(contentType.attributes).map(([fieldName, field]) => {
-      if (field.type === fieldType) {
+      if (field.type === fieldType && field.type !== 'relation') {
         fields.push(fieldName);
-      }
-      if (field.type === 'relation' && field.target) {
+      } else if (field.type === 'relation' && field.target && !field.private) {
         const relation = strapi.contentTypes[field.target];
-        Object.entries(relation.attributes).map(([subFieldName, subField]) => {
-          if (subField.type === fieldType) {
-            fields.push(subFieldName);
-          }
-        });
+        if (!fields.includes(`${fieldName}.id`)) {
+          fields.push(`${fieldName}.id`);
+        }
+          Object.entries(relation.attributes).map(([subFieldName, subField]) => {
+            if (subField.type === fieldType) {
+              fields.push(`${fieldName}.${subFieldName}`);
+            }
+          });
+
       }
     });
   });
@@ -37,18 +40,6 @@ const getAllowedFields = async (contentType) => {
   return fields;
 };
 
-const recursiveMatch = (fields) => {
-  return fields.reduce((result, o) => {
-    const field = RegExp(/\[([\w\d[\]]+)\]/g).exec(o)[1];
-    if (RegExp(/\[.*\]/g).test(field)) {
-      const fieldName = RegExp(/[\w\d]+/g).exec(field)[0];
-      result[fieldName] = recursiveMatch(field.match(/\[([\w\d[\]]+)\]/g));
-    } else {
-      result[field] = {};
-    }
-    return result;
-  }, {});
-};
 
 /**
  * Get all fields from a pattern.
@@ -58,8 +49,8 @@ const recursiveMatch = (fields) => {
  * @returns {array} The fields.\[([\w\d\[\]]+)\]
  */
 const getFieldsFromPattern = (pattern) => {
-  let fields = pattern.match(/\[([\w\d[\]]+)\]/g); // Get all substrings between [] as array.
-  fields = recursiveMatch(fields); // Strip [] from string.
+  let fields = pattern.match(/[[\w\d.]+]/g); // Get all substrings between [] as array.
+  fields = fields.map((field) => RegExp(/(?<=\[)(.*?)(?=\])/).exec(field)[0]); // Strip [] from string.
   return fields;
 };
 
@@ -72,29 +63,24 @@ const getFieldsFromPattern = (pattern) => {
  * @returns {string} The path.
  */
 
-const resolvePattern = async (pattern, entity) => {
+ const resolvePattern = async (pattern, entity) => {
   const fields = getFieldsFromPattern(pattern);
 
-  Object.keys(fields).map((field) => {
-    if (!Object.keys(fields[field]).length) {
-      pattern = pattern.replace(`[${field}]`, entity[field] || '');
-    } else {
-      const subField = Object.keys(fields[field])[0];
-      if (Array.isArray(entity[field]) && entity[field][0]) {
-        pattern = pattern.replace(
-          `[${field}[${subField}]]`,
-          entity[field][0][subField] || '',
-        );
-      } else {
-        pattern = pattern.replace(
-          `[${field}[${subField}]]`,
-          entity[field][subField] || '',
-        );
-      }
-    }
+  fields.map((field) => {
+    const relationalField = field.split('.').length > 1 ? field.split('.') : null;
+      if (!relationalField) {
+        pattern = pattern.replace(`[${field}]`, entity[field] || '');
+      } else if (Array.isArray(entity[relationalField[0]])) {
+          // If the relational attribute is an array, use the first result.
+          pattern = pattern.replace(`[${field}]`, entity[relationalField[0]][0] && entity[relationalField[0]][0][relationalField[1]] ? entity[relationalField[0]][0][relationalField[1]] : '');
+        } else if (typeof entity[relationalField[0]] === 'object') {
+          pattern = pattern.replace(`[${field}]`, entity[relationalField[0]] && entity[relationalField[0]][relationalField[1]] ? entity[relationalField[0]][relationalField[1]] : '');
+        }
+
+
   });
 
-  pattern = pattern.replace(/([^:]\/)\/+/g, '$1'); // Remove duplicate forward slashes.
+  pattern = pattern.replace(/([^:]\/)\/+/g, "$1"); // Remove duplicate forward slashes.
   pattern = pattern.startsWith('/') ? pattern : `/${pattern}`; // Add a starting slash.
   return pattern;
 };
@@ -135,25 +121,10 @@ const validatePattern = async (pattern, allowedFieldNames) => {
   }
 
   let fieldsAreAllowed = true;
-  const allowedFieldsRecursive = (fields) => {
-    Object.keys(fields).map((field) => {
-      try {
-        if (
-          Object.keys(fields[field])
-          && Object.keys(fields[field]).length > 0
-        ) {
-          allowedFieldsRecursive(fields[field]);
-        }
-      } catch (e) {
-        console.log('Failed!');
-        console.log(e);
-      }
 
-      if (!allowedFieldNames.includes(field)) fieldsAreAllowed = false;
-      return true;
-    });
-  };
-  allowedFieldsRecursive(getFieldsFromPattern(pattern));
+  getFieldsFromPattern(pattern).map((field) => {
+    if (!allowedFieldNames.includes(field)) fieldsAreAllowed = false;
+  });
 
   if (!fieldsAreAllowed) {
     return {

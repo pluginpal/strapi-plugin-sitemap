@@ -42,9 +42,9 @@ const getLanguageLinks = async (page, contentType, defaultURL, excludeDrafts) =>
           },
         ],
         id: translation.id,
-        published_at: excludeDrafts ? {
-          $notNull: true,
-        } : {},
+        publishedAt: {
+          $notNull: excludeDrafts,
+        },
       },
       orderBy: 'id',
       populate: ['localizations'],
@@ -69,8 +69,7 @@ const getLanguageLinks = async (page, contentType, defaultURL, excludeDrafts) =>
 
     const { pattern } = config.contentTypes[contentType]['languages'][locale];
     const translationUrl = await strapi.plugins.sitemap.services.pattern.resolvePattern(pattern, translationEntity);
-    let hostnameOverride = config.hostname_overrides[translationEntity.locale] || '';
-    hostnameOverride = hostnameOverride.replace(/\/+$/, "");
+    const hostnameOverride = config.hostname_overrides[translationEntity.locale]?.replace(/\/+$/, "") || '';
     links.push({
       lang: translationEntity.locale,
       url: `${hostnameOverride}${translationUrl}`,
@@ -107,23 +106,17 @@ const getSitemapPageData = async (page, contentType, excludeDrafts) => {
 
   const { pattern } = config.contentTypes[contentType]['languages'][locale];
   const path = await strapi.plugins.sitemap.services.pattern.resolvePattern(pattern, page);
-  let hostnameOverride = config.hostname_overrides[page.locale] || '';
-  hostnameOverride = hostnameOverride.replace(/\/+$/, "");
+
+  const hostnameOverride = config.hostname_overrides[page.locale]?.replace(/\/+$/, "") || '';
   const url = `${hostnameOverride}${path}`;
 
-  const pageData = {
+  return {
     lastmod: page.updatedAt,
     url: url,
     links: await getLanguageLinks(page, contentType, url, excludeDrafts),
     changefreq: config.contentTypes[contentType]['languages'][locale].changefreq || 'monthly',
     priority: parseFloat(config.contentTypes[contentType]['languages'][locale].priority) || 0.5,
   };
-
-  if (config.contentTypes[contentType]['languages'][locale].includeLastmod === false) {
-    delete pageData.lastmod;
-  }
-
-  return pageData;
 };
 
 /**
@@ -162,9 +155,9 @@ const createSitemapEntries = async () => {
             },
           },
         ],
-        published_at: excludeDrafts ? {
-          $notNull: true,
-        } : {},
+        published_at: {
+          $notNull: excludeDrafts,
+        },
       },
       populate,
       orderBy: 'id',
