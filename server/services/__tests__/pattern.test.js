@@ -6,24 +6,27 @@ const patternService = require('../pattern');
 describe('Pattern service', () => {
   describe('Get fields from pattern', () => {
     test('Should return an array of fieldnames extracted from a pattern', () => {
-      const pattern = '/en/[category]/[slug]';
+      const pattern = '/en/[category]/[slug]/[relation.id]';
 
       const result = patternService().getFieldsFromPattern(pattern);
 
-      expect(result).toEqual(['category', 'slug']);
+      expect(result).toEqual(['category', 'slug', 'relation.id']);
     });
   });
   describe('Resolve pattern', () => {
     test('Resolve valid pattern', async () => {
-      const pattern = '/en/[category]/[slug]';
+      const pattern = '/en/[category]/[slug]/[relation.url]';
       const entity = {
         category: 'category-a',
         slug: 'my-page-slug',
+        relation: {
+          url: 'relation-url',
+        },
       };
 
       const result = await patternService().resolvePattern(pattern, entity);
 
-      expect(result).toMatch('/en/category-a/my-page-slug');
+      expect(result).toMatch('/en/category-a/my-page-slug/relation-url');
     });
 
     test('Resolve pattern with missing field', async () => {
