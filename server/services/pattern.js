@@ -18,16 +18,24 @@ const getAllowedFields = async (contentType) => {
       if (field.type === fieldType && field.type !== 'relation') {
         fields.push(fieldName);
       } else if (field.type === 'relation' && field.target && !field.private) {
-        const relation = strapi.contentTypes[field.target];
-        if (!fields.includes(`${fieldName}.id`)) {
-          fields.push(`${fieldName}.id`);
-        }
+        if (fieldName === 'localizations') {
+          return null;
+        } else {
+          const relation = strapi.contentTypes[field.target];
+
+          if (
+            strapi.config.get('plugin.sitemap.allowedFields').includes('id')
+            && !fields.includes(`${fieldName}.id`)
+          ) {
+            fields.push(`${fieldName}.id`);
+          }
+
           Object.entries(relation.attributes).map(([subFieldName, subField]) => {
             if (subField.type === fieldType) {
               fields.push(`${fieldName}.${subFieldName}`);
             }
           });
-
+        }
       }
     });
   });
@@ -68,16 +76,15 @@ const getFieldsFromPattern = (pattern) => {
 
   fields.map((field) => {
     const relationalField = field.split('.').length > 1 ? field.split('.') : null;
+
       if (!relationalField) {
         pattern = pattern.replace(`[${field}]`, entity[field] || '');
       } else if (Array.isArray(entity[relationalField[0]])) {
-          // If the relational attribute is an array, use the first result.
-          pattern = pattern.replace(`[${field}]`, entity[relationalField[0]][0] && entity[relationalField[0]][0][relationalField[1]] ? entity[relationalField[0]][0][relationalField[1]] : '');
-        } else if (typeof entity[relationalField[0]] === 'object') {
-          pattern = pattern.replace(`[${field}]`, entity[relationalField[0]] && entity[relationalField[0]][relationalField[1]] ? entity[relationalField[0]][relationalField[1]] : '');
-        }
-
-
+        // If the relational attribute is an array, use the first result.
+        pattern = pattern.replace(`[${field}]`, entity[relationalField[0]][0] && entity[relationalField[0]][0][relationalField[1]] ? entity[relationalField[0]][0][relationalField[1]] : '');
+      } else if (typeof entity[relationalField[0]] === 'object') {
+        pattern = pattern.replace(`[${field}]`, entity[relationalField[0]] && entity[relationalField[0]][relationalField[1]] ? entity[relationalField[0]][relationalField[1]] : '');
+      }
   });
 
   pattern = pattern.replace(/([^:]\/)\/+/g, "$1"); // Remove duplicate forward slashes.
