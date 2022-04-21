@@ -104,6 +104,11 @@ Fields can be injected in the pattern by escaping them with `[]`.
 
 Also relations can be queried in the pattern like so: `[relation.fieldname]`.
 
+The following field types are by default allowed in a pattern:
+
+- `id`
+- `uid`
+
 *Allowed field types can be altered with the `allowedFields` config. Read more about it below.*
 
 ## 🌍 Multilingual
