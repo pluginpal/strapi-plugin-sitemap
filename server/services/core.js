@@ -4,8 +4,10 @@
  * Sitemap service.
  */
 
-const { SitemapStream, streamToPromise } = require('sitemap');
+const { getConfigUrls } = require('@strapi/utils/lib');
+const { SitemapStream, streamToPromise, SitemapAndIndexStream } = require('sitemap');
 const { isEmpty } = require('lodash');
+const { resolve } = require('path');
 const fs = require('fs');
 const { logMessage, getService, noLimit } = require('../utils');
 
@@ -221,28 +223,61 @@ const writeSitemapFile = (filename, sitemap) => {
 };
 
 /**
+ * Get the SitemapStream instance.
+ *
+ * @param {number} urlCount - The amount of URLs.
+ *
+ * @returns {SitemapStream} - The sitemap stream.
+ */
+ const getSitemapStream = async (urlCount) => {
+  const config = await getService('settings').getConfig();
+  const LIMIT = strapi.config.get('plugin.sitemap.limit');
+  const { serverUrl } = getConfigUrls(strapi.config);
+
+  if (urlCount <= LIMIT) {
+    return new SitemapStream({
+      hostname: config.hostname,
+      xslUrl: "xsl/sitemap.xsl",
+    });
+  } else {
+    return new SitemapAndIndexStream({
+      limit: LIMIT,
+      xslUrl: "xsl/sitemap.xsl",
+      lastmodDateOnly: false,
+      getSitemapStream: (i) => {
+        const sitemapStream = new SitemapStream({
+          hostname: config.hostname,
+          xslUrl: "xsl/sitemap.xsl",
+        });
+        const path = `sitemap/sitemap-${i}.xml`;
+        const ws = sitemapStream.pipe(fs.createWriteStream(resolve(`public/${path}`)));
+
+        return [new URL(path, serverUrl || 'http://localhost:1337').toString(), sitemapStream, ws];
+      },
+    });
+  }
+};
+
+/**
  * The main sitemap generation service.
  *
  * @returns {void}
  */
 const createSitemap = async () => {
   try {
-    const config = await getService('settings').getConfig();
-    const sitemap = new SitemapStream({
-      hostname: config.hostname,
-      xslUrl: "xsl/sitemap.xsl",
-    });
-
     const sitemapEntries = await createSitemapEntries();
     if (isEmpty(sitemapEntries)) {
       strapi.log.info(logMessage(`No sitemap XML was generated because there were 0 URLs configured.`));
       return;
     }
 
+    const sitemap = await getSitemapStream(sitemapEntries.length);
+
     sitemapEntries.map((sitemapEntry) => sitemap.write(sitemapEntry));
     sitemap.end();
 
     writeSitemapFile('index.xml', sitemap);
+
   } catch (err) {
     strapi.log.error(logMessage(`Something went wrong while trying to build the SitemapStream. ${err}`));
     throw new Error();

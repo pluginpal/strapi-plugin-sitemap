@@ -74,6 +74,7 @@ module.exports = {
           throw new Error();
         } else {
           sitemapInfo.urls = _.get(result, 'urlset.url.length') || 0;
+          sitemapInfo.sitemaps = _.get(result, 'sitemapindex.sitemap.length') || 0;
         }
       });
 
