@@ -10,12 +10,14 @@ const { logMessage } = require("../utils");
  * Get all field names allowed in the URL of a given content type.
  *
  * @param {string} contentType - The content type.
+ * @param {array} allowedFields - Override the allowed fields.
  *
- * @returns {string} The fields.
+ * @returns {string[]} The fields.
  */
-const getAllowedFields = async (contentType) => {
+const getAllowedFields = (contentType, allowedFields = []) => {
   const fields = [];
-  strapi.config.get('plugin.sitemap.allowedFields').map((fieldType) => {
+  const fieldTypes = allowedFields.length > 0 ? allowedFields : strapi.config.get('plugin.sitemap.allowedFields');
+  fieldTypes.map((fieldType) => {
     Object.entries(contentType.attributes).map(([fieldName, field]) => {
       if (field.type === fieldType && field.type !== 'relation') {
         fields.push(fieldName);
@@ -28,7 +30,7 @@ const getAllowedFields = async (contentType) => {
         const relation = strapi.contentTypes[field.target];
 
         if (
-          strapi.config.get('plugin.sitemap.allowedFields').includes('id')
+          fieldTypes.includes('id')
           && !fields.includes(`${fieldName}.id`)
         ) {
           fields.push(`${fieldName}.id`);
@@ -44,7 +46,7 @@ const getAllowedFields = async (contentType) => {
   });
 
   // Add id field manually because it is not on the attributes object of a content type.
-  if (strapi.config.get('plugin.sitemap.allowedFields').includes('id')) {
+  if (fieldTypes.includes('id')) {
     fields.push('id');
   }
 

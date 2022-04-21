@@ -3,7 +3,70 @@
 
 const patternService = require('../pattern');
 
+global.strapi = {
+  contentTypes: {
+    'another-test-relation:target:api': {
+      attributes: {
+        slugField: {
+          type: 'uid',
+        },
+        textField: {
+          type: 'text',
+        },
+      },
+    },
+  },
+};
+
 describe('Pattern service', () => {
+  describe('Get allowed fields for a content type', () => {
+    test('Should return the right fields', () => {
+      const allowedFields = ['id', 'uid'];
+      const contentType = {
+        attributes: {
+          urlField: {
+            type: 'uid',
+          },
+          textField: {
+            type: 'text',
+          },
+          localizations: {
+            type: 'relation',
+            target: 'test:target:api',
+            relation: 'oneToOne',
+          },
+          relation: {
+            type: 'relation',
+            target: 'another-test:target:api',
+            relation: 'oneToMany',
+          },
+          anotherRelation: {
+            type: 'relation',
+            target: 'another-test-relation:target:api',
+            relation: 'oneToOne',
+          },
+        },
+      };
+
+      const result = patternService().getAllowedFields(contentType, allowedFields);
+
+      expect(result).toContain('id');
+      expect(result).toContain('urlField');
+      expect(result).toContain('anotherRelation.id');
+      expect(result).toContain('anotherRelation.slugField');
+    });
+
+    test('Should return only the id as allowed', () => {
+      const allowedFields = ['id', 'uid'];
+      const contentType = {
+        attributes: {},
+      };
+
+      const result = patternService().getAllowedFields(contentType, allowedFields);
+
+      expect(result).toEqual(['id']);
+    });
+  });
   describe('Get fields from pattern', () => {
     test('Should return an array of fieldnames extracted from a pattern', () => {
       const pattern = '/en/[category]/[slug]/[relation.id]';
