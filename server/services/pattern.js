@@ -1,5 +1,7 @@
 'use strict';
 
+const { logMessage } = require("../utils");
+
 /**
  * Pattern service.
  */
@@ -17,25 +19,26 @@ const getAllowedFields = async (contentType) => {
     Object.entries(contentType.attributes).map(([fieldName, field]) => {
       if (field.type === fieldType && field.type !== 'relation') {
         fields.push(fieldName);
-      } else if (field.type === 'relation' && field.target && !field.private) {
-        if (fieldName === 'localizations') {
-          return null;
-        } else {
-          const relation = strapi.contentTypes[field.target];
+      } else if (
+        field.type === 'relation'
+        && field.target
+        && field.relation.endsWith('ToOne') // TODO: implement `ToMany` relations (#78).
+        && fieldName !== 'localizations'
+      ) {
+        const relation = strapi.contentTypes[field.target];
 
-          if (
-            strapi.config.get('plugin.sitemap.allowedFields').includes('id')
-            && !fields.includes(`${fieldName}.id`)
-          ) {
-            fields.push(`${fieldName}.id`);
-          }
-
-          Object.entries(relation.attributes).map(([subFieldName, subField]) => {
-            if (subField.type === fieldType) {
-              fields.push(`${fieldName}.${subFieldName}`);
-            }
-          });
+        if (
+          strapi.config.get('plugin.sitemap.allowedFields').includes('id')
+          && !fields.includes(`${fieldName}.id`)
+        ) {
+          fields.push(`${fieldName}.id`);
         }
+
+        Object.entries(relation.attributes).map(([subFieldName, subField]) => {
+          if (subField.type === fieldType) {
+            fields.push(`${fieldName}.${subFieldName}`);
+          }
+        });
       }
     });
   });
@@ -80,8 +83,7 @@ const getFieldsFromPattern = (pattern) => {
       if (!relationalField) {
         pattern = pattern.replace(`[${field}]`, entity[field] || '');
       } else if (Array.isArray(entity[relationalField[0]])) {
-        // If the relational attribute is an array, use the first result.
-        pattern = pattern.replace(`[${field}]`, entity[relationalField[0]][0] && entity[relationalField[0]][0][relationalField[1]] ? entity[relationalField[0]][0][relationalField[1]] : '');
+        strapi.log.error(logMessage('Something went wrong whilst resolving the pattern.'));
       } else if (typeof entity[relationalField[0]] === 'object') {
         pattern = pattern.replace(`[${field}]`, entity[relationalField[0]] && entity[relationalField[0]][relationalField[1]] ? entity[relationalField[0]][relationalField[1]] : '');
       }
