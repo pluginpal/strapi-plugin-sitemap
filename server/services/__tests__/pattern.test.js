@@ -55,17 +55,6 @@ describe('Pattern service', () => {
       expect(result).toContain('anotherRelation.id');
       expect(result).toContain('anotherRelation.slugField');
     });
-
-    test('Should return only the id as allowed', () => {
-      const allowedFields = ['id', 'uid'];
-      const contentType = {
-        attributes: {},
-      };
-
-      const result = patternService().getAllowedFields(contentType, allowedFields);
-
-      expect(result).toEqual(['id']);
-    });
   });
   describe('Get fields from pattern', () => {
     test('Should return an array of fieldnames extracted from a pattern', () => {
