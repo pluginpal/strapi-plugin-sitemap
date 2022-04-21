@@ -52,8 +52,10 @@ describe('Pattern service', () => {
 
       expect(result).toContain('id');
       expect(result).toContain('urlField');
+      expect(result).not.toContain('textField');
       expect(result).toContain('anotherRelation.id');
       expect(result).toContain('anotherRelation.slugField');
+      expect(result).not.toContain('anotherRelation.textField');
     });
   });
   describe('Get fields from pattern', () => {
