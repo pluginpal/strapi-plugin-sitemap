@@ -26,6 +26,13 @@ const getLanguageLinks = async (page, contentType, defaultURL, excludeDrafts) =>
   const links = [];
   links.push({ lang: page.locale, url: defaultURL });
 
+  const populate = ['localizations'].concat(Object.keys(strapi.contentTypes[contentType].attributes).reduce((prev, current) => {
+    if (strapi.contentTypes[contentType].attributes[current].type === 'relation') {
+      prev.push(current);
+    }
+    return prev;
+  }, []));
+
   await Promise.all(page.localizations.map(async (translation) => {
     const translationEntity = await strapi.query(contentType).findOne({
       where: {
@@ -46,8 +53,7 @@ const getLanguageLinks = async (page, contentType, defaultURL, excludeDrafts) =>
           $notNull: true,
         } : {},
       },
-      orderBy: 'id',
-      populate: ['localizations'],
+      populate,
     });
 
     if (!translationEntity) return null;
@@ -141,8 +147,6 @@ const createSitemapEntries = async () => {
     const excludeDrafts = config.excludeDrafts && strapi.contentTypes[contentType].options.draftAndPublish;
 
     const populate = ['localizations'].concat(Object.keys(strapi.contentTypes[contentType].attributes).reduce((prev, current) => {
-
-
       if (strapi.contentTypes[contentType].attributes[current].type === 'relation') {
         prev.push(current);
       }

@@ -26,6 +26,8 @@ const getAllowedFields = (contentType, allowedFields = []) => {
         && field.target
         && field.relation.endsWith('ToOne') // TODO: implement `ToMany` relations (#78).
         && fieldName !== 'localizations'
+        && fieldName !== 'createdBy'
+        && fieldName !== 'updatedBy'
       ) {
         const relation = strapi.contentTypes[field.target];
 
