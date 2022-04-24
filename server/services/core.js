@@ -28,6 +28,13 @@ const getLanguageLinks = async (page, contentType, defaultURL, excludeDrafts) =>
   const links = [];
   links.push({ lang: page.locale, url: defaultURL });
 
+  const populate = ['localizations'].concat(Object.keys(strapi.contentTypes[contentType].attributes).reduce((prev, current) => {
+    if (strapi.contentTypes[contentType].attributes[current].type === 'relation') {
+      prev.push(current);
+    }
+    return prev;
+  }, []));
+
   await Promise.all(page.localizations.map(async (translation) => {
     const translationEntity = await strapi.query(contentType).findOne({
       where: {
@@ -48,8 +55,7 @@ const getLanguageLinks = async (page, contentType, defaultURL, excludeDrafts) =>
           $notNull: true,
         } : {},
       },
-      orderBy: 'id',
-      populate: ['localizations'],
+      populate,
     });
 
     if (!translationEntity) return null;
@@ -141,6 +147,14 @@ const createSitemapEntries = async () => {
   // Collection entries.
   await Promise.all(Object.keys(config.contentTypes).map(async (contentType) => {
     const excludeDrafts = config.excludeDrafts && strapi.contentTypes[contentType].options.draftAndPublish;
+
+    const populate = ['localizations'].concat(Object.keys(strapi.contentTypes[contentType].attributes).reduce((prev, current) => {
+      if (strapi.contentTypes[contentType].attributes[current].type === 'relation') {
+        prev.push(current);
+      }
+      return prev;
+    }, []));
+
     const pages = await noLimit(strapi.query(contentType), {
       where: {
         $or: [
@@ -159,17 +173,16 @@ const createSitemapEntries = async () => {
           $notNull: true,
         } : {},
       },
+      populate,
       orderBy: 'id',
-      populate: ['localizations'],
     });
-
     // Add formatted sitemap page data to the array.
     await Promise.all(pages.map(async (page) => {
+
       const pageData = await getSitemapPageData(page, contentType, excludeDrafts);
       if (pageData) sitemapEntries.push(pageData);
     }));
   }));
-
   // Custom entries.
   await Promise.all(Object.keys(config.customEntries).map(async (customEntry) => {
     sitemapEntries.push({
@@ -266,6 +279,7 @@ const writeSitemapFile = (filename, sitemap) => {
 const createSitemap = async () => {
   try {
     const sitemapEntries = await createSitemapEntries();
+
     if (isEmpty(sitemapEntries)) {
       strapi.log.info(logMessage(`No sitemap XML was generated because there were 0 URLs configured.`));
       return;
