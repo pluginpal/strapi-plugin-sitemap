@@ -97,15 +97,17 @@ Custom URLs will get the following XML attributes:
 To create dynamic URLs this plugin uses **URL patterns**. A URL pattern is used when adding URL bundles to the sitemap and has the following format:
 
 ```
-/pages/[my-uid-field]
+/pages/[category.slug]/[my-uid-field]
 ```
 
 Fields can be injected in the pattern by escaping them with `[]`.
 
+Also relations can be queried in the pattern like so: `[relation.fieldname]`.
+
 The following field types are by default allowed in a pattern:
 
-- id
-- uid
+- `id`
+- `uid`
 
 *Allowed field types can be altered with the `allowedFields` config. Read more about it below.*
 
