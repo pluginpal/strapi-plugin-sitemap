@@ -25,6 +25,7 @@
 - **Auto-updating** (Uses lifecycle methods to keep the sitemap XML up-to-date)
 - **URL bundles** (Bundle URLs by type and add them to the sitemap XML)
 - **Dynamic paths** (Implements URL patterns in which you can inject dynamic fields)
+- **Sitemap indexes** (Paginated sitemap indexes for large URL sets)
 - **Exclude URLs** (Exclude specified URLs from the sitemap)
 - **Custom URLs** (URLs of pages which are not managed in Strapi)
 - **Styled with XSL** (Human readable XML styling)
@@ -186,6 +187,7 @@ module.exports = ({ env }) => ({
       autoGenerate: true,
       allowedFields: ['id', 'uid'],
       excludedTypes: [],
+      limit: 45000,
     },
   },
 });
@@ -225,6 +227,16 @@ All types in this array will not be shown as an option when selecting the type o
 ###### Key: `excludedTypes `
 
 > `required:` NO | `type:` array | `default:` `['admin::permission', 'admin::role', 'admin::api-token', 'plugin::i18n.locale', 'plugin::users-permissions.permission', 'plugin::users-permissions.role']`
+
+### Limit
+
+When creating large sitemaps (50.000+ URLs) you might want to split the sitemap in to chunks that you bring together in a sitemap index.
+
+The limit is there to specify the maximum amount of URL a single sitemap may hold. If you try to add more URLs to a single sitemap.xml it will automatically be split up in to chunks which are brought together in a single sitemap index.
+
+###### Key: `limit `
+
+> `required:` NO | `type:` int | `default:` 45000
 
 ## 🤝 Contributing
 

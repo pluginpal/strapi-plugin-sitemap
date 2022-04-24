@@ -55,6 +55,7 @@
   "Info.SitemapIsPresent.Title": "Sitemap XML is present",
   "Info.SitemapIsPresent.LastUpdatedAt": "Last updated at:",
   "Info.SitemapIsPresent.AmountOfURLs": "Amount of URLs:",
+  "Info.SitemapIsPresent.AmountOfSitemaps": "Amount of sitemaps:",
 
   "EditView.ExcludeFromSitemap": "Exclude from Sitemap",
 
