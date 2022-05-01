@@ -21,11 +21,14 @@ global.strapi = {
 describe('Pattern service', () => {
   describe('Get allowed fields for a content type', () => {
     test('Should return the right fields', () => {
-      const allowedFields = ['id', 'uid'];
+      const allowedFields = ['id', 'uid', 'slugField'];
       const contentType = {
         attributes: {
           urlField: {
             type: 'uid',
+          },
+          slugField: {
+            type: 'unknown',
           },
           textField: {
             type: 'text',
@@ -52,6 +55,7 @@ describe('Pattern service', () => {
 
       expect(result).toContain('id');
       expect(result).toContain('urlField');
+      expect(result).toContain('slugField');
       expect(result).not.toContain('textField');
       expect(result).toContain('anotherRelation.id');
       expect(result).toContain('anotherRelation.slugField');
