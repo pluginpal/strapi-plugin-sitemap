@@ -15,7 +15,7 @@ const getAllowedFields = async (contentType) => {
   const fields = [];
   strapi.config.get('plugin.sitemap.allowedFields').map((fieldType) => {
     Object.entries(contentType.attributes).map(([fieldName, field]) => {
-      if (field.type === fieldType) {
+      if ((field.type === fieldType || fieldName === fieldType)) {
         fields.push(fieldName);
       }
     });
