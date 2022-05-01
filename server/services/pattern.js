@@ -19,7 +19,7 @@ const getAllowedFields = (contentType, allowedFields = []) => {
   const fieldTypes = allowedFields.length > 0 ? allowedFields : strapi.config.get('plugin.sitemap.allowedFields');
   fieldTypes.map((fieldType) => {
     Object.entries(contentType.attributes).map(([fieldName, field]) => {
-      if (field.type === fieldType && field.type !== 'relation') {
+      if ((field.type === fieldType || fieldName === fieldType) && field.type !== 'relation') {
         fields.push(fieldName);
       } else if (
         field.type === 'relation'
@@ -39,7 +39,7 @@ const getAllowedFields = (contentType, allowedFields = []) => {
         }
 
         Object.entries(relation.attributes).map(([subFieldName, subField]) => {
-          if (subField.type === fieldType) {
+          if (subField.type === fieldType || subFieldName === fieldType) {
             fields.push(`${fieldName}.${subFieldName}`);
           }
         });
