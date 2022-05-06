@@ -207,7 +207,7 @@ You might want to disable this setting if you're experiencing performance issues
 > `required:` NO | `type:` bool | `default:` true
 
 ### Allowed fields
-When defining a URL pattern you can populate it with dynamic fields. The fields allowed in the pattern are specified by type. By default only the field types `id` and `uid` are allowed in the pattern, but you can alter this setting to allow more field types in the pattern.
+When defining a URL pattern you can populate it with dynamic fields. The fields allowed in the pattern can be manipulated with this setting. Fields can be specified either by type or by name. By default the plugin allows `id` and `uid`.
 
 *If you are missing a key field type of which you think it should be allowed by default please create an issue and explain why it is needed.*
 
