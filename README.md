@@ -28,6 +28,7 @@
 - **Sitemap indexes** (Paginated sitemap indexes for large URL sets)
 - **Exclude URLs** (Exclude specified URLs from the sitemap)
 - **Custom URLs** (URLs of pages which are not managed in Strapi)
+- **CLI** (CLI for sitemap generation)
 - **Styled with XSL** (Human readable XML styling)
 
 ## ⏳ Installation
@@ -131,6 +132,28 @@ Sitemap: https://your-strapi-domain.com/sitemap/index.xml
 ```
 
 Read more about the `robots.txt` file [here](https://developers.google.com/search/docs/advanced/robots/create-robots-txt).
+
+## 📺 CLI
+
+This plugin comes with it's own `strapi-sitemap` CLI.
+You can add it to your project like so:
+
+```
+"scripts": {
+  // ...
+  "sitemap": "strapi-sitemap"
+},
+```
+
+You can now run the `generate` command like so:
+
+```bash
+# using yarn
+yarn sitemap generate
+
+# using npm
+npm run sitemap generate
+```
 
 ## ⚙️ Settings
 Settings can be changed in the admin section of the plugin. In the last tab (Settings) you will find the settings as described below.

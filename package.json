@@ -10,6 +10,9 @@
     "required": false,
     "kind": "plugin"
   },
+  "bin": {
+    "strapi-sitemap": "./bin/strapi-sitemap"
+  },
   "scripts": {
     "eslint": "eslint --max-warnings=0 './**/*.{js,jsx}'",
     "eslint:fix": "eslint --fix './**/*.{js,jsx}'",
@@ -17,6 +20,8 @@
     "plugin:install": "yarn install && rm -rf node_modules/@strapi/helper-plugin"
   },
   "dependencies": {
+    "chalk": "^4.1.2",
+    "commander": "^8.3.0",
     "immutable": "^3.8.2",
     "redux-immutable": "^4.0.0",
     "redux-thunk": "^2.3.0",
@@ -39,6 +44,7 @@
     "admin",
     "server",
     "public",
+    "bin",
     "strapi-admin.js",
     "strapi-server.js"
   ],
