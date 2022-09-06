@@ -93,7 +93,8 @@ const getFieldsFromPattern = (pattern) => {
       }
   });
 
-  pattern = `/${pattern.replace(/\/+/, '')}`; // Make sure we only have on forward slash
+  pattern = pattern.replace(/\/+/g, "/"); // Remove duplicate forward slashes.
+  pattern = pattern.startsWith('/') ? pattern : `/${pattern}`; // Make sure we only have on forward slash.
   return pattern;
 };
 
