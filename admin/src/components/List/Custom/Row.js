@@ -2,11 +2,7 @@ import React from 'react';
 
 import Pencil from '@strapi/icons/Pencil';
 import Trash from '@strapi/icons/Trash';
-import { Box } from '@strapi/design-system/Box';
-import { Flex } from '@strapi/design-system/Flex';
-import { Tr, Td } from '@strapi/design-system/Table';
-import { Typography } from '@strapi/design-system/Typography';
-import { IconButton } from '@strapi/design-system/IconButton';
+import { Box, Flex, Tr, Td, Typography, IconButton } from '@strapi/design-system';
 
 const CustomRow = ({ openModal, entry }) => {
   const handleEditClick = (e) => {

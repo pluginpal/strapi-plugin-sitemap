@@ -4,10 +4,8 @@ import { Map } from 'immutable';
 import { useIntl } from 'react-intl';
 
 import { useNotification } from '@strapi/helper-plugin';
-import { HeaderLayout } from '@strapi/design-system/Layout';
-import { Box } from '@strapi/design-system/Box';
+import { Box, Button, HeaderLayout } from '@strapi/design-system';
 import CheckIcon from '@strapi/icons/Check';
-import { Button } from '@strapi/design-system/Button';
 
 import { discardAllChanges, submit } from '../../state/actions/Sitemap';
 

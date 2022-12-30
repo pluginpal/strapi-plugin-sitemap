@@ -5,10 +5,7 @@ import { useIntl } from 'react-intl';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { useNotification } from '@strapi/helper-plugin';
-import { Typography } from '@strapi/design-system/Typography';
-import { Box } from '@strapi/design-system/Box';
-import { Button } from '@strapi/design-system/Button';
-import { Link } from '@strapi/design-system/Link';
+import { Typography, Box, Button, Link } from '@strapi/design-system';
 
 import { generateSitemap } from '../../state/actions/Sitemap';
 import { formatTime } from '../../helpers/timeFormat';

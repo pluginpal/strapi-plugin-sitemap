@@ -2,9 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useIntl } from 'react-intl';
 
 import { request } from '@strapi/helper-plugin';
-import { ModalLayout, ModalFooter, ModalBody, ModalHeader } from '@strapi/design-system/ModalLayout';
-import { Button } from '@strapi/design-system/Button';
-import { Typography } from '@strapi/design-system/Typography';
+import { ModalLayout, ModalFooter, ModalBody, ModalHeader, Button, Typography } from '@strapi/design-system';
 
 import CustomForm from './Custom';
 import CollectionForm from './Collection';

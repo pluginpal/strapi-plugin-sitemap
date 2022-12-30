@@ -1,7 +1,5 @@
 import React from 'react';
-import { Select, Option } from '@strapi/design-system/Select';
-import { Checkbox } from '@strapi/design-system/Checkbox';
-import { Box } from '@strapi/design-system/Box';
+import { Select, Option, Checkbox, Box } from '@strapi/design-system';
 import { useIntl } from 'react-intl';
 
 const SelectLanguage = (props) => {
