@@ -5,7 +5,7 @@ import { useIntl } from 'react-intl';
 
 import { useNotification } from '@strapi/helper-plugin';
 import { Box, Button, HeaderLayout } from '@strapi/design-system';
-import CheckIcon from '@strapi/icons/Check';
+import { Check } from '@strapi/icons';
 
 import { discardAllChanges, submit } from '../../state/actions/Sitemap';
 
@@ -48,7 +48,7 @@ const Header = () => {
               onClick={handleSubmit}
               disabled={disabled}
               type="submit"
-              startIcon={<CheckIcon />}
+              startIcon={<Check />}
               size="L"
             >
               {formatMessage({ id: 'sitemap.Button.Save', defaultMessage: 'Save' })}

@@ -1,7 +1,6 @@
 import React from 'react';
 
-import Pencil from '@strapi/icons/Pencil';
-import Trash from '@strapi/icons/Trash';
+import { Pencil, Trash } from '@strapi/icons';
 import { Box, Flex, Tr, Td, Typography, IconButton } from '@strapi/design-system';
 import { useSelector } from 'react-redux';
 

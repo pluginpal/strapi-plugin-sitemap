@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { NoContent } from '@strapi/helper-plugin';
-import Plus from '@strapi/icons/Plus';
+import { Plus } from '@strapi/icons';
 import {
   Table,
   Thead,

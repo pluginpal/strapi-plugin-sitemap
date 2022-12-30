@@ -6,7 +6,7 @@
 
 import React from 'react';
 
-import BulletList from '@strapi/icons/BulletList';
+import { BulletList } from '@strapi/icons';
 
 const PluginIcon = () => <BulletList />;
 
