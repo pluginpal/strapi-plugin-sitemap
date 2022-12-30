@@ -5,11 +5,9 @@
  */
 
 import React from 'react';
-import { Icon } from '@strapi/design-system/Icon';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import pluginPkg from '../../../../package.json';
+import BulletList from '@strapi/icons/BulletList';
 
-const PluginIcon = () => <Icon as={() => <FontAwesomeIcon icon={pluginPkg.strapi.icon} />} width="16px" />;
+const PluginIcon = () => <BulletList />;
 
 export default PluginIcon;
