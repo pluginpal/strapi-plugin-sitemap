@@ -1,11 +1,18 @@
 import React from 'react';
 
 import { NoContent } from '@strapi/helper-plugin';
-import Plus from '@strapi/icons/Plus';
-import { VisuallyHidden } from '@strapi/design-system/VisuallyHidden';
-import { Table, Thead, Tbody, Tr, Th, TFooter } from '@strapi/design-system/Table';
-import { Typography } from '@strapi/design-system/Typography';
-import { Button } from '@strapi/design-system/Button';
+import { Plus } from '@strapi/icons';
+import {
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  TFooter,
+  VisuallyHidden,
+  Typography,
+  Button,
+} from '@strapi/design-system';
 import { useIntl } from 'react-intl';
 
 import CustomRow from './Row';

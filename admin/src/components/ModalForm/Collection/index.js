@@ -4,13 +4,17 @@ import { useIntl } from 'react-intl';
 import { isEmpty } from 'lodash/fp';
 import styled from 'styled-components';
 
-import { Grid, GridItem } from '@strapi/design-system/Grid';
-import { TextInput } from '@strapi/design-system/TextInput';
-import { Select, Option } from '@strapi/design-system/Select';
-import { Popover } from '@strapi/design-system/Popover';
-import { Box } from '@strapi/design-system/Box';
-import { Stack } from '@strapi/design-system/Stack';
-import { Checkbox } from '@strapi/design-system/Checkbox';
+import {
+  Grid,
+  GridItem,
+  TextInput,
+  Select,
+  Option,
+  Popover,
+  Box,
+  Stack,
+  Checkbox,
+} from '@strapi/design-system';
 
 import SelectContentTypes from '../../SelectContentTypes';
 

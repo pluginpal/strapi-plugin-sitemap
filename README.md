@@ -11,7 +11,7 @@
     <img src="https://img.shields.io/npm/dm/strapi-plugin-sitemap" alt="Monthly download on NPM" />
   </a>
   <a href="https://codecov.io/gh/boazpoolman/strapi-plugin-sitemap">
-    <img src="https://img.shields.io/github/workflow/status/boazpoolman/strapi-plugin-sitemap/Tests/master" alt="CI build status" />
+    <img src="https://img.shields.io/github/actions/workflow/status/boazpoolman/strapi-plugin-sitemap/tests.yml?branch=master" alt="CI build status" />
   </a>
   <a href="https://codecov.io/gh/boazpoolman/strapi-plugin-sitemap">
     <img src="https://codecov.io/gh/boazpoolman/strapi-plugin-sitemap/coverage.svg?branch=master" alt="codecov.io" />
@@ -65,7 +65,7 @@ Complete installation requirements are the exact same as for Strapi itself and c
 
 **Supported Strapi versions**:
 
-- Strapi 4.1.8 (recently tested)
+- Strapi 4.3.2 (recently tested)
 - Strapi ^4.x (use `strapi-plugin-sitemap@^2.0.0`)
 - Strapi ^3.4.x (use `strapi-plugin-sitemap@1.2.5`)
 
@@ -234,7 +234,7 @@ You might want to disable this setting if you're experiencing performance issues
 > `required:` NO | `type:` bool | `default:` true
 
 ### Allowed fields
-When defining a URL pattern you can populate it with dynamic fields. The fields allowed in the pattern are specified by type. By default only the field types `id` and `uid` are allowed in the pattern, but you can alter this setting to allow more field types in the pattern.
+When defining a URL pattern you can populate it with dynamic fields. The fields allowed in the pattern can be manipulated with this setting. Fields can be specified either by type or by name. By default the plugin allows `id` and `uid`.
 
 *If you are missing a key field type of which you think it should be allowed by default please create an issue and explain why it is needed.*
 

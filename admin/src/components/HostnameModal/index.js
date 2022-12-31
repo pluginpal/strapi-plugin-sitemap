@@ -1,11 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { useIntl } from 'react-intl';
 
-import { ModalLayout, ModalFooter, ModalBody, ModalHeader } from '@strapi/design-system/ModalLayout';
-import { Typography } from '@strapi/design-system/Typography';
-import { Button } from '@strapi/design-system/Button';
-import { TextInput } from '@strapi/design-system/TextInput';
-import { Grid, GridItem } from '@strapi/design-system/Grid';
+import {
+  ModalLayout,
+  ModalFooter,
+  ModalBody,
+  ModalHeader,
+  Typography,
+  Button,
+  TextInput,
+  Grid,
+  GridItem,
+} from '@strapi/design-system';
+
 import { isEqual } from 'lodash/fp';
 
 const ModalForm = (props) => {

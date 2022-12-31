@@ -3,12 +3,15 @@ import { Map } from 'immutable';
 import { useDispatch, useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
 
-import { Button } from '@strapi/design-system/Button';
-import { Typography } from '@strapi/design-system/Typography';
-import { ToggleInput } from '@strapi/design-system/ToggleInput';
-import { Grid, GridItem } from '@strapi/design-system/Grid';
-import { TextInput } from '@strapi/design-system/TextInput';
-import { useTheme } from '@strapi/design-system';
+import {
+  Button,
+  Typography,
+  ToggleInput,
+  Grid,
+  GridItem,
+  TextInput,
+  useTheme,
+} from '@strapi/design-system';
 
 import { onChangeSettings } from '../../state/actions/Sitemap';
 import HostnameModal from '../../components/HostnameModal';

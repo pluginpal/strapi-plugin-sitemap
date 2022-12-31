@@ -1,6 +1,5 @@
 import React from 'react';
-import { Tabs, Tab, TabGroup, TabPanels, TabPanel } from '@strapi/design-system/Tabs';
-import { Box } from '@strapi/design-system/Box';
+import { Tabs, Tab, TabGroup, TabPanels, TabPanel, Box } from '@strapi/design-system';
 import { useIntl } from 'react-intl';
 
 import CollectionURLs from '../../tabs/CollectionURLs';

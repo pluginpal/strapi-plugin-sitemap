@@ -1,12 +1,7 @@
 import React from 'react';
 
-import Pencil from '@strapi/icons/Pencil';
-import Trash from '@strapi/icons/Trash';
-import { Box } from '@strapi/design-system/Box';
-import { Flex } from '@strapi/design-system/Flex';
-import { Tr, Td } from '@strapi/design-system/Table';
-import { Typography } from '@strapi/design-system/Typography';
-import { IconButton } from '@strapi/design-system/IconButton';
+import { Pencil, Trash } from '@strapi/icons';
+import { Box, Flex, Tr, Td, Typography, IconButton } from '@strapi/design-system';
 import { useSelector } from 'react-redux';
 
 const CustomRow = ({ openModal, entry }) => {
