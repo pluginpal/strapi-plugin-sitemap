@@ -1,3 +1,5 @@
+This is a fork of the work done by the original author. This fork includes an additional feature allowing you to add a conditional to any url bundle. For example you may have a published draft of an entry that is temporarily disabled with a flag, is not available in a certain locale, or maybe you don't want a search engine to index a page without any proper SEO content. 
+
 <div align="center">
 <h1>Strapi sitemap plugin</h1>
 	
