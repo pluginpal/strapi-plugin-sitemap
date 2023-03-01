@@ -139,7 +139,9 @@ const createSitemapEntries = async () => {
   // Collection entries.
   await Promise.all(Object.keys(config.contentTypes).map(async (contentType) => {
     const excludeDrafts = config.excludeDrafts && strapi.contentTypes[contentType].options.draftAndPublish;
-    const pages = await noLimit(strapi.query(contentType), {
+    const current = config.contentTypes[contentType]['languages']['und']
+
+    let query = {
       where: {
         $or: [
           {
@@ -156,7 +158,20 @@ const createSitemapEntries = async () => {
         published_at: excludeDrafts ? {
           $notNull: true,
         } : {},
-      },
+      }
+    };
+
+    for (let i = 0; i <= Object.keys(current).length; i++) {
+      let exists = current[`condition${i}`] && current[`conditionOperator${i}`] && current[`conditionValue${i}`]
+      if (exists) {
+        query.where[current[`condition${i}`]] = {
+          [current[`conditionOperator${i}`]]: current[`conditionValue${i}`],
+        };
+      }
+    }
+
+    const pages = await noLimit(strapi.query(contentType), {
+      ...query,
       orderBy: 'id',
       populate: ['localizations'],
     });
