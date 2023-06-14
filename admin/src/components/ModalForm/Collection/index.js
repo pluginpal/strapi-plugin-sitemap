@@ -68,8 +68,6 @@ const CollectionForm = (props) => {
     return false;
   });
 
-  console.log('tmpValue', tmpValue);
-
   return (
     <form style={{ borderTop: '1px solid #f5f5f6', paddingTop: 30 }}>
       <Grid gap={6}>
