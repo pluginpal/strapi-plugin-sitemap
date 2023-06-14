@@ -4,8 +4,10 @@
  * Sitemap service.
  */
 
-const { SitemapStream, streamToPromise } = require('sitemap');
+const { getConfigUrls } = require('@strapi/utils/lib');
+const { SitemapStream, streamToPromise, SitemapAndIndexStream } = require('sitemap');
 const { isEmpty } = require('lodash');
+const { resolve } = require('path');
 const fs = require('fs');
 const { logMessage, getService, noLimit } = require('../utils');
 
@@ -25,6 +27,13 @@ const getLanguageLinks = async (page, contentType, defaultURL, excludeDrafts) =>
 
   const links = [];
   links.push({ lang: page.locale, url: defaultURL });
+
+  const populate = ['localizations'].concat(Object.keys(strapi.contentTypes[contentType].attributes).reduce((prev, current) => {
+    if (strapi.contentTypes[contentType].attributes[current].type === 'relation') {
+      prev.push(current);
+    }
+    return prev;
+  }, []));
 
   await Promise.all(page.localizations.map(async (translation) => {
     const translationEntity = await strapi.query(contentType).findOne({
@@ -46,8 +55,7 @@ const getLanguageLinks = async (page, contentType, defaultURL, excludeDrafts) =>
           $notNull: true,
         } : {},
       },
-      orderBy: 'id',
-      populate: ['localizations'],
+      populate,
     });
 
     if (!translationEntity) return null;
@@ -139,6 +147,14 @@ const createSitemapEntries = async () => {
   // Collection entries.
   await Promise.all(Object.keys(config.contentTypes).map(async (contentType) => {
     const excludeDrafts = config.excludeDrafts && strapi.contentTypes[contentType].options.draftAndPublish;
+
+    const populate = ['localizations'].concat(Object.keys(strapi.contentTypes[contentType].attributes).reduce((prev, current) => {
+      if (strapi.contentTypes[contentType].attributes[current].type === 'relation') {
+        prev.push(current);
+      }
+      return prev;
+    }, []));
+
     const pages = await noLimit(strapi.query(contentType), {
       where: {
         $or: [
@@ -157,17 +173,16 @@ const createSitemapEntries = async () => {
           $notNull: true,
         } : {},
       },
+      populate,
       orderBy: 'id',
-      populate: ['localizations'],
     });
-
     // Add formatted sitemap page data to the array.
     await Promise.all(pages.map(async (page) => {
+
       const pageData = await getSitemapPageData(page, contentType, excludeDrafts);
       if (pageData) sitemapEntries.push(pageData);
     }));
   }));
-
   // Custom entries.
   await Promise.all(Object.keys(config.customEntries).map(async (customEntry) => {
     sitemapEntries.push({
@@ -221,28 +236,62 @@ const writeSitemapFile = (filename, sitemap) => {
 };
 
 /**
+ * Get the SitemapStream instance.
+ *
+ * @param {number} urlCount - The amount of URLs.
+ *
+ * @returns {SitemapStream} - The sitemap stream.
+ */
+ const getSitemapStream = async (urlCount) => {
+  const config = await getService('settings').getConfig();
+  const LIMIT = strapi.config.get('plugin.sitemap.limit');
+  const { serverUrl } = getConfigUrls(strapi.config);
+
+  if (urlCount <= LIMIT) {
+    return new SitemapStream({
+      hostname: config.hostname,
+      xslUrl: "xsl/sitemap.xsl",
+    });
+  } else {
+    return new SitemapAndIndexStream({
+      limit: LIMIT,
+      xslUrl: "xsl/sitemap.xsl",
+      lastmodDateOnly: false,
+      getSitemapStream: (i) => {
+        const sitemapStream = new SitemapStream({
+          hostname: config.hostname,
+          xslUrl: "xsl/sitemap.xsl",
+        });
+        const path = `sitemap/sitemap-${i}.xml`;
+        const ws = sitemapStream.pipe(fs.createWriteStream(resolve(`public/${path}`)));
+
+        return [new URL(path, serverUrl || 'http://localhost:1337').toString(), sitemapStream, ws];
+      },
+    });
+  }
+};
+
+/**
  * The main sitemap generation service.
  *
  * @returns {void}
  */
 const createSitemap = async () => {
   try {
-    const config = await getService('settings').getConfig();
-    const sitemap = new SitemapStream({
-      hostname: config.hostname,
-      xslUrl: "xsl/sitemap.xsl",
-    });
-
     const sitemapEntries = await createSitemapEntries();
+
     if (isEmpty(sitemapEntries)) {
       strapi.log.info(logMessage(`No sitemap XML was generated because there were 0 URLs configured.`));
       return;
     }
 
+    const sitemap = await getSitemapStream(sitemapEntries.length);
+
     sitemapEntries.map((sitemapEntry) => sitemap.write(sitemapEntry));
     sitemap.end();
 
     writeSitemapFile('index.xml', sitemap);
+
   } catch (err) {
     strapi.log.error(logMessage(`Something went wrong while trying to build the SitemapStream. ${err}`));
     throw new Error();

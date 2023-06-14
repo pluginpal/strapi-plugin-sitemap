@@ -13,6 +13,7 @@ module.exports = {
       'plugin::users-permissions.permission',
       'plugin::users-permissions.role',
     ],
+    limit: 45000,
   },
   validator() {},
 };

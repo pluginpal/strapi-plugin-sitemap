@@ -25,8 +25,10 @@
 - **Auto-updating** (Uses lifecycle methods to keep the sitemap XML up-to-date)
 - **URL bundles** (Bundle URLs by type and add them to the sitemap XML)
 - **Dynamic paths** (Implements URL patterns in which you can inject dynamic fields)
+- **Sitemap indexes** (Paginated sitemap indexes for large URL sets)
 - **Exclude URLs** (Exclude specified URLs from the sitemap)
 - **Custom URLs** (URLs of pages which are not managed in Strapi)
+- **CLI** (CLI for sitemap generation)
 - **Styled with XSL** (Human readable XML styling)
 
 ## ⏳ Installation
@@ -97,15 +99,17 @@ Custom URLs will get the following XML attributes:
 To create dynamic URLs this plugin uses **URL patterns**. A URL pattern is used when adding URL bundles to the sitemap and has the following format:
 
 ```
-/pages/[my-uid-field]
+/pages/[category.slug]/[my-uid-field]
 ```
 
 Fields can be injected in the pattern by escaping them with `[]`.
 
+Also relations can be queried in the pattern like so: `[relation.fieldname]`.
+
 The following field types are by default allowed in a pattern:
 
-- id
-- uid
+- `id`
+- `uid`
 
 *Allowed field types can be altered with the `allowedFields` config. Read more about it below.*
 
@@ -128,6 +132,28 @@ Sitemap: https://your-strapi-domain.com/sitemap/index.xml
 ```
 
 Read more about the `robots.txt` file [here](https://developers.google.com/search/docs/advanced/robots/create-robots-txt).
+
+## 📺 CLI
+
+This plugin comes with it's own `strapi-sitemap` CLI.
+You can add it to your project like so:
+
+```
+"scripts": {
+  // ...
+  "sitemap": "strapi-sitemap"
+},
+```
+
+You can now run the `generate` command like so:
+
+```bash
+# using yarn
+yarn sitemap generate
+
+# using npm
+npm run sitemap generate
+```
 
 ## ⚙️ Settings
 Settings can be changed in the admin section of the plugin. In the last tab (Settings) you will find the settings as described below.
@@ -184,6 +210,7 @@ module.exports = ({ env }) => ({
       autoGenerate: true,
       allowedFields: ['id', 'uid'],
       excludedTypes: [],
+      limit: 45000,
     },
   },
 });
@@ -223,6 +250,16 @@ All types in this array will not be shown as an option when selecting the type o
 ###### Key: `excludedTypes `
 
 > `required:` NO | `type:` array | `default:` `['admin::permission', 'admin::role', 'admin::api-token', 'plugin::i18n.locale', 'plugin::users-permissions.permission', 'plugin::users-permissions.role']`
+
+### Limit
+
+When creating large sitemaps (50.000+ URLs) you might want to split the sitemap in to chunks that you bring together in a sitemap index.
+
+The limit is there to specify the maximum amount of URL a single sitemap may hold. If you try to add more URLs to a single sitemap.xml it will automatically be split up in to chunks which are brought together in a single sitemap index.
+
+###### Key: `limit `
+
+> `required:` NO | `type:` int | `default:` 45000
 
 ## 🤝 Contributing
 

@@ -83,14 +83,25 @@ const Info = () => {
               {`${month}/${day}/${year} - ${time}`}
             </Typography>
           </div>
-          <div style={{ marginBottom: '15px' }}>
-            <Typography variant="omega">
-              {formatMessage({ id: 'sitemap.Info.SitemapIsPresent.AmountOfURLs', defaultMessage: 'Amount of URLs:' })}
-            </Typography>
-            <Typography variant="omega" fontWeight="bold" style={{ marginLeft: '5px' }}>
-              {sitemapInfo.get('urls')}
-            </Typography>
-          </div>
+          {sitemapInfo.get('sitemaps') === 0 ? (
+            <div style={{ marginBottom: '15px' }}>
+              <Typography variant="omega">
+                {formatMessage({ id: 'sitemap.Info.SitemapIsPresent.AmountOfURLs', defaultMessage: 'Amount of URLs:' })}
+              </Typography>
+              <Typography variant="omega" fontWeight="bold" style={{ marginLeft: '5px' }}>
+                {sitemapInfo.get('urls')}
+              </Typography>
+            </div>
+          ) : (
+            <div style={{ marginBottom: '15px' }}>
+              <Typography variant="omega">
+                {formatMessage({ id: 'sitemap.Info.SitemapIsPresent.AmountOfSitemaps', defaultMessage: 'Amount of URLs:' })}
+              </Typography>
+              <Typography variant="omega" fontWeight="bold" style={{ marginLeft: '5px' }}>
+                {sitemapInfo.get('sitemaps')}
+              </Typography>
+            </div>
+          )}
           <div style={{ display: 'flex', flexDirection: 'row' }}>
             <Button
               onClick={() => dispatch(generateSitemap(toggleNotification))}
