@@ -28,39 +28,8 @@ const getLanguageLinks = async (page, contentType, defaultURL, excludeDrafts) =>
   const links = [];
   links.push({ lang: page.locale, url: defaultURL });
 
-  const populate = ['localizations'].concat(Object.keys(strapi.contentTypes[contentType].attributes).reduce((prev, current) => {
-    if (strapi.contentTypes[contentType].attributes[current].type === 'relation') {
-      prev.push(current);
-    }
-    return prev;
-  }, []));
-
   await Promise.all(page.localizations.map(async (translation) => {
-    const translationEntity = await strapi.query(contentType).findOne({
-      where: {
-        $or: [
-          {
-            sitemap_exclude: {
-              $null: true,
-            },
-          },
-          {
-            sitemap_exclude: {
-              $eq: false,
-            },
-          },
-        ],
-        id: translation.id,
-        published_at: excludeDrafts ? {
-          $notNull: true,
-        } : {},
-      },
-      populate,
-    });
-
-    if (!translationEntity) return null;
-
-    let { locale } = translationEntity;
+    let { locale } = translation;
 
     // Return when there is no pattern for the page.
     if (
@@ -76,11 +45,11 @@ const getLanguageLinks = async (page, contentType, defaultURL, excludeDrafts) =>
     }
 
     const { pattern } = config.contentTypes[contentType]['languages'][locale];
-    const translationUrl = await strapi.plugins.sitemap.services.pattern.resolvePattern(pattern, translationEntity);
-    let hostnameOverride = config.hostname_overrides[translationEntity.locale] || '';
+    const translationUrl = await strapi.plugins.sitemap.services.pattern.resolvePattern(pattern, translation);
+    let hostnameOverride = config.hostname_overrides[translation.locale] || '';
     hostnameOverride = hostnameOverride.replace(/\/+$/, "");
     links.push({
-      lang: translationEntity.locale,
+      lang: translation.locale,
       url: `${hostnameOverride}${translationUrl}`,
     });
   }));
@@ -136,6 +105,61 @@ const getSitemapPageData = async (page, contentType, excludeDrafts) => {
 };
 
 /**
+ * Get an array of fields extracted from all the patterns across
+ * the different languages.
+ *
+ * @param {obj} contentType - The content type
+ * @param {bool} topLevel - Should include only top level fields
+ * @param {string} relation - Specify a relation. If you do; the function will only return fields of that relation.
+ *
+ * @returns {array} The fields.
+ */
+const getFieldsFromConfig = (contentType, topLevel = false, relation) => {
+  let fields = [];
+
+  if (contentType) {
+    Object.entries(contentType['languages']).map(([langcode, { pattern }]) => {
+      fields.push(...getService('pattern').getFieldsFromPattern(pattern, topLevel, relation));
+    });
+  }
+
+  if (topLevel) {
+    fields.push('locale');
+    fields.push('updatedAt');
+  }
+
+  // Remove duplicates
+  fields = [...new Set(fields)];
+
+  return fields;
+};
+
+/**
+ * Get an object of relations extracted from all the patterns across
+ * the different languages.
+ *
+ * @param {obj} contentType - The content type
+ *
+ * @returns {object} The relations.
+ */
+const getRelationsFromConfig = (contentType) => {
+  const relationsObject = {};
+
+  if (contentType) {
+    Object.entries(contentType['languages']).map(([langcode, { pattern }]) => {
+      const relations = getService('pattern').getRelationsFromPattern(pattern);
+      relations.map((relation) => {
+        relationsObject[relation] = {
+          fields: getFieldsFromConfig(contentType, false, relation),
+        };
+      });
+    });
+  }
+
+  return relationsObject;
+};
+
+/**
  * Get array of sitemap entries based on the plugins configurations.
  *
  * @returns {array} The entries.
@@ -148,14 +172,10 @@ const createSitemapEntries = async () => {
   await Promise.all(Object.keys(config.contentTypes).map(async (contentType) => {
     const excludeDrafts = config.excludeDrafts && strapi.contentTypes[contentType].options.draftAndPublish;
 
-    const populate = ['localizations'].concat(Object.keys(strapi.contentTypes[contentType].attributes).reduce((prev, current) => {
-      if (strapi.contentTypes[contentType].attributes[current].type === 'relation') {
-        prev.push(current);
-      }
-      return prev;
-    }, []));
+    const relations = getRelationsFromConfig(config.contentTypes[contentType]);
+    const fields = getFieldsFromConfig(config.contentTypes[contentType], true);
 
-    const pages = await noLimit(strapi.query(contentType), {
+    const pages = await noLimit(strapi, contentType, {
       where: {
         $or: [
           {
@@ -173,12 +193,20 @@ const createSitemapEntries = async () => {
           $notNull: true,
         } : {},
       },
-      populate,
+      locale: 'all',
+      fields,
+      populate: {
+        localizations: {
+          fields,
+          populate: relations,
+        },
+        ...relations,
+      },
       orderBy: 'id',
     });
+
     // Add formatted sitemap page data to the array.
     await Promise.all(pages.map(async (page) => {
-
       const pageData = await getSitemapPageData(page, contentType, excludeDrafts);
       if (pageData) sitemapEntries.push(pageData);
     }));

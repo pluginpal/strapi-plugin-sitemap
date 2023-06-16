@@ -10,13 +10,13 @@ const getService = (name) => {
 
 const logMessage = (msg = '') => `[strapi-plugin-sitemap]: ${msg}`;
 
-const noLimit = async (query, parameters, limit = 100) => {
+const noLimit = async (strapi, queryString, parameters, limit = 100) => {
   let entries = [];
-  const amountOfEntries = await query.count(parameters);
+  const amountOfEntries = await strapi.query(queryString).count(parameters);
 
   for (let i = 0; i < (amountOfEntries / limit); i++) {
     /* eslint-disable-next-line */
-    const chunk = await query.findMany({
+    const chunk = await strapi.entityService.findMany(queryString, {
       ...parameters,
       limit: limit,
       offset: (i * limit),
