@@ -108,6 +108,78 @@ const getPages = async (config, contentType) => {
   return pages;
 };
 
+/**
+ * Create a sitemap in the database
+ *
+ * @param {string} sitemapString - The sitemapString
+ * @param {string} name - The name of the sitemap
+ * @param {number} delta - The delta of the sitemap
+ *
+ * @returns {void}
+ */
+const createSitemap = async (sitemapString, name, delta) => {
+  const sitemap = await strapi.entityService.findMany('plugin::sitemap.sitemap', {
+    filters: {
+      name,
+      delta,
+    },
+  });
+
+  if (sitemap[0]) {
+    await strapi.entityService.delete('plugin::sitemap.sitemap', sitemap[0].id);
+  }
+
+  await strapi.entityService.create('plugin::sitemap.sitemap', {
+    data: {
+      sitemap_string: sitemapString,
+      name,
+      delta,
+    },
+  });
+};
+
+/**
+ * Get a sitemap from the database
+ *
+ * @param {string} name - The name of the sitemap
+ * @param {number} delta - The delta of the sitemap
+ *
+ * @returns {void}
+ */
+const getSitemap = async (name, delta) => {
+  const sitemap = await strapi.entityService.findMany('plugin::sitemap.sitemap', {
+    filters: {
+      name,
+      delta,
+    },
+  });
+
+  return sitemap[0];
+};
+
+/**
+ * Delete a sitemap from the database
+ *
+ * @param {string} name - The name of the sitemap
+ *
+ * @returns {void}
+ */
+const deleteSitemap = async (name) => {
+  const sitemaps = await strapi.entityService.findMany('plugin::sitemap.sitemap', {
+    filters: {
+      name,
+    },
+  });
+
+  await Promise.all(sitemaps.map(async (sm) => {
+    await strapi.entityService.delete('plugin::sitemap.sitemap', sm.id);
+  }));
+};
+
+
 module.exports = () => ({
   getPages,
+  createSitemap,
+  getSitemap,
+  deleteSitemap,
 });

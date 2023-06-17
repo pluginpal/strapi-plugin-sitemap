@@ -156,28 +156,10 @@ const createSitemapEntries = async () => {
  *
  * @returns {void}
  */
-const saveSitemap = (filename, sitemap) => {
-  streamToPromise(sitemap)
+const saveSitemap = async (filename, sitemap) => {
+  await streamToPromise(sitemap)
     .then(async (sm) => {
-      const sitemapExists = await strapi.entityService.findMany('plugin::sitemap.sitemap', {
-        filters: {
-          name: 'default',
-        },
-      });
-
-      if (sitemapExists[0]) {
-        await strapi.entityService.update('plugin::sitemap.sitemap', sitemapExists[0].id, {
-          data: {
-            sitemap_string: sm.toString(),
-          },
-        });
-      } else {
-        await strapi.entityService.create('plugin::sitemap.sitemap', {
-          data: {
-            sitemap_string: sm.toString(),
-          },
-        });
-      }
+      await getService('query').createSitemap(sm.toString(), 'default', 0);
     })
     .catch((err) => {
       strapi.log.error(logMessage(`Something went wrong while trying to build the sitemap with streamToPromise. ${err}`));
@@ -203,6 +185,7 @@ const saveSitemap = (filename, sitemap) => {
       xslUrl: "xsl/sitemap.xsl",
     });
   } else {
+
     return new SitemapAndIndexStream({
       limit: LIMIT,
       xslUrl: "xsl/sitemap.xsl",
@@ -212,10 +195,15 @@ const saveSitemap = (filename, sitemap) => {
           hostname: config.hostname,
           xslUrl: "xsl/sitemap.xsl",
         });
-        const path = `sitemap/sitemap-${i}.xml`;
-        const ws = sitemapStream.pipe(fs.createWriteStream(resolve(`public/${path}`)));
+        const delta = i + 1;
+        const path = `api/sitemap/index.xml?page=${delta}`;
 
-        return [new URL(path, serverUrl || 'http://localhost:1337').toString(), sitemapStream, ws];
+        streamToPromise(sitemapStream)
+          .then((sm) => {
+            getService('query').createSitemap(sm.toString(), 'default', delta);
+          });
+
+        return [new URL(path, serverUrl || 'http://localhost:1337').toString(), sitemapStream];
       },
     });
   }
@@ -235,12 +223,14 @@ const createSitemap = async () => {
       return;
     }
 
+    await getService('query').deleteSitemap('default');
+
     const sitemap = await getSitemapStream(sitemapEntries.length);
 
     sitemapEntries.map((sitemapEntry) => sitemap.write(sitemapEntry));
     sitemap.end();
 
-    saveSitemap('default', sitemap);
+    await saveSitemap('default', sitemap);
 
   } catch (err) {
     strapi.log.error(logMessage(`Something went wrong while trying to build the SitemapStream. ${err}`));

@@ -63,16 +63,11 @@ module.exports = {
   },
 
   info: async (ctx) => {
-    const sitemap = await strapi.entityService.findMany('plugin::sitemap.sitemap', {
-      filters: {
-        name: 'default',
-      },
-    });
-
+    const sitemap = await getService('query').getSitemap('default', 0);
     const sitemapInfo = {};
 
-    if (sitemap[0]) {
-      const xmlString = sitemap[0].sitemap_string;
+    if (sitemap) {
+      const xmlString = sitemap.sitemap_string;
 
       parser.parseString(xmlString, (error, result) => {
         if (error) {
@@ -84,7 +79,7 @@ module.exports = {
         }
       });
 
-      sitemapInfo.updateTime = sitemap[0].updatedAt;
+      sitemapInfo.updateTime = sitemap.updatedAt;
       sitemapInfo.location = '/sitemap/index.xml';
     }
 
@@ -92,18 +87,16 @@ module.exports = {
   },
 
   getSitemap: async (ctx) => {
-    const sitemap = await strapi.entityService.findMany('plugin::sitemap.sitemap', {
-      filters: {
-        name: 'default',
-      },
-    });
+    const { page = 0 } = ctx.query;
+    const sitemap = await getService('query').getSitemap('default', page);
 
-    if (!sitemap[0]) {
-      throw new errors.NotFoundError('Not found');
+    if (!sitemap) {
+      ctx.notFound('Not found');
+      return;
     }
 
     ctx.response.set("content-type", 'application/xml');
-    ctx.body = sitemap[0].sitemap_string;
+    ctx.body = sitemap.sitemap_string;
   },
 
   getSitemapXsl: async (ctx) => {
