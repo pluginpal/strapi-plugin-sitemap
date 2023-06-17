@@ -16,7 +16,7 @@ const CMEditViewExclude = () => {
     setSitemapSettings(settings);
   };
 
-  useEffect(async () => {
+  useEffect(() => {
     getSitemapSettings();
   }, []);
 
