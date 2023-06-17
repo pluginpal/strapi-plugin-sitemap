@@ -64,11 +64,38 @@ describe('Pattern service', () => {
   });
   describe('Get fields from pattern', () => {
     test('Should return an array of fieldnames extracted from a pattern', () => {
-      const pattern = '/en/[category]/[slug]/[relation.id]';
+      const pattern = '/en/[id]/[slug]/[category.id]';
 
       const result = patternService().getFieldsFromPattern(pattern);
 
-      expect(result).toEqual(['category', 'slug', 'relation.id']);
+      expect(result).toEqual(['id', 'slug', 'category.id']);
+    });
+  });
+  describe('Get only top level fields from pattern', () => {
+    test('Should return an array of fieldnames extracted from a pattern', () => {
+      const pattern = '/en/[id]/[slug]/[category.id]';
+
+      const result = patternService().getFieldsFromPattern(pattern, true);
+
+      expect(result).toEqual(['id', 'slug']);
+    });
+  });
+  describe('Get only specific relation fields from pattern', () => {
+    test('Should return an array of fieldnames extracted from a pattern', () => {
+      const pattern = '/en/[id]/[slug]/[category.path]';
+
+      const result = patternService().getFieldsFromPattern(pattern, false, 'category');
+
+      expect(result).toEqual(['path']);
+    });
+  });
+  describe('Get relations from pattern', () => {
+    test('Should return an array of relations extracted from a pattern', () => {
+      const pattern = '/en/[category]/[slug]/[relation.id]/[another_relation.fieldName]';
+
+      const result = patternService().getRelationsFromPattern(pattern);
+
+      expect(result).toEqual(['relation', 'another_relation']);
     });
   });
   describe('Resolve pattern', () => {
