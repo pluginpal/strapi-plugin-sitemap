@@ -19,7 +19,7 @@ const noLimit = async (strapi, queryString, parameters, limit = 100) => {
     const chunk = await strapi.entityService.findMany(queryString, {
       ...parameters,
       limit: limit,
-      offset: (i * limit),
+      start: (i * limit),
     });
     entries = [...chunk, ...entries];
   }

@@ -17,11 +17,10 @@ const { logMessage, getService, noLimit } = require('../utils');
  * @param {object} page - The entity.
  * @param {string} contentType - The model of the entity.
  * @param {string} defaultURL - The default URL of the different languages.
- * @param {bool} excludeDrafts - whether to exclude drafts.
  *
  * @returns {array} The language links.
  */
-const getLanguageLinks = async (page, contentType, defaultURL, excludeDrafts) => {
+const getLanguageLinks = async (page, contentType, defaultURL) => {
   const config = await getService('settings').getConfig();
   if (!page.localizations) return null;
 
@@ -66,7 +65,7 @@ const getLanguageLinks = async (page, contentType, defaultURL, excludeDrafts) =>
  *
  * @returns {object} The sitemap entry data.
  */
-const getSitemapPageData = async (page, contentType, excludeDrafts) => {
+const getSitemapPageData = async (page, contentType) => {
   let locale = page.locale || 'und';
   const config = await getService('settings').getConfig();
 
@@ -92,7 +91,7 @@ const getSitemapPageData = async (page, contentType, excludeDrafts) => {
   const pageData = {
     lastmod: page.updatedAt,
     url: url,
-    links: await getLanguageLinks(page, contentType, url, excludeDrafts),
+    links: await getLanguageLinks(page, contentType, url),
     changefreq: config.contentTypes[contentType]['languages'][locale].changefreq || 'monthly',
     priority: parseFloat(config.contentTypes[contentType]['languages'][locale].priority) || 0.5,
   };
@@ -170,44 +169,11 @@ const createSitemapEntries = async () => {
 
   // Collection entries.
   await Promise.all(Object.keys(config.contentTypes).map(async (contentType) => {
-    const excludeDrafts = config.excludeDrafts && strapi.contentTypes[contentType].options.draftAndPublish;
-
-    const relations = getRelationsFromConfig(config.contentTypes[contentType]);
-    const fields = getFieldsFromConfig(config.contentTypes[contentType], true);
-
-    const pages = await noLimit(strapi, contentType, {
-      where: {
-        $or: [
-          {
-            sitemap_exclude: {
-              $null: true,
-            },
-          },
-          {
-            sitemap_exclude: {
-              $eq: false,
-            },
-          },
-        ],
-        published_at: excludeDrafts ? {
-          $notNull: true,
-        } : {},
-      },
-      locale: 'all',
-      fields,
-      populate: {
-        localizations: {
-          fields,
-          populate: relations,
-        },
-        ...relations,
-      },
-      orderBy: 'id',
-    });
+    const pages = await getService('query').getPages(config, contentType);
 
     // Add formatted sitemap page data to the array.
     await Promise.all(pages.map(async (page) => {
-      const pageData = await getSitemapPageData(page, contentType, excludeDrafts);
+      const pageData = await getSitemapPageData(page, contentType);
       if (pageData) sitemapEntries.push(pageData);
     }));
   }));
