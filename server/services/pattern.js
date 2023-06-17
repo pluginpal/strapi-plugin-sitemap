@@ -60,12 +60,36 @@ const getAllowedFields = (contentType, allowedFields = []) => {
  * Get all fields from a pattern.
  *
  * @param {string} pattern - The pattern.
+ * @param {boolean} topLevel - No relation fields.
+ * @param {string} relation - Specify a relation. If you do; the function will only return fields of that relation.
  *
- * @returns {array} The fields.\[([\w\d\[\]]+)\]
+ * @returns {array} The fields.
  */
-const getFieldsFromPattern = (pattern) => {
+const getFieldsFromPattern = (pattern, topLevel = false, relation) => {
   let fields = pattern.match(/[[\w\d.]+]/g); // Get all substrings between [] as array.
   fields = fields.map((field) => RegExp(/(?<=\[)(.*?)(?=\])/).exec(field)[0]); // Strip [] from string.
+
+  if (relation) {
+    fields = fields.filter((field) => field.startsWith(`${relation}.`));
+    fields = fields.map((field) => field.split('.')[1]);
+  } else if (topLevel) {
+    fields = fields.filter((field) => field.split('.').length === 1);
+  }
+
+  return fields;
+};
+
+/**
+ * Get all relations from a pattern.
+ *
+ * @param {string} pattern - The pattern.
+ *
+ * @returns {array} The relations.
+ */
+const getRelationsFromPattern = (pattern) => {
+  let fields = getFieldsFromPattern(pattern);
+  fields = fields.filter((field) => field.split('.').length > 1); // Filter on fields containing a dot (.)
+  fields = fields.map((field) => field.split('.')[0]); // Extract the first part of the fields
   return fields;
 };
 
@@ -155,6 +179,7 @@ const validatePattern = async (pattern, allowedFieldNames) => {
 module.exports = () => ({
   getAllowedFields,
   getFieldsFromPattern,
+  getRelationsFromPattern,
   resolvePattern,
   validatePattern,
 });
