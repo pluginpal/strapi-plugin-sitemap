@@ -156,17 +156,28 @@ const createSitemapEntries = async () => {
  *
  * @returns {void}
  */
-const writeSitemapFile = (filename, sitemap) => {
+const saveSitemap = (filename, sitemap) => {
   streamToPromise(sitemap)
-    .then((sm) => {
-      fs.writeFile(`public/sitemap/${filename}`, sm.toString(), (err) => {
-        if (err) {
-          strapi.log.error(logMessage(`Something went wrong while trying to write the sitemap XML file to your public folder. ${err}`));
-          throw new Error();
-        } else {
-          strapi.log.info(logMessage(`The sitemap XML has been generated. It can be accessed on /sitemap/index.xml.`));
-        }
+    .then(async (sm) => {
+      const sitemapExists = await strapi.entityService.findMany('plugin::sitemap.sitemap', {
+        filters: {
+          name: 'default',
+        },
       });
+
+      if (sitemapExists[0]) {
+        await strapi.entityService.update('plugin::sitemap.sitemap', sitemapExists[0].id, {
+          data: {
+            sitemap_string: sm.toString(),
+          },
+        });
+      } else {
+        await strapi.entityService.create('plugin::sitemap.sitemap', {
+          data: {
+            sitemap_string: sm.toString(),
+          },
+        });
+      }
     })
     .catch((err) => {
       strapi.log.error(logMessage(`Something went wrong while trying to build the sitemap with streamToPromise. ${err}`));
@@ -229,7 +240,7 @@ const createSitemap = async () => {
     sitemapEntries.map((sitemapEntry) => sitemap.write(sitemapEntry));
     sitemap.end();
 
-    writeSitemapFile('index.xml', sitemap);
+    saveSitemap('default', sitemap);
 
   } catch (err) {
     strapi.log.error(logMessage(`Something went wrong while trying to build the SitemapStream. ${err}`));
@@ -241,6 +252,6 @@ module.exports = () => ({
   getLanguageLinks,
   getSitemapPageData,
   createSitemapEntries,
-  writeSitemapFile,
+  saveSitemap,
   createSitemap,
 });
