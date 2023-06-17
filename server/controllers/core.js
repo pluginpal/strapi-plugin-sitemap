@@ -99,25 +99,25 @@ module.exports = {
   },
 
   getSitemapXsl: async (ctx) => {
-    const xsl = fs.readFileSync(path.resolve(__dirname, "../../public/xsl/sitemap.xsl"), "utf8");
+    const xsl = fs.readFileSync(path.resolve(__dirname, "../../xsl/sitemap.xsl"), "utf8");
     ctx.response.set("content-type", 'application/xml');
     ctx.body = xsl;
   },
 
   getSitemapXslJs: async (ctx) => {
-    const xsl = fs.readFileSync(path.resolve(__dirname, "../../public/xsl/sitemap.xsl.js"), "utf8");
+    const xsl = fs.readFileSync(path.resolve(__dirname, "../../xsl/sitemap.xsl.js"), "utf8");
     ctx.response.set("content-type", 'text/javascript');
     ctx.body = xsl;
   },
 
   getSitemapXslSortable: async (ctx) => {
-    const xsl = fs.readFileSync(path.resolve(__dirname, "../../public/xsl/sortable.min.js"), "utf8");
+    const xsl = fs.readFileSync(path.resolve(__dirname, "../../xsl/sortable.min.js"), "utf8");
     ctx.response.set("content-type", 'text/javascript');
     ctx.body = xsl;
   },
 
   getSitemapXslCss: async (ctx) => {
-    const xsl = fs.readFileSync(path.resolve(__dirname, "../../public/xsl/sitemap.xsl.css"), "utf8");
+    const xsl = fs.readFileSync(path.resolve(__dirname, "../../xsl/sitemap.xsl.css"), "utf8");
     ctx.response.set("content-type", 'text/css');
     ctx.body = xsl;
   },
