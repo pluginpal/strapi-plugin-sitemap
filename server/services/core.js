@@ -7,8 +7,6 @@
 const { getConfigUrls } = require('@strapi/utils/lib');
 const { SitemapStream, streamToPromise, SitemapAndIndexStream } = require('sitemap');
 const { isEmpty } = require('lodash');
-const { resolve } = require('path');
-const fs = require('fs');
 const { logMessage, getService } = require('../utils');
 
 /**

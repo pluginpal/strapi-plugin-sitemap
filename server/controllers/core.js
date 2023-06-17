@@ -3,7 +3,6 @@
 const fs = require('fs');
 const _ = require('lodash');
 const path = require("path");
-const { errors } = require('@strapi/utils');
 const xml2js = require('xml2js');
 
 const { getService, logMessage } = require('../utils');
