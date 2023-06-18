@@ -7,7 +7,7 @@
 const { getConfigUrls } = require('@strapi/utils/lib');
 const { SitemapStream, streamToPromise, SitemapAndIndexStream } = require('sitemap');
 const { isEmpty } = require('lodash');
-const { logMessage, getService } = require('../utils');
+const { logMessage, getService, formatCache } = require('../utils');
 
 /**
  * Get a formatted array of different language URLs of a single page.
@@ -104,22 +104,37 @@ const getSitemapPageData = async (page, contentType) => {
 /**
  * Get array of sitemap entries based on the plugins configurations.
  *
- * @returns {array} The entries.
+ * @returns {object} The cache and regular entries.
  */
-const createSitemapEntries = async () => {
+const createSitemapEntries = async (type, id) => {
   const config = await getService('settings').getConfig();
   const sitemapEntries = [];
+  const cacheEntries = {};
 
   // Collection entries.
   await Promise.all(Object.keys(config.contentTypes).map(async (contentType) => {
-    const pages = await getService('query').getPages(config, contentType);
+    if (type && type !== contentType) {
+      return;
+    }
+
+    cacheEntries[contentType] = {};
+
+    // Query all the pages
+    const pages = await getService('query').getPages(config, contentType, id);
 
     // Add formatted sitemap page data to the array.
     await Promise.all(pages.map(async (page) => {
       const pageData = await getSitemapPageData(page, contentType);
-      if (pageData) sitemapEntries.push(pageData);
+      if (pageData) {
+        sitemapEntries.push(pageData);
+
+        // Add page to the cache.
+        cacheEntries[contentType][page.id] = pageData;
+      }
     }));
   }));
+
+
   // Custom entries.
   await Promise.all(Object.keys(config.customEntries).map(async (customEntry) => {
     sitemapEntries.push({
@@ -143,7 +158,7 @@ const createSitemapEntries = async () => {
     }
   }
 
-  return sitemapEntries;
+  return { cacheEntries, sitemapEntries };
 };
 
 /**
@@ -210,23 +225,46 @@ const saveSitemap = async (filename, sitemap) => {
 /**
  * The main sitemap generation service.
  *
+ * @param {array} cache - The cached JSON
+ * @param {array} contentType - Content type to refresh
+ * @param {array} id - ID to refresh
+ *
  * @returns {void}
  */
-const createSitemap = async () => {
+const createSitemap = async (cache, contentType, id) => {
   try {
-    const sitemapEntries = await createSitemapEntries();
+    const {
+      sitemapEntries,
+      cacheEntries,
+    } = await createSitemapEntries(contentType, id);
 
-    if (isEmpty(sitemapEntries)) {
+    // Format cache to regular entries
+    const formattedCache = formatCache(cache, contentType, id);
+
+    const allEntries = [
+      ...sitemapEntries,
+      ...formattedCache,
+    ];
+
+    if (isEmpty(allEntries)) {
       strapi.log.info(logMessage(`No sitemap XML was generated because there were 0 URLs configured.`));
       return;
     }
 
     await getService('query').deleteSitemap('default');
 
-    const sitemap = await getSitemapStream(sitemapEntries.length);
+    const sitemap = await getSitemapStream(allEntries.length);
 
-    sitemapEntries.map((sitemapEntry) => sitemap.write(sitemapEntry));
+    allEntries.map((sitemapEntry) => sitemap.write(sitemapEntry));
     sitemap.end();
+
+    if (!cache) {
+      await getService('query').createSitemapCache(cacheEntries, 'default');
+    } else {
+      // TODO: Better object merging.
+      const newCache = Object.assign(cache, cacheEntries);
+      await getService('query').updateSitemapCache(newCache, 'default');
+    }
 
     await saveSitemap('default', sitemap);
 

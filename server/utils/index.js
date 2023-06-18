@@ -27,9 +27,34 @@ const noLimit = async (strapi, queryString, parameters, limit = 100) => {
   return entries;
 };
 
+const formatCache = (cache, contentType, id) => {
+  let formattedCache = [];
+
+  if (cache) {
+    // Remove the items from the cache that will be refreshed.
+    if (contentType && id) {
+      delete cache[contentType][id];
+    } else if (contentType) {
+      delete cache[contentType];
+    }
+
+    Object.values(cache).map((values) => {
+      if (values) {
+        formattedCache = [
+          ...formattedCache,
+          ...Object.values(values),
+        ];
+      }
+    });
+  }
+
+  return formattedCache;
+};
+
 module.exports = {
   getService,
   getCoreStore,
   logMessage,
   noLimit,
+  formatCache,
 };

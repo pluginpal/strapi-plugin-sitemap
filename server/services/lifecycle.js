@@ -16,27 +16,69 @@ const subscribeLifecycleMethods = async (modelName) => {
       models: [modelName],
 
       async afterCreate(event) {
-        await sitemapService.createSitemap();
+        const cache = await getService('query').getSitemapCache('default');
+        const { id } = event.result;
+
+        if (cache) {
+          await sitemapService.createSitemap(cache.sitemap_json, modelName, id);
+        } else {
+          await sitemapService.createSitemap();
+        }
       },
 
       async afterCreateMany(event) {
-        await sitemapService.createSitemap();
+        const cache = await getService('query').getSitemapCache('default');
+        const { id } = event.result;
+
+        if (cache) {
+          await sitemapService.createSitemap(cache.sitemap_json, modelName, id);
+        } else {
+          await sitemapService.createSitemap();
+        }
       },
 
       async afterUpdate(event) {
-        await sitemapService.createSitemap();
+        const cache = await getService('query').getSitemapCache('default');
+        const { id } = event.result;
+
+        if (cache) {
+          await sitemapService.createSitemap(cache.sitemap_json, modelName, id);
+        } else {
+          await sitemapService.createSitemap();
+        }
       },
 
       async afterUpdateMany(event) {
-        await sitemapService.createSitemap();
+        const cache = await getService('query').getSitemapCache('default');
+        const { id } = event.result;
+
+        if (cache) {
+          await sitemapService.createSitemap(cache.sitemap_json, modelName, id);
+        } else {
+          await sitemapService.createSitemap();
+        }
       },
 
       async afterDelete(event) {
-        await sitemapService.createSitemap();
+        const cache = await getService('query').getSitemapCache('default');
+        const { id } = event.result;
+
+        if (cache) {
+          await sitemapService.createSitemap(cache.sitemap_json, modelName, id);
+        } else {
+          await sitemapService.createSitemap();
+        }
       },
 
       async afterDeleteMany(event) {
-        await sitemapService.createSitemap();
+        const cache = await getService('query').getSitemapCache('default');
+        const { id } = event.result;
+
+        if (cache) {
+          await sitemapService.createSitemap(cache.sitemap_json, modelName, id);
+        } else {
+          await sitemapService.createSitemap();
+        }
       },
     });
   } else {
