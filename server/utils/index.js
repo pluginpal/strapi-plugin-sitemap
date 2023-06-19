@@ -24,20 +24,16 @@ const noLimit = async (strapi, queryString, parameters, limit = 100) => {
     entries = [...chunk, ...entries];
   }
 
-  console.log(queryString, amountOfEntries, entries);
-
   return entries;
 };
 
-const formatCache = (cache, contentType, id) => {
+const formatCache = (cache, contentType, ids) => {
   let formattedCache = [];
 
-  // TODO:
-  // Cache invalidation & regeneration should also occur for al its translated counterparts
   if (cache) {
     // Remove the items from the cache that will be refreshed.
-    if (contentType && id) {
-      delete cache[contentType][id];
+    if (contentType && ids) {
+      ids.map((id) => delete cache[contentType][id]);
     } else if (contentType) {
       delete cache[contentType];
     }

@@ -104,9 +104,13 @@ const getSitemapPageData = async (page, contentType) => {
 /**
  * Get array of sitemap entries based on the plugins configurations.
  *
+ * @param {string} type - Query only entities of this type.
+ * @param {array} ids - Query only these ids.
+ * @param {bool} excludeDrafts - Whether to exclude drafts.
+ *
  * @returns {object} The cache and regular entries.
  */
-const createSitemapEntries = async (type, id) => {
+const createSitemapEntries = async (type, ids) => {
   const config = await getService('settings').getConfig();
   const sitemapEntries = [];
   const cacheEntries = {};
@@ -120,7 +124,7 @@ const createSitemapEntries = async (type, id) => {
     cacheEntries[contentType] = {};
 
     // Query all the pages
-    const pages = await getService('query').getPages(config, contentType, id);
+    const pages = await getService('query').getPages(config, contentType, ids);
 
     // Add formatted sitemap page data to the array.
     await Promise.all(pages.map(async (page) => {
@@ -226,20 +230,20 @@ const saveSitemap = async (filename, sitemap) => {
  * The main sitemap generation service.
  *
  * @param {array} cache - The cached JSON
- * @param {array} contentType - Content type to refresh
- * @param {array} id - ID to refresh
+ * @param {string} contentType - Content type to refresh
+ * @param {array} ids - IDs to refresh
  *
  * @returns {void}
  */
-const createSitemap = async (cache, contentType, id) => {
+const createSitemap = async (cache, contentType, ids) => {
   try {
     const {
       sitemapEntries,
       cacheEntries,
-    } = await createSitemapEntries(contentType, id);
+    } = await createSitemapEntries(contentType, ids);
 
     // Format cache to regular entries
-    const formattedCache = formatCache(cache, contentType, id);
+    const formattedCache = formatCache(cache, contentType, ids);
 
     const allEntries = [
       ...sitemapEntries,

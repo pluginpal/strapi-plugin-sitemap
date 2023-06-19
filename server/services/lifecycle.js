@@ -18,9 +18,11 @@ const subscribeLifecycleMethods = async (modelName) => {
       async afterCreate(event) {
         const cache = await getService('query').getSitemapCache('default');
         const { id } = event.result;
+        const ids = await getService('query').getLocalizationIds(modelName, id);
+        ids.push(id);
 
         if (cache) {
-          await sitemapService.createSitemap(cache.sitemap_json, modelName, id);
+          await sitemapService.createSitemap(cache.sitemap_json, modelName, ids);
         } else {
           await sitemapService.createSitemap();
         }
@@ -29,9 +31,11 @@ const subscribeLifecycleMethods = async (modelName) => {
       async afterCreateMany(event) {
         const cache = await getService('query').getSitemapCache('default');
         const { id } = event.result;
+        const ids = await getService('query').getLocalizationIds(modelName, id);
+        ids.push(id);
 
         if (cache) {
-          await sitemapService.createSitemap(cache.sitemap_json, modelName, id);
+          await sitemapService.createSitemap(cache.sitemap_json, modelName, ids);
         } else {
           await sitemapService.createSitemap();
         }
@@ -40,9 +44,12 @@ const subscribeLifecycleMethods = async (modelName) => {
       async afterUpdate(event) {
         const cache = await getService('query').getSitemapCache('default');
         const { id } = event.result;
+        const ids = await getService('query').getLocalizationIds(modelName, id);
+        ids.push(id);
+        console.log(ids);
 
         if (cache) {
-          await sitemapService.createSitemap(cache.sitemap_json, modelName, id);
+          await sitemapService.createSitemap(cache.sitemap_json, modelName, ids);
         } else {
           await sitemapService.createSitemap();
         }
@@ -51,9 +58,11 @@ const subscribeLifecycleMethods = async (modelName) => {
       async afterUpdateMany(event) {
         const cache = await getService('query').getSitemapCache('default');
         const { id } = event.result;
+        const ids = await getService('query').getLocalizationIds(modelName, id);
+        ids.push(id);
 
         if (cache) {
-          await sitemapService.createSitemap(cache.sitemap_json, modelName, id);
+          await sitemapService.createSitemap(cache.sitemap_json, modelName, ids);
         } else {
           await sitemapService.createSitemap();
         }
@@ -62,9 +71,11 @@ const subscribeLifecycleMethods = async (modelName) => {
       async afterDelete(event) {
         const cache = await getService('query').getSitemapCache('default');
         const { id } = event.result;
+        const ids = await getService('query').getLocalizationIds(modelName, id);
+        ids.push(id);
 
         if (cache) {
-          await sitemapService.createSitemap(cache.sitemap_json, modelName, id);
+          await sitemapService.createSitemap(cache.sitemap_json, modelName, ids);
         } else {
           await sitemapService.createSitemap();
         }
@@ -73,9 +84,11 @@ const subscribeLifecycleMethods = async (modelName) => {
       async afterDeleteMany(event) {
         const cache = await getService('query').getSitemapCache('default');
         const { id } = event.result;
+        const ids = await getService('query').getLocalizationIds(modelName, id);
+        ids.push(id);
 
         if (cache) {
-          await sitemapService.createSitemap(cache.sitemap_json, modelName, id);
+          await sitemapService.createSitemap(cache.sitemap_json, modelName, ids);
         } else {
           await sitemapService.createSitemap();
         }

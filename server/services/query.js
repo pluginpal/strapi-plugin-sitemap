@@ -69,12 +69,12 @@ const getRelationsFromConfig = (contentType) => {
  * Query the nessecary pages from Strapi to build the sitemap with.
  *
  * @param {obj} config - The config object
- * @param {obj} contentType - The content type
- * @param {number} id - A page id
+ * @param {string} contentType - Query only entities of this type.
+ * @param {array} ids - Query only these ids.
  *
  * @returns {object} The pages.
  */
-const getPages = async (config, contentType, id) => {
+const getPages = async (config, contentType, ids) => {
   const excludeDrafts = config.excludeDrafts && strapi.contentTypes[contentType].options.draftAndPublish;
   const isLocalized = strapi.contentTypes[contentType].pluginOptions?.i18n?.localized;
 
@@ -95,8 +95,8 @@ const getPages = async (config, contentType, id) => {
           },
         },
       ],
-      id: id ? {
-        $eq: id,
+      id: ids ? {
+        $in: ids,
       } : {},
     },
     locale: 'all',
@@ -113,6 +113,31 @@ const getPages = async (config, contentType, id) => {
   });
 
   return pages;
+};
+
+/**
+ * Query the IDs of the corresponding localization entities.
+ *
+ * @param {obj} contentType - The content type
+ * @param {number} id - A page id
+ *
+ * @returns {object} The pages.
+ */
+const getLocalizationIds = async (contentType, id) => {
+  const isLocalized = strapi.contentTypes[contentType].pluginOptions?.i18n?.localized;
+  const ids = [];
+
+  if (isLocalized) {
+    const response = await strapi.entityService.findMany(contentType, {
+      filters: { localizations: id },
+      locale: 'all',
+      fields: ['id'],
+    });
+
+    response.map((localization) => ids.push(localization.id));
+  }
+
+  return ids;
 };
 
 /**
@@ -258,6 +283,7 @@ const getSitemapCache = async (name) => {
 
 module.exports = () => ({
   getPages,
+  getLocalizationIds,
   createSitemap,
   getSitemap,
   deleteSitemap,
