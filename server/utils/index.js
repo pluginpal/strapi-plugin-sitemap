@@ -54,7 +54,7 @@ const formatCache = (cache, contentType, ids) => {
 const mergeCache = (oldCache, newCache) => {
   const mergedCache = [oldCache, newCache].reduce((merged, current) => {
     Object.entries(current).forEach(([key, value]) => {
-      merged[key] ??= {};
+      if (!merged[key]) merged[key] = {};
       merged[key] = { ...merged[key], ...value };
     });
     return merged;
