@@ -7,7 +7,7 @@
 const { getConfigUrls } = require('@strapi/utils/lib');
 const { SitemapStream, streamToPromise, SitemapAndIndexStream } = require('sitemap');
 const { isEmpty } = require('lodash');
-const { logMessage, getService, formatCache } = require('../utils');
+const { logMessage, getService, formatCache, mergeCache } = require('../utils');
 
 /**
  * Get a formatted array of different language URLs of a single page.
@@ -261,8 +261,7 @@ const createSitemap = async (cache, contentType, id) => {
     if (!cache) {
       await getService('query').createSitemapCache(cacheEntries, 'default');
     } else {
-      // TODO: Better object merging.
-      const newCache = Object.assign(cache, cacheEntries);
+      const newCache = mergeCache(cache, cacheEntries);
       await getService('query').updateSitemapCache(newCache, 'default');
     }
 
