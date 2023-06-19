@@ -81,32 +81,24 @@ const getPages = async (config, contentType, id) => {
   const relations = getRelationsFromConfig(config.contentTypes[contentType]);
   const fields = getFieldsFromConfig(config.contentTypes[contentType], true, isLocalized);
 
-  // TODO:
-  // Double check if the filters are working correctly
-  const filters = {
-    $or: [
-      {
-        sitemap_exclude: {
-          $null: true,
-        },
-      },
-      {
-        sitemap_exclude: {
-          $eq: false,
-        },
-      },
-    ],
-    id: id ? {
-      $eq: id,
-    } : {},
-    published_at: excludeDrafts ? {
-      $notNull: true,
-    } : {},
-  };
-
   const pages = await noLimit(strapi, contentType, {
-    where: filters,
-    filters,
+    filters: {
+      $or: [
+        {
+          sitemap_exclude: {
+            $null: true,
+          },
+        },
+        {
+          sitemap_exclude: {
+            $eq: false,
+          },
+        },
+      ],
+      id: id ? {
+        $eq: id,
+      } : {},
+    },
     locale: 'all',
     fields,
     populate: {
@@ -117,6 +109,7 @@ const getPages = async (config, contentType, id) => {
       ...relations,
     },
     orderBy: 'id',
+    publicationState: excludeDrafts ? 'live' : 'preview',
   });
 
   return pages;
