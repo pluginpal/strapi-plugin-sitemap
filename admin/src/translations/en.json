@@ -1,4 +1,6 @@
 {
+  "Settings.Configuration.Title": "Configuration",
+
   "Button.Save": "Save",
   "Button.Cancel": "Cancel",
   "Button.Add": "Add",
@@ -68,5 +70,6 @@
   "notification.success.submit": "Settings have been updated",
   "notification.success.generate": "Sitemap has been generated",
 
-  "plugin.name": "Sitemap"
+  "plugin.name": "Sitemap",
+  "plugin.name.extended": "Sitemap plugin"
 }
