@@ -33,7 +33,7 @@ const formatCache = (cache, contentType, ids) => {
   if (cache) {
     // Remove the items from the cache that will be refreshed.
     if (contentType && ids) {
-      ids.map((id) => delete cache[contentType][id]);
+      ids.map((id) => delete cache[contentType]?.[id]);
     } else if (contentType) {
       delete cache[contentType];
     }
