@@ -79,7 +79,7 @@ module.exports = {
       });
 
       sitemapInfo.updateTime = sitemap.updatedAt;
-      sitemapInfo.location = '/sitemap/index.xml';
+      sitemapInfo.location = '/api/sitemap/index.xml';
     }
 
     ctx.send(sitemapInfo);
