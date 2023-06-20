@@ -1,7 +1,6 @@
 import { prefixPluginTranslations } from '@strapi/helper-plugin';
 import pluginPkg from '../../package.json';
 import pluginId from './helpers/pluginId';
-import pluginIcon from './components/PluginIcon';
 import CMEditViewExclude from './components/CMEditViewExclude';
 import pluginPermissions from './permissions';
 // import getTrad from './helpers/getTrad';
