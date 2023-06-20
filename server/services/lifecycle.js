@@ -30,12 +30,9 @@ const subscribeLifecycleMethods = async (modelName) => {
 
       async afterCreateMany(event) {
         const cache = await getService('query').getSitemapCache('default');
-        const { id } = event.result;
-        const ids = await getService('query').getLocalizationIds(modelName, id);
-        ids.push(id);
 
         if (cache) {
-          await sitemapService.createSitemap(cache.sitemap_json, modelName, ids);
+          await sitemapService.createSitemap(cache.sitemap_json, modelName);
         } else {
           await sitemapService.createSitemap();
         }
@@ -57,12 +54,9 @@ const subscribeLifecycleMethods = async (modelName) => {
 
       async afterUpdateMany(event) {
         const cache = await getService('query').getSitemapCache('default');
-        const { id } = event.result;
-        const ids = await getService('query').getLocalizationIds(modelName, id);
-        ids.push(id);
 
         if (cache) {
-          await sitemapService.createSitemap(cache.sitemap_json, modelName, ids);
+          await sitemapService.createSitemap(cache.sitemap_json, modelName);
         } else {
           await sitemapService.createSitemap();
         }
@@ -83,12 +77,9 @@ const subscribeLifecycleMethods = async (modelName) => {
 
       async afterDeleteMany(event) {
         const cache = await getService('query').getSitemapCache('default');
-        const { id } = event.result;
-        const ids = await getService('query').getLocalizationIds(modelName, id);
-        ids.push(id);
 
         if (cache) {
-          await sitemapService.createSitemap(cache.sitemap_json, modelName, ids);
+          await sitemapService.createSitemap(cache.sitemap_json, modelName);
         } else {
           await sitemapService.createSitemap();
         }
