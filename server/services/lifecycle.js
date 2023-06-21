@@ -9,6 +9,7 @@ const { getService, logMessage } = require('../utils');
  */
 
 const subscribeLifecycleMethods = async (modelName) => {
+  const cachingEnabled = strapi.config.get('plugin.sitemap.caching');
   const sitemapService = await getService('core');
 
   if (strapi.contentTypes[modelName]) {
@@ -16,6 +17,10 @@ const subscribeLifecycleMethods = async (modelName) => {
       models: [modelName],
 
       async afterCreate(event) {
+        if (!cachingEnabled) {
+          await sitemapService.createSitemap();
+          return;
+        }
         const cache = await getService('query').getSitemapCache('default');
         const { id } = event.result;
         const ids = await getService('query').getLocalizationIds(modelName, id);
@@ -29,6 +34,10 @@ const subscribeLifecycleMethods = async (modelName) => {
       },
 
       async afterCreateMany(event) {
+        if (!cachingEnabled) {
+          await sitemapService.createSitemap();
+          return;
+        }
         const cache = await getService('query').getSitemapCache('default');
 
         if (cache) {
@@ -39,6 +48,10 @@ const subscribeLifecycleMethods = async (modelName) => {
       },
 
       async afterUpdate(event) {
+        if (!cachingEnabled) {
+          await sitemapService.createSitemap();
+          return;
+        }
         const cache = await getService('query').getSitemapCache('default');
         const { id } = event.result;
         const ids = await getService('query').getLocalizationIds(modelName, id);
@@ -53,6 +66,10 @@ const subscribeLifecycleMethods = async (modelName) => {
       },
 
       async afterUpdateMany(event) {
+        if (!cachingEnabled) {
+          await sitemapService.createSitemap();
+          return;
+        }
         const cache = await getService('query').getSitemapCache('default');
 
         if (cache) {
@@ -62,20 +79,35 @@ const subscribeLifecycleMethods = async (modelName) => {
         }
       },
 
-      async afterDelete(event) {
-        const cache = await getService('query').getSitemapCache('default');
-        const { id } = event.result;
+      async beforeDelete(event) {
+        if (!cachingEnabled) return;
+
+        const { id } = event.params.where;
         const ids = await getService('query').getLocalizationIds(modelName, id);
         ids.push(id);
+        event.state.idsToInvalidate = ids;
+      },
+
+      async afterDelete(event) {
+        if (!cachingEnabled) {
+          await sitemapService.createSitemap();
+          return;
+        }
+        const cache = await getService('query').getSitemapCache('default');
+        const { idsToInvalidate } = event.state;
 
         if (cache) {
-          await sitemapService.createSitemap(cache.sitemap_json, modelName, ids);
+          await sitemapService.createSitemap(cache.sitemap_json, modelName, idsToInvalidate);
         } else {
           await sitemapService.createSitemap();
         }
       },
 
       async afterDeleteMany(event) {
+        if (!cachingEnabled) {
+          await sitemapService.createSitemap();
+          return;
+        }
         const cache = await getService('query').getSitemapCache('default');
 
         if (cache) {

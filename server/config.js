@@ -3,6 +3,8 @@
 module.exports = {
   default: {
     autoGenerate: true,
+    caching: true,
+    limit: 45000,
     allowedFields: ['id', 'uid'],
     excludedTypes: [
       'admin::permission',
@@ -13,7 +15,6 @@ module.exports = {
       'plugin::users-permissions.permission',
       'plugin::users-permissions.role',
     ],
-    limit: 45000,
   },
   validator() {},
 };

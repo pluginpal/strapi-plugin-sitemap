@@ -236,6 +236,8 @@ const saveSitemap = async (filename, sitemap) => {
  * @returns {void}
  */
 const createSitemap = async (cache, contentType, ids) => {
+  const cachingEnabled = strapi.config.get('plugin.sitemap.caching');
+
   try {
     const {
       sitemapEntries,
@@ -262,11 +264,13 @@ const createSitemap = async (cache, contentType, ids) => {
     allEntries.map((sitemapEntry) => sitemap.write(sitemapEntry));
     sitemap.end();
 
-    if (!cache) {
-      await getService('query').createSitemapCache(cacheEntries, 'default');
-    } else {
-      const newCache = mergeCache(cache, cacheEntries);
-      await getService('query').updateSitemapCache(newCache, 'default');
+    if (cachingEnabled) {
+      if (!cache) {
+        await getService('query').createSitemapCache(cacheEntries, 'default');
+      } else {
+        const newCache = mergeCache(cache, cacheEntries);
+        await getService('query').updateSitemapCache(newCache, 'default');
+      }
     }
 
     await saveSitemap('default', sitemap);
