@@ -104,27 +104,25 @@ const getSitemapPageData = async (page, contentType) => {
 /**
  * Get array of sitemap entries based on the plugins configurations.
  *
- * @param {string} type - Query only entities of this type.
- * @param {array} ids - Query only these ids.
- * @param {bool} excludeDrafts - Whether to exclude drafts.
+ * @param {object} invalidationObject - An object containing the types and ids to invalidate
  *
  * @returns {object} The cache and regular entries.
  */
-const createSitemapEntries = async (type, ids) => {
+const createSitemapEntries = async (invalidationObject) => {
   const config = await getService('settings').getConfig();
   const sitemapEntries = [];
   const cacheEntries = {};
 
   // Collection entries.
   await Promise.all(Object.keys(config.contentTypes).map(async (contentType) => {
-    if (type && type !== contentType) {
+    if (invalidationObject && !Object.keys(invalidationObject).includes(contentType)) {
       return;
     }
 
     cacheEntries[contentType] = {};
 
     // Query all the pages
-    const pages = await getService('query').getPages(config, contentType, ids);
+    const pages = await getService('query').getPages(config, contentType, invalidationObject?.[contentType]?.ids);
 
     // Add formatted sitemap page data to the array.
     await Promise.all(pages.map(async (page) => {
@@ -230,22 +228,21 @@ const saveSitemap = async (filename, sitemap) => {
  * The main sitemap generation service.
  *
  * @param {array} cache - The cached JSON
- * @param {string} contentType - Content type to refresh
- * @param {array} ids - IDs to refresh
+ * @param {object} invalidationObject - An object containing the types and ids to invalidate
  *
  * @returns {void}
  */
-const createSitemap = async (cache, contentType, ids) => {
+const createSitemap = async (cache, invalidationObject) => {
   const cachingEnabled = strapi.config.get('plugin.sitemap.caching');
 
   try {
     const {
       sitemapEntries,
       cacheEntries,
-    } = await createSitemapEntries(contentType, ids);
+    } = await createSitemapEntries(invalidationObject);
 
     // Format cache to regular entries
-    const formattedCache = formatCache(cache, contentType, ids);
+    const formattedCache = formatCache(cache, invalidationObject);
 
     const allEntries = [
       ...sitemapEntries,

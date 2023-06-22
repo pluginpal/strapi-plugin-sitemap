@@ -27,25 +27,29 @@ const noLimit = async (strapi, queryString, parameters, limit = 100) => {
   return entries;
 };
 
-const formatCache = (cache, contentType, ids) => {
+const formatCache = (cache, invalidationObject) => {
   let formattedCache = [];
 
   if (cache) {
-    // Remove the items from the cache that will be refreshed.
-    if (contentType && ids) {
-      ids.map((id) => delete cache[contentType]?.[id]);
-    } else if (contentType) {
-      delete cache[contentType];
-    }
+    if (invalidationObject) {
+      Object.keys(invalidationObject).map((contentType) => {
+        // Remove the items from the cache that will be refreshed.
+        if (contentType && invalidationObject[contentType].ids) {
+          invalidationObject[contentType].ids.map((id) => delete cache[contentType]?.[id]);
+        } else if (contentType) {
+          delete cache[contentType];
+        }
+      });
 
-    Object.values(cache).map((values) => {
-      if (values) {
-        formattedCache = [
-          ...formattedCache,
-          ...Object.values(values),
-        ];
-      }
-    });
+      Object.values(cache).map((values) => {
+        if (values) {
+          formattedCache = [
+            ...formattedCache,
+            ...Object.values(values),
+          ];
+        }
+      });
+    }
   }
 
   return formattedCache;

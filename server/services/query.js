@@ -141,6 +141,61 @@ const getLocalizationIds = async (contentType, id) => {
 };
 
 /**
+ * Compose the object used to invalide a part of the cache.
+ *
+ * @param {obj} config - The config
+ * @param {string} updatedType - The content type
+ * @param {number} updatedId - A page id
+ *
+ * @returns {object} The invalidation object.
+ */
+const composeInvalidationObject = async (config, updatedType, updatedId) => {
+  const mainLocaleIds = await getLocalizationIds(updatedType, updatedId);
+
+  // Add the updated entity.
+  const invalidationObject = {
+    [updatedType]: {
+      ids: [
+        ...mainLocaleIds,
+        updatedId,
+      ],
+    },
+  };
+
+  // Add all pages that have a relation to the updated entity.
+  await Promise.all(Object.keys(config.contentTypes).map(async (contentType) => {
+    const relations = Object.keys(getRelationsFromConfig(config.contentTypes[contentType]));
+
+    await Promise.all(relations.map(async (relation) => {
+      if (strapi.contentTypes[contentType].attributes[relation].target === updatedType) {
+        const pagesToUpdate = await strapi.entityService.findMany(contentType, {
+          filters: {
+            [relation]: updatedId,
+          },
+          fields: ['id'],
+        });
+
+
+        if (pagesToUpdate.length > 0) invalidationObject[contentType] = {};
+
+        await Promise.all(pagesToUpdate.map(async (page) => {
+          const localeIds = await getLocalizationIds(contentType, page.id);
+
+          invalidationObject[contentType] = {
+            ids: [
+              ...localeIds,
+              page.id,
+            ],
+          };
+        }));
+      }
+    }));
+  }));
+
+  return invalidationObject;
+};
+
+/**
  * Create a sitemap in the database
  *
  * @param {string} sitemapString - The sitemapString
@@ -282,6 +337,8 @@ const getSitemapCache = async (name) => {
 };
 
 module.exports = () => ({
+  getFieldsFromConfig,
+  getRelationsFromConfig,
   getPages,
   getLocalizationIds,
   createSitemap,
@@ -290,4 +347,5 @@ module.exports = () => ({
   createSitemapCache,
   updateSitemapCache,
   getSitemapCache,
+  composeInvalidationObject,
 });

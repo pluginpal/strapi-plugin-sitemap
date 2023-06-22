@@ -21,13 +21,13 @@ const subscribeLifecycleMethods = async (modelName) => {
           await sitemapService.createSitemap();
           return;
         }
+
+        const config = await getService('settings').getConfig();
         const cache = await getService('query').getSitemapCache('default');
-        const { id } = event.result;
-        const ids = await getService('query').getLocalizationIds(modelName, id);
-        ids.push(id);
+        const invalidationObject = await getService('query').composeInvalidationObject(config, modelName, event.result.id);
 
         if (cache) {
-          await sitemapService.createSitemap(cache.sitemap_json, modelName, ids);
+          await sitemapService.createSitemap(cache.sitemap_json, invalidationObject);
         } else {
           await sitemapService.createSitemap();
         }
@@ -40,8 +40,12 @@ const subscribeLifecycleMethods = async (modelName) => {
         }
         const cache = await getService('query').getSitemapCache('default');
 
+        const invalidationObject = {
+          [modelName]: {},
+        };
+
         if (cache) {
-          await sitemapService.createSitemap(cache.sitemap_json, modelName);
+          await sitemapService.createSitemap(cache.sitemap_json, invalidationObject);
         } else {
           await sitemapService.createSitemap();
         }
@@ -52,14 +56,13 @@ const subscribeLifecycleMethods = async (modelName) => {
           await sitemapService.createSitemap();
           return;
         }
+
+        const config = await getService('settings').getConfig();
         const cache = await getService('query').getSitemapCache('default');
-        const { id } = event.result;
-        const ids = await getService('query').getLocalizationIds(modelName, id);
-        ids.push(id);
-        console.log(ids);
+        const invalidationObject = await getService('query').composeInvalidationObject(config, modelName, event.result.id);
 
         if (cache) {
-          await sitemapService.createSitemap(cache.sitemap_json, modelName, ids);
+          await sitemapService.createSitemap(cache.sitemap_json, invalidationObject);
         } else {
           await sitemapService.createSitemap();
         }
@@ -71,9 +74,14 @@ const subscribeLifecycleMethods = async (modelName) => {
           return;
         }
         const cache = await getService('query').getSitemapCache('default');
+        console.log(event);
+
+        const invalidationObject = {
+          [modelName]: {},
+        };
 
         if (cache) {
-          await sitemapService.createSitemap(cache.sitemap_json, modelName);
+          await sitemapService.createSitemap(cache.sitemap_json, invalidationObject);
         } else {
           await sitemapService.createSitemap();
         }
@@ -81,11 +89,8 @@ const subscribeLifecycleMethods = async (modelName) => {
 
       async beforeDelete(event) {
         if (!cachingEnabled) return;
-
         const { id } = event.params.where;
-        const ids = await getService('query').getLocalizationIds(modelName, id);
-        ids.push(id);
-        event.state.idsToInvalidate = ids;
+        event.state.id = id;
       },
 
       async afterDelete(event) {
@@ -93,11 +98,13 @@ const subscribeLifecycleMethods = async (modelName) => {
           await sitemapService.createSitemap();
           return;
         }
+
+        const config = await getService('settings').getConfig();
         const cache = await getService('query').getSitemapCache('default');
-        const { idsToInvalidate } = event.state;
+        const invalidationObject = await getService('query').composeInvalidationObject(config, modelName, event.state.id);
 
         if (cache) {
-          await sitemapService.createSitemap(cache.sitemap_json, modelName, idsToInvalidate);
+          await sitemapService.createSitemap(cache.sitemap_json, invalidationObject);
         } else {
           await sitemapService.createSitemap();
         }
@@ -110,8 +117,12 @@ const subscribeLifecycleMethods = async (modelName) => {
         }
         const cache = await getService('query').getSitemapCache('default');
 
+        const invalidationObject = {
+          [modelName]: {},
+        };
+
         if (cache) {
-          await sitemapService.createSitemap(cache.sitemap_json, modelName);
+          await sitemapService.createSitemap(cache.sitemap_json, invalidationObject);
         } else {
           await sitemapService.createSitemap();
         }
