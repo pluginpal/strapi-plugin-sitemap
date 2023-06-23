@@ -2,7 +2,7 @@
 
 const { getService, logMessage } = require('../utils');
 
-const generateSitemapAfterUpdate = async (modelName, queryFilters, object) => {
+const generateSitemapAfterUpdate = async (modelName, queryFilters, object, ids) => {
   const cachingEnabled = strapi.config.get('plugin.sitemap.caching');
 
   if (!cachingEnabled) {
@@ -17,7 +17,7 @@ const generateSitemapAfterUpdate = async (modelName, queryFilters, object) => {
 
     if (!object) {
       const config = await getService('settings').getConfig();
-      invalidationObject = await getService('query').composeInvalidationObject(config, modelName, queryFilters);
+      invalidationObject = await getService('query').composeInvalidationObject(config, modelName, queryFilters, ids);
     } else {
       invalidationObject = object;
     }
@@ -42,17 +42,15 @@ const subscribeLifecycleMethods = async (modelName) => {
       models: [modelName],
 
       async afterCreate(event) {
-        await generateSitemapAfterUpdate(modelName, event.params.where);
+        await generateSitemapAfterUpdate(modelName, event.params.where, null, [event.result.id]);
       },
 
-      // TODO:
-      // Test this lifecycle.
       async afterCreateMany(event) {
-        await generateSitemapAfterUpdate(modelName, event.params.where);
+        await generateSitemapAfterUpdate(modelName, event.params.where, null, event.result.ids);
       },
 
       async afterUpdate(event) {
-        await generateSitemapAfterUpdate(modelName, event.params.where);
+        await generateSitemapAfterUpdate(modelName, event.params.where, null, [event.result.id]);
       },
 
       async afterUpdateMany(event) {
@@ -68,11 +66,9 @@ const subscribeLifecycleMethods = async (modelName) => {
       },
 
       async afterDelete(event) {
-        await generateSitemapAfterUpdate(modelName, {}, event.state.invalidationObject);
+        await generateSitemapAfterUpdate(modelName, null, event.state.invalidationObject);
       },
 
-      // TODO:
-      // Test this lifecycle.
       async beforeDeleteMany(event) {
         if (!cachingEnabled) return;
 
@@ -82,7 +78,7 @@ const subscribeLifecycleMethods = async (modelName) => {
       },
 
       async afterDeleteMany(event) {
-        await generateSitemapAfterUpdate(modelName, {}, event.state.invalidationObject);
+        await generateSitemapAfterUpdate(modelName, null, event.state.invalidationObject);
       },
     });
   } else {

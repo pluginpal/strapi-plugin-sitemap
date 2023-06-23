@@ -146,17 +146,21 @@ const getLocalizationIds = async (contentType, ids) => {
  * @param {obj} config - The config
  * @param {string} type - The content type
  * @param {object} queryFilters - The query filters
+ * @param {object} ids - Skip the query, just pass the ids
  *
  * @returns {object} The invalidation object.
  */
-const composeInvalidationObject = async (config, type, queryFilters) => {
-  const updatedIds = await strapi.entityService.findMany(type, {
-    filters: queryFilters,
-    fields: ['id'],
-  });
+const composeInvalidationObject = async (config, type, queryFilters, ids = []) => {
+  const mainIds = [...ids];
 
-  const mainIds = [];
-  updatedIds.map((page) => mainIds.push(page.id));
+  if (ids.length === 0) {
+    const updatedIds = await strapi.entityService.findMany(type, {
+      filters: queryFilters,
+      fields: ['id'],
+    });
+    updatedIds.map((page) => mainIds.push(page.id));
+  }
+
   const mainLocaleIds = await getLocalizationIds(type, mainIds);
 
   // Add the updated entity.
@@ -185,14 +189,14 @@ const composeInvalidationObject = async (config, type, queryFilters) => {
           invalidationObject[contentType] = {};
         }
 
-        const ids = [];
-        pagesToUpdate.map((page) => ids.push(page.id));
-        const localeIds = await getLocalizationIds(contentType, ids);
+        const relatedIds = [];
+        pagesToUpdate.map((page) => relatedIds.push(page.id));
+        const relatedLocaleIds = await getLocalizationIds(contentType, relatedIds);
 
         invalidationObject[contentType] = {
           ids: [
-            ...localeIds,
-            ...ids,
+            ...relatedLocaleIds,
+            ...relatedIds,
           ],
         };
       }
