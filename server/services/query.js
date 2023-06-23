@@ -119,45 +119,52 @@ const getPages = async (config, contentType, ids) => {
  * Query the IDs of the corresponding localization entities.
  *
  * @param {obj} contentType - The content type
- * @param {number} id - A page id
+ * @param {array} ids - Page ids
  *
  * @returns {object} The pages.
  */
-const getLocalizationIds = async (contentType, id) => {
+const getLocalizationIds = async (contentType, ids) => {
   const isLocalized = strapi.contentTypes[contentType].pluginOptions?.i18n?.localized;
-  const ids = [];
+  const localizationIds = [];
 
   if (isLocalized) {
     const response = await strapi.entityService.findMany(contentType, {
-      filters: { localizations: id },
+      filters: { localizations: ids },
       locale: 'all',
       fields: ['id'],
     });
 
-    response.map((localization) => ids.push(localization.id));
+    response.map((localization) => localizationIds.push(localization.id));
   }
 
-  return ids;
+  return localizationIds;
 };
 
 /**
  * Compose the object used to invalide a part of the cache.
  *
  * @param {obj} config - The config
- * @param {string} updatedType - The content type
- * @param {number} updatedId - A page id
+ * @param {string} type - The content type
+ * @param {object} queryFilters - The query filters
  *
  * @returns {object} The invalidation object.
  */
-const composeInvalidationObject = async (config, updatedType, updatedId) => {
-  const mainLocaleIds = await getLocalizationIds(updatedType, updatedId);
+const composeInvalidationObject = async (config, type, queryFilters) => {
+  const updatedIds = await strapi.entityService.findMany(type, {
+    filters: queryFilters,
+    fields: ['id'],
+  });
+
+  const mainIds = [];
+  updatedIds.map((page) => mainIds.push(page.id));
+  const mainLocaleIds = await getLocalizationIds(type, mainIds);
 
   // Add the updated entity.
   const invalidationObject = {
-    [updatedType]: {
+    [type]: {
       ids: [
         ...mainLocaleIds,
-        updatedId,
+        ...mainIds,
       ],
     },
   };
@@ -167,27 +174,27 @@ const composeInvalidationObject = async (config, updatedType, updatedId) => {
     const relations = Object.keys(getRelationsFromConfig(config.contentTypes[contentType]));
 
     await Promise.all(relations.map(async (relation) => {
-      if (strapi.contentTypes[contentType].attributes[relation].target === updatedType) {
+      if (strapi.contentTypes[contentType].attributes[relation].target === type) {
+
         const pagesToUpdate = await strapi.entityService.findMany(contentType, {
-          filters: {
-            [relation]: updatedId,
-          },
+          filters: { [relation]: mainIds },
           fields: ['id'],
         });
 
+        if (pagesToUpdate.length > 0 && !invalidationObject[contentType]) {
+          invalidationObject[contentType] = {};
+        }
 
-        if (pagesToUpdate.length > 0) invalidationObject[contentType] = {};
+        const ids = [];
+        pagesToUpdate.map((page) => ids.push(page.id));
+        const localeIds = await getLocalizationIds(contentType, ids);
 
-        await Promise.all(pagesToUpdate.map(async (page) => {
-          const localeIds = await getLocalizationIds(contentType, page.id);
-
-          invalidationObject[contentType] = {
-            ids: [
-              ...localeIds,
-              page.id,
-            ],
-          };
-        }));
+        invalidationObject[contentType] = {
+          ids: [
+            ...localeIds,
+            ...ids,
+          ],
+        };
       }
     }));
   }));
