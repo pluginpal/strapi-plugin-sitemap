@@ -21,7 +21,11 @@ describe('Caching utilities', () => {
     };
 
     test('Should format and invalidate the cache for specific ids of content type', () => {
-      const formattedCache = formatCache(cache, 'api::page.page', [2, 3]);
+      const formattedCache = formatCache(cache, {
+        'api::page.page': {
+          ids: [2, 3],
+        },
+      });
       expect(formattedCache).toEqual([
         { url: "/test/page/1" },
         { url: "/test/category/1" },
@@ -29,7 +33,9 @@ describe('Caching utilities', () => {
     });
 
     test('Should format and invalidate the cache for an entire content type', () => {
-      const formattedCache = formatCache(cache, 'api::page.page');
+      const formattedCache = formatCache(cache, {
+        'api::page.page': {},
+      });
       expect(formattedCache).toEqual([
         { url: "/test/category/1" },
       ]);
