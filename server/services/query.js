@@ -225,16 +225,23 @@ const createSitemap = async (sitemapString, name, delta) => {
   });
 
   if (sitemap[0]) {
-    await strapi.entityService.delete('plugin::sitemap.sitemap', sitemap[0].id);
+    await strapi.entityService.update('plugin::sitemap.sitemap', sitemap[0].id, {
+      data: {
+        sitemap_string: sitemapString,
+        name,
+        delta,
+      },
+    });
+  } else {
+    await strapi.entityService.create('plugin::sitemap.sitemap', {
+      data: {
+        sitemap_string: sitemapString,
+        name,
+        delta,
+      },
+    });
   }
 
-  await strapi.entityService.create('plugin::sitemap.sitemap', {
-    data: {
-      sitemap_string: sitemapString,
-      name,
-      delta,
-    },
-  });
 };
 
 /**
