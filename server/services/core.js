@@ -193,23 +193,30 @@ const saveSitemap = async (filename, sitemap) => {
  const getSitemapStream = async (urlCount) => {
   const config = await getService('settings').getConfig();
   const LIMIT = strapi.config.get('plugin.sitemap.limit');
+  const enableXsl = strapi.config.get('plugin.sitemap.xsl');
   const { serverUrl } = getConfigUrls(strapi.config);
+
+  const xslObj = {};
+
+  if (enableXsl) {
+    xslObj.xslUrl = 'xsl/sitemap.xsl';
+  }
 
   if (urlCount <= LIMIT) {
     return new SitemapStream({
       hostname: config.hostname,
-      xslUrl: "xsl/sitemap.xsl",
+      ...xslObj,
     });
   } else {
 
     return new SitemapAndIndexStream({
       limit: LIMIT,
-      xslUrl: "xsl/sitemap.xsl",
+      ...xslObj,
       lastmodDateOnly: false,
       getSitemapStream: (i) => {
         const sitemapStream = new SitemapStream({
           hostname: config.hostname,
-          xslUrl: "xsl/sitemap.xsl",
+        ...xslObj,
         });
         const delta = i + 1;
         const path = `api/sitemap/index.xml?page=${delta}`;

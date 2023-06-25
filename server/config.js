@@ -4,6 +4,7 @@ module.exports = {
   default: {
     autoGenerate: false,
     caching: true,
+    xsl: true,
     limit: 45000,
     allowedFields: ['id', 'uid'],
     excludedTypes: [
