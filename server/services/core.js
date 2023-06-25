@@ -175,7 +175,13 @@ const createSitemapEntries = async (invalidationObject) => {
 const saveSitemap = async (filename, sitemap) => {
   await streamToPromise(sitemap)
     .then(async (sm) => {
-      await getService('query').createSitemap(sm.toString(), 'default', 0);
+      try {
+        await getService('query').createSitemap(sm.toString(), 'default', 0);
+        strapi.log.info(logMessage(`The sitemap XML has been generated. It can be accessed on /api/sitemap/index.xml.`));
+      } catch (e) {
+        strapi.log.error(logMessage(`Something went wrong while trying to write the sitemap XML to the database. ${e}`));
+        throw new Error();
+      }
     })
     .catch((err) => {
       strapi.log.error(logMessage(`Something went wrong while trying to build the sitemap with streamToPromise. ${err}`));
