@@ -3,7 +3,7 @@
 module.exports = {
   default: {
     autoGenerate: false,
-    caching: false,
+    caching: true,
     limit: 45000,
     allowedFields: ['id', 'uid'],
     excludedTypes: [

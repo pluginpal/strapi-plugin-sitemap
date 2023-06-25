@@ -235,6 +235,7 @@ const saveSitemap = async (filename, sitemap) => {
  */
 const createSitemap = async (cache, invalidationObject) => {
   const cachingEnabled = strapi.config.get('plugin.sitemap.caching');
+  const autoGenerationEnabled = strapi.config.get('plugin.sitemap.autoGenerate');
 
   try {
     const {
@@ -259,7 +260,7 @@ const createSitemap = async (cache, invalidationObject) => {
     allEntries.map((sitemapEntry) => sitemap.write(sitemapEntry));
     sitemap.end();
 
-    if (cachingEnabled) {
+    if (cachingEnabled && autoGenerationEnabled) {
       if (!cache) {
         await getService('query').createSitemapCache(cacheEntries, 'default');
       } else {
