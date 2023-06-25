@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { useNotification } from '@strapi/helper-plugin';
 
@@ -15,8 +15,11 @@ import Header from '../../components/Header';
 import Info from '../../components/Info';
 
 import { getAllowedFields, getContentTypes, getSettings, getSitemapInfo, getLanguages } from '../../state/actions/Sitemap';
+import Loader from '../../components/Loader';
 
 const App = () => {
+  const loading = useSelector((state) => state.getIn(['sitemap', 'loading'], false));
+
   const dispatch = useDispatch();
   const toggleNotification = useNotification();
 
@@ -29,7 +32,8 @@ const App = () => {
   }, [dispatch]);
 
   return (
-    <div>
+    <div style={{ position: 'relative' }}>
+      {loading && <Loader fullPage />}
       <Header />
       <Info />
       <Tabs />

@@ -22,9 +22,11 @@ import {
   GET_SITEMAP_INFO_SUCCEEDED,
   ON_CHANGE_CUSTOM_ENTRY,
   GET_ALLOWED_FIELDS_SUCCEEDED,
+  SET_LOADING_STATE,
 } from '../../../config/constants';
 
 const initialState = fromJS({
+  loading: false,
   info: {},
   allowedFields: {},
   settings: Map({}),
@@ -107,6 +109,9 @@ export default function sitemapReducer(state = initialState, action) {
     case GET_ALLOWED_FIELDS_SUCCEEDED:
       return state
         .update('allowedFields', () => action.fields);
+    case SET_LOADING_STATE:
+      return state
+        .update('loading', () => action.loading);
     default:
       return state;
   }

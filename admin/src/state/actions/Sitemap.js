@@ -24,6 +24,7 @@
   GET_SITEMAP_INFO_SUCCEEDED,
   ON_CHANGE_CUSTOM_ENTRY,
   GET_ALLOWED_FIELDS_SUCCEEDED,
+  SET_LOADING_STATE,
 } from '../../config/constants';
 
 import getTrad from '../../helpers/getTrad';
@@ -96,9 +97,11 @@ export function discardModifiedContentTypes() {
 export function generateSitemap(toggleNotification) {
   return async function(dispatch) {
     try {
+      dispatch(setLoading(true));
       const { message } = await request('/sitemap', { method: 'GET' });
       dispatch(getSitemapInfo());
       toggleNotification({ type: 'success', message });
+      dispatch(setLoading(false));
     } catch (err) {
       toggleNotification({ type: 'warning', message: { id: 'notification.error' } });
     }
@@ -215,3 +218,10 @@ export function getAllowedFieldsSucceeded(fields) {
     fields,
   };
 }
+
+export function setLoading(loading) {
+  return {
+    type: SET_LOADING_STATE,
+    loading,
+  };
+};
