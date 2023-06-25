@@ -12,14 +12,14 @@ const { logMessage, getService, formatCache, mergeCache } = require('../utils');
 /**
  * Get a formatted array of different language URLs of a single page.
  *
+ * @param {object} config - The config object.
  * @param {object} page - The entity.
  * @param {string} contentType - The model of the entity.
  * @param {string} defaultURL - The default URL of the different languages.
  *
  * @returns {array} The language links.
  */
-const getLanguageLinks = async (page, contentType, defaultURL) => {
-  const config = await getService('settings').getConfig();
+const getLanguageLinks = async (config, page, contentType, defaultURL) => {
   if (!page.localizations) return null;
 
   const links = [];
@@ -57,15 +57,15 @@ const getLanguageLinks = async (page, contentType, defaultURL) => {
 /**
  * Get a formatted sitemap entry object for a single page.
  *
+ * @param {object} config - The config object.
  * @param {object} page - The entity.
  * @param {string} contentType - The model of the entity.
  * @param {bool} excludeDrafts - Whether to exclude drafts.
  *
  * @returns {object} The sitemap entry data.
  */
-const getSitemapPageData = async (page, contentType) => {
+const getSitemapPageData = async (config, page, contentType) => {
   let locale = page.locale || 'und';
-  const config = await getService('settings').getConfig();
 
   // Return when there is no pattern for the page.
   if (
@@ -89,7 +89,7 @@ const getSitemapPageData = async (page, contentType) => {
   const pageData = {
     lastmod: page.updatedAt,
     url: url,
-    links: await getLanguageLinks(page, contentType, url),
+    links: await getLanguageLinks(config, page, contentType, url),
     changefreq: config.contentTypes[contentType]['languages'][locale].changefreq || 'monthly',
     priority: parseFloat(config.contentTypes[contentType]['languages'][locale].priority) || 0.5,
   };
@@ -104,31 +104,29 @@ const getSitemapPageData = async (page, contentType) => {
 /**
  * Get array of sitemap entries based on the plugins configurations.
  *
- * @param {string} type - Query only entities of this type.
- * @param {array} ids - Query only these ids.
- * @param {bool} excludeDrafts - Whether to exclude drafts.
+ * @param {object} invalidationObject - An object containing the types and ids to invalidate
  *
  * @returns {object} The cache and regular entries.
  */
-const createSitemapEntries = async (type, ids) => {
+const createSitemapEntries = async (invalidationObject) => {
   const config = await getService('settings').getConfig();
   const sitemapEntries = [];
   const cacheEntries = {};
 
   // Collection entries.
   await Promise.all(Object.keys(config.contentTypes).map(async (contentType) => {
-    if (type && type !== contentType) {
+    if (invalidationObject && !Object.keys(invalidationObject).includes(contentType)) {
       return;
     }
 
     cacheEntries[contentType] = {};
 
     // Query all the pages
-    const pages = await getService('query').getPages(config, contentType, ids);
+    const pages = await getService('query').getPages(config, contentType, invalidationObject?.[contentType]?.ids);
 
     // Add formatted sitemap page data to the array.
-    await Promise.all(pages.map(async (page) => {
-      const pageData = await getSitemapPageData(page, contentType);
+    await Promise.all(pages.map(async (page, i) => {
+      const pageData = await getSitemapPageData(config, page, contentType);
       if (pageData) {
         sitemapEntries.push(pageData);
 
@@ -136,6 +134,7 @@ const createSitemapEntries = async (type, ids) => {
         cacheEntries[contentType][page.id] = pageData;
       }
     }));
+
   }));
 
 
@@ -230,22 +229,20 @@ const saveSitemap = async (filename, sitemap) => {
  * The main sitemap generation service.
  *
  * @param {array} cache - The cached JSON
- * @param {string} contentType - Content type to refresh
- * @param {array} ids - IDs to refresh
+ * @param {object} invalidationObject - An object containing the types and ids to invalidate
  *
  * @returns {void}
  */
-const createSitemap = async (cache, contentType, ids) => {
+const createSitemap = async (cache, invalidationObject) => {
   const cachingEnabled = strapi.config.get('plugin.sitemap.caching');
 
   try {
     const {
       sitemapEntries,
       cacheEntries,
-    } = await createSitemapEntries(contentType, ids);
-
+    } = await createSitemapEntries(invalidationObject);
     // Format cache to regular entries
-    const formattedCache = formatCache(cache, contentType, ids);
+    const formattedCache = formatCache(cache, invalidationObject);
 
     const allEntries = [
       ...sitemapEntries,
@@ -256,8 +253,6 @@ const createSitemap = async (cache, contentType, ids) => {
       strapi.log.info(logMessage(`No sitemap XML was generated because there were 0 URLs configured.`));
       return;
     }
-
-    await getService('query').deleteSitemap('default');
 
     const sitemap = await getSitemapStream(allEntries.length);
 

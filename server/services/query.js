@@ -119,25 +119,91 @@ const getPages = async (config, contentType, ids) => {
  * Query the IDs of the corresponding localization entities.
  *
  * @param {obj} contentType - The content type
- * @param {number} id - A page id
+ * @param {array} ids - Page ids
  *
  * @returns {object} The pages.
  */
-const getLocalizationIds = async (contentType, id) => {
+const getLocalizationIds = async (contentType, ids) => {
   const isLocalized = strapi.contentTypes[contentType].pluginOptions?.i18n?.localized;
-  const ids = [];
+  const localizationIds = [];
 
   if (isLocalized) {
     const response = await strapi.entityService.findMany(contentType, {
-      filters: { localizations: id },
+      filters: { localizations: ids },
       locale: 'all',
       fields: ['id'],
     });
 
-    response.map((localization) => ids.push(localization.id));
+    response.map((localization) => localizationIds.push(localization.id));
   }
 
-  return ids;
+  return localizationIds;
+};
+
+/**
+ * Compose the object used to invalide a part of the cache.
+ *
+ * @param {obj} config - The config
+ * @param {string} type - The content type
+ * @param {object} queryFilters - The query filters
+ * @param {object} ids - Skip the query, just pass the ids
+ *
+ * @returns {object} The invalidation object.
+ */
+const composeInvalidationObject = async (config, type, queryFilters, ids = []) => {
+  const mainIds = [...ids];
+
+  if (ids.length === 0) {
+    const updatedIds = await strapi.entityService.findMany(type, {
+      filters: queryFilters,
+      fields: ['id'],
+    });
+    updatedIds.map((page) => mainIds.push(page.id));
+  }
+
+  const mainLocaleIds = await getLocalizationIds(type, mainIds);
+
+  // Add the updated entity.
+  const invalidationObject = {
+    [type]: {
+      ids: [
+        ...mainLocaleIds,
+        ...mainIds,
+      ],
+    },
+  };
+
+  // Add all pages that have a relation to the updated entity.
+  await Promise.all(Object.keys(config.contentTypes).map(async (contentType) => {
+    const relations = Object.keys(getRelationsFromConfig(config.contentTypes[contentType]));
+
+    await Promise.all(relations.map(async (relation) => {
+      if (strapi.contentTypes[contentType].attributes[relation].target === type) {
+
+        const pagesToUpdate = await strapi.entityService.findMany(contentType, {
+          filters: { [relation]: mainIds },
+          fields: ['id'],
+        });
+
+        if (pagesToUpdate.length > 0 && !invalidationObject[contentType]) {
+          invalidationObject[contentType] = {};
+        }
+
+        const relatedIds = [];
+        pagesToUpdate.map((page) => relatedIds.push(page.id));
+        const relatedLocaleIds = await getLocalizationIds(contentType, relatedIds);
+
+        invalidationObject[contentType] = {
+          ids: [
+            ...relatedLocaleIds,
+            ...relatedIds,
+          ],
+        };
+      }
+    }));
+  }));
+
+  return invalidationObject;
 };
 
 /**
@@ -159,16 +225,23 @@ const createSitemap = async (sitemapString, name, delta) => {
   });
 
   if (sitemap[0]) {
-    await strapi.entityService.delete('plugin::sitemap.sitemap', sitemap[0].id);
+    await strapi.entityService.update('plugin::sitemap.sitemap', sitemap[0].id, {
+      data: {
+        sitemap_string: sitemapString,
+        name,
+        delta,
+      },
+    });
+  } else {
+    await strapi.entityService.create('plugin::sitemap.sitemap', {
+      data: {
+        sitemap_string: sitemapString,
+        name,
+        delta,
+      },
+    });
   }
 
-  await strapi.entityService.create('plugin::sitemap.sitemap', {
-    data: {
-      sitemap_string: sitemapString,
-      name,
-      delta,
-    },
-  });
 };
 
 /**
@@ -282,6 +355,8 @@ const getSitemapCache = async (name) => {
 };
 
 module.exports = () => ({
+  getFieldsFromConfig,
+  getRelationsFromConfig,
   getPages,
   getLocalizationIds,
   createSitemap,
@@ -290,4 +365,5 @@ module.exports = () => ({
   createSitemapCache,
   updateSitemapCache,
   getSitemapCache,
+  composeInvalidationObject,
 });
