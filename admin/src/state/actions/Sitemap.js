@@ -224,4 +224,4 @@ export function setLoading(loading) {
     type: SET_LOADING_STATE,
     loading,
   };
-};
+}
