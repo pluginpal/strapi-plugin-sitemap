@@ -1,9 +1,10 @@
 'use strict';
 
-const { logMessage } = require('./utils');
+const { logMessage, getService } = require('./utils');
 
 module.exports = async () => {
   const sitemap = strapi.plugin('sitemap');
+  const cron = strapi.config.get('plugin.sitemap.cron');
 
   try {
     // Give the public role permissions to access the public API endpoints.
@@ -47,6 +48,19 @@ module.exports = async () => {
     ];
     await strapi.admin.services.permission.actionProvider.registerMany(actions);
 
+    // Schedule cron to generate the sitemap
+    if (cron) {
+      strapi.cron.add({
+        generateSitemap: {
+          task: async ({ strapi }) => {
+            await getService('core').createSitemap();
+          },
+          options: {
+            rule: cron,
+          },
+        },
+      });
+    }
   } catch (error) {
     strapi.log.error(logMessage(`Bootstrap failed with error "${error.message}".`));
   }

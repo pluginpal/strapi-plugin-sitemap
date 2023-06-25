@@ -5,6 +5,7 @@ module.exports = {
     autoGenerate: false,
     caching: true,
     xsl: true,
+    cron: '0 0 0 * * *',
     limit: 45000,
     allowedFields: ['id', 'uid'],
     excludedTypes: [

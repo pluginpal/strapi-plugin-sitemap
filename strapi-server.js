@@ -1,5 +1,6 @@
 'use strict';
 
+const destroy = require('./server/bootstrap');
 const bootstrap = require('./server/bootstrap');
 const register = require('./server/register');
 const services = require('./server/services');
@@ -10,6 +11,7 @@ const contentTypes = require('./server/content-types');
 
 module.exports = () => {
   return {
+    destroy,
     bootstrap,
     register,
     routes,
