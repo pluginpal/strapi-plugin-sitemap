@@ -3,11 +3,8 @@
 const fs = require('fs');
 const _ = require('lodash');
 const path = require("path");
-const xml2js = require('xml2js');
 
-const { getService, logMessage } = require('../utils');
-
-const parser = new xml2js.Parser({ attrkey: "ATTR" });
+const { getService } = require('../utils');
 
 /**
  * Sitemap.js controller
@@ -62,21 +59,17 @@ module.exports = {
   },
 
   info: async (ctx) => {
-    const sitemap = await getService('query').getSitemap('default', 0);
+    const sitemap = await getService('query').getSitemap('default', 0, ['link_count', 'updated_at', 'type']);
     const sitemapInfo = {};
 
     if (sitemap) {
-      const xmlString = sitemap.sitemap_string;
-
-      parser.parseString(xmlString, (error, result) => {
-        if (error) {
-          strapi.log.error(logMessage(`An error occurred while trying to parse the sitemap XML to json. ${error}`));
-          throw new Error();
-        } else {
-          sitemapInfo.urls = _.get(result, 'urlset.url.length') || 0;
-          sitemapInfo.sitemaps = _.get(result, 'sitemapindex.sitemap.length') || 0;
-        }
-      });
+      if (sitemap.type === 'index') {
+        sitemapInfo.sitemaps = sitemap.link_count;
+        sitemapInfo.urls = 0;
+      } else {
+        sitemapInfo.urls = sitemap.link_count;
+        sitemapInfo.sitemaps = 0;
+      }
 
       sitemapInfo.updateTime = sitemap.updatedAt;
       sitemapInfo.location = '/api/sitemap/index.xml';

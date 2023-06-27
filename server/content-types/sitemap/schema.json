@@ -38,6 +38,9 @@
     "delta": {
       "type": "integer",
       "default": 1
+    },
+    "link_count": {
+      "type": "integer"
     }
   }
 }

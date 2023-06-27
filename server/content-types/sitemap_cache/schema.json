@@ -26,6 +26,10 @@
       "type": "string",
       "default": "default",
       "required": true
+    },
+    "sitemap_id": {
+      "type": "integer",
+      "required": true
     }
   }
 }

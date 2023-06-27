@@ -7,6 +7,7 @@
 const { getConfigUrls } = require('@strapi/utils/lib');
 const { SitemapStream, streamToPromise, SitemapAndIndexStream } = require('sitemap');
 const { isEmpty } = require('lodash');
+
 const { logMessage, getService, formatCache, mergeCache } = require('../utils');
 
 /**
@@ -169,15 +170,20 @@ const createSitemapEntries = async (invalidationObject) => {
  *
  * @param {string} filename - The file name.
  * @param {SitemapStream} sitemap - The SitemapStream instance.
+ * @param {bool} isIndex - Is a sitemap index
  *
  * @returns {void}
  */
-const saveSitemap = async (filename, sitemap) => {
-  await streamToPromise(sitemap)
+const saveSitemap = async (filename, sitemap, isIndex) => {
+  return streamToPromise(sitemap)
     .then(async (sm) => {
       try {
-        await getService('query').createSitemap(sm.toString(), 'default', 0);
-        strapi.log.info(logMessage(`The sitemap XML has been generated. It can be accessed on /api/sitemap/index.xml.`));
+        return await getService('query').createSitemap({
+          sitemap_string: sm.toString(),
+          name: 'default',
+          delta: 0,
+          type: isIndex ? 'index' : 'default_hreflang',
+        });
       } catch (e) {
         strapi.log.error(logMessage(`Something went wrong while trying to write the sitemap XML to the database. ${e}`));
         throw new Error();
@@ -209,13 +215,13 @@ const saveSitemap = async (filename, sitemap) => {
   }
 
   if (urlCount <= LIMIT) {
-    return new SitemapStream({
+    return [new SitemapStream({
       hostname: config.hostname,
       ...xslObj,
-    });
+    }), false];
   } else {
 
-    return new SitemapAndIndexStream({
+    return [new SitemapAndIndexStream({
       limit: LIMIT,
       ...xslObj,
       lastmodDateOnly: false,
@@ -229,12 +235,17 @@ const saveSitemap = async (filename, sitemap) => {
 
         streamToPromise(sitemapStream)
           .then((sm) => {
-            getService('query').createSitemap(sm.toString(), 'default', delta);
+            getService('query').createSitemap({
+              sitemap_string: sm.toString(),
+              name: 'default',
+              type: 'default_hreflang',
+              delta,
+            });
           });
 
         return [new URL(path, serverUrl || 'http://localhost:1337').toString(), sitemapStream];
       },
-    });
+    }), true];
   }
 };
 
@@ -268,22 +279,25 @@ const createSitemap = async (cache, invalidationObject) => {
       return;
     }
 
-    const sitemap = await getSitemapStream(allEntries.length);
+    await getService('query').deleteSitemap('default');
+
+    const [sitemap, isIndex] = await getSitemapStream(allEntries.length);
 
     allEntries.map((sitemapEntry) => sitemap.write(sitemapEntry));
     sitemap.end();
 
+    const sitemapId = await saveSitemap('default', sitemap, isIndex);
+
     if (cachingEnabled && autoGenerationEnabled) {
       if (!cache) {
-        await getService('query').createSitemapCache(cacheEntries, 'default');
+        getService('query').createSitemapCache(cacheEntries, 'default', sitemapId);
       } else {
         const newCache = mergeCache(cache, cacheEntries);
-        await getService('query').updateSitemapCache(newCache, 'default');
+        getService('query').updateSitemapCache(newCache, 'default', sitemapId);
       }
     }
 
-    await saveSitemap('default', sitemap);
-
+    strapi.log.info(logMessage(`The sitemap XML has been generated. It can be accessed on /api/sitemap/index.xml.`));
   } catch (err) {
     strapi.log.error(logMessage(`Something went wrong while trying to build the SitemapStream. ${err}`));
     throw new Error();

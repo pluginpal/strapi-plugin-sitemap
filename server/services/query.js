@@ -1,6 +1,13 @@
+/* eslint-disable camelcase */
+
 'use strict';
 
-const { noLimit, getService } = require("../utils");
+const { get } = require('lodash');
+const xml2js = require('xml2js');
+
+const parser = new xml2js.Parser({ attrkey: "ATTR" });
+
+const { noLimit, getService, logMessage } = require("../utils");
 
 /**
  * Query service.
@@ -207,57 +214,21 @@ const composeInvalidationObject = async (config, type, queryFilters, ids = []) =
 };
 
 /**
- * Create a sitemap in the database
- *
- * @param {string} sitemapString - The sitemapString
- * @param {string} name - The name of the sitemap
- * @param {number} delta - The delta of the sitemap
- *
- * @returns {void}
- */
-const createSitemap = async (sitemapString, name, delta) => {
-  const sitemap = await strapi.entityService.findMany('plugin::sitemap.sitemap', {
-    filters: {
-      name,
-      delta,
-    },
-    fields: ['id'],
-  });
-
-  if (sitemap[0]) {
-    await strapi.entityService.update('plugin::sitemap.sitemap', sitemap[0].id, {
-      data: {
-        sitemap_string: sitemapString,
-        name,
-        delta,
-      },
-    });
-  } else {
-    await strapi.entityService.create('plugin::sitemap.sitemap', {
-      data: {
-        sitemap_string: sitemapString,
-        name,
-        delta,
-      },
-    });
-  }
-
-};
-
-/**
  * Get a sitemap from the database
  *
  * @param {string} name - The name of the sitemap
  * @param {number} delta - The delta of the sitemap
+ * @param {array} fields - The fields array
  *
  * @returns {void}
  */
-const getSitemap = async (name, delta) => {
+const getSitemap = async (name, delta, fields = ['sitemap_string']) => {
   const sitemap = await strapi.entityService.findMany('plugin::sitemap.sitemap', {
     filters: {
       name,
       delta,
     },
+    fields,
   });
 
   return sitemap[0];
@@ -284,14 +255,56 @@ const deleteSitemap = async (name) => {
 };
 
 /**
+ * Create a sitemap in the database
+ *
+ * @param {obj} data - The sitemap data
+ *
+ * @returns {void}
+ */
+const createSitemap = async (data) => {
+  const {
+    name,
+    delta,
+    type,
+    sitemap_string,
+  } = data;
+
+  let linkCount = null;
+
+  parser.parseString(sitemap_string, (error, result) => {
+    if (error) {
+      strapi.log.error(logMessage(`An error occurred while trying to parse the sitemap XML to json. ${error}`));
+      throw new Error();
+    } else if (type === 'index') {
+        linkCount = get(result, 'sitemapindex.sitemap.length') || 0;
+    } else {
+      linkCount = get(result, 'urlset.url.length') || 0;
+    }
+  });
+
+  const sitemap = await strapi.entityService.create('plugin::sitemap.sitemap', {
+    data: {
+      sitemap_string,
+      name,
+      delta,
+      type,
+      link_count: linkCount,
+    },
+  });
+
+  return sitemap.id;
+};
+
+/**
  * Create a sitemap_cache in the database
  *
  * @param {string} sitemapJson - The sitemap JSON
  * @param {string} name - The name of the sitemap
+ * @param {number} sitemapId - The id of the sitemap
  *
  * @returns {void}
  */
-const createSitemapCache = async (sitemapJson, name) => {
+const createSitemapCache = async (sitemapJson, name, sitemapId) => {
   const sitemap = await strapi.entityService.findMany('plugin::sitemap.sitemap-cache', {
     filters: {
       name,
@@ -306,6 +319,7 @@ const createSitemapCache = async (sitemapJson, name) => {
   await strapi.entityService.create('plugin::sitemap.sitemap-cache', {
     data: {
       sitemap_json: sitemapJson,
+      sitemap_id: sitemapId,
       name,
     },
   });
@@ -316,10 +330,11 @@ const createSitemapCache = async (sitemapJson, name) => {
  *
  * @param {string} sitemapJson - The sitemap JSON
  * @param {string} name - The name of the sitemap
+ * @param {number} sitemapId - The id of the sitemap
  *
  * @returns {void}
  */
-const updateSitemapCache = async (sitemapJson, name) => {
+const updateSitemapCache = async (sitemapJson, name, sitemapId) => {
   const sitemap = await strapi.entityService.findMany('plugin::sitemap.sitemap-cache', {
     filters: {
       name,
@@ -331,6 +346,7 @@ const updateSitemapCache = async (sitemapJson, name) => {
     await strapi.entityService.update('plugin::sitemap.sitemap-cache', sitemap[0].id, {
       data: {
         sitemap_json: sitemapJson,
+        sitemap_id: sitemapId,
         name,
       },
     });
