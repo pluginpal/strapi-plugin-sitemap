@@ -21,7 +21,11 @@ const noLimit = async (strapi, queryString, parameters, limit = 5000) => {
       limit: limit,
       start: (i * limit),
     });
-    entries = [...chunk, ...entries];
+    if (chunk.id) {
+      entries = [chunk, ...entries];
+    } else {
+      entries = [...chunk, ...entries];
+    }
   }
 
   return entries;
