@@ -43,6 +43,25 @@ const getAllowedFields = (contentType, allowedFields = []) => {
             fields.push(`${fieldName}.${subFieldName}`);
           }
         });
+      } else if (
+        field.type === 'component'
+        && field.component
+        && field.repeatable !== true // TODO: implement repeatable components (#78).
+      ) {
+        const relation = strapi.components[field.component];
+
+        if (
+          fieldTypes.includes('id')
+          && !fields.includes(`${fieldName}.id`)
+        ) {
+          fields.push(`${fieldName}.id`);
+        }
+
+        Object.entries(relation.attributes).map(([subFieldName, subField]) => {
+          if (subField.type === fieldType || subFieldName === fieldType) {
+            fields.push(`${fieldName}.${subFieldName}`);
+          }
+        });
       }
     });
   });
