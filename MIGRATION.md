@@ -3,6 +3,10 @@
 	
 ## From 2.x to 3.x
 
+### Requirements
+
+You need to be running **Strapi v4.12 or higher** to run v3.
+
 ### Migration steps
 
 The following manual steps will have to be done when migrating.
