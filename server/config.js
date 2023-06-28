@@ -2,11 +2,11 @@
 
 module.exports = {
   default: {
-    autoGenerate: false,
-    caching: true,
-    xsl: true,
     cron: '0 0 0 * * *',
     limit: 45000,
+    xsl: true,
+    autoGenerate: false,
+    caching: true,
     allowedFields: ['id', 'uid'],
     excludedTypes: [
       'admin::permission',
