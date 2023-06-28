@@ -59,6 +59,15 @@ The cron can be altered or disabled through plugin config.
 Because of that, the auto generation option will be **disabled by default**.
 You can still enable auto generation through plugin config.
 
+#### Configuration page
+
+The sitemap configuration page in Strapi admin has been moved to the **Settings** section of your Strapi app.<br />
+From now on it can be accessed on the following path:
+
+```
+/admin/settings/sitemap
+```
+
 #### Sitemap indexes
 
 Large sitemaps (larger then 45.000 urls) will automatically be split up in to seperate sitemaps. <br />
