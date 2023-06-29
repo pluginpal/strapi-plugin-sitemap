@@ -1,6 +1,6 @@
 {
   "name": "strapi-plugin-sitemap",
-  "version": "2.0.10",
+  "version": "3.0.0",
   "description": "Generate a highly customizable sitemap XML in Strapi CMS.",
   "strapi": {
     "displayName": "Sitemap",
@@ -14,10 +14,23 @@
     "strapi-sitemap": "./bin/strapi-sitemap"
   },
   "scripts": {
-    "eslint": "eslint --max-warnings=0 './**/*.{js,jsx}'",
-    "eslint:fix": "eslint --fix './**/*.{js,jsx}'",
-    "test:unit": "jest --verbose",
-    "plugin:install": "yarn install && rm -rf node_modules/@strapi/helper-plugin"
+    "build": "tsc --outDir build && yarn build:copy-files",
+    "build:install": "cp package.json build && cp yarn.lock build && cd build && yarn --frozen-lockfile --unsafe-perm --production",
+    "build:copy-files": "copyfiles -u 1 xsl/**/* build/xsl/",
+    "develop": "yarn develop:copy-files && tsc -w",
+    "develop:copy-files": "copyfiles -u 1 xsl/**/* build/xsl/",
+    "eslint": "eslint --max-warnings=0 './**/*.{js,jsx,ts,tsx}'",
+    "eslint:fix": "eslint --fix './**/*.{js,jsx,ts,tsx}'",
+    "test:install": "mv yarn.lock tmp-yarn.lock && mv package.json tmp-package.json && yarn add @types/jest typescript jest ts-jest supertest && rm -rf package.json yarn.lock && mv tmp-package.json package.json && mv tmp-yarn.lock yarn.lock",
+    "test:unit": "ENV_PATH=./playground/.env jest --verbose --runInBand",
+    "test:integration": "ENV_PATH=./playground/.env jest --verbose --runInBand --testMatch **/healthcheck.test.ts",
+    "docs:generate": "cd docs && yarn generate",
+    "docs:dev": "cd docs && yarn dev",
+    "playground:install": "cd playground && yarn install",
+    "playground:build": "cd playground && yarn build",
+    "playground:start": "cd playground && yarn start",
+    "playground:develop": "cd playground && yarn develop",
+    "playground:install-plugin": "cd playground && yarn add strapi-plugin-sitemap@'./../build'"
   },
   "dependencies": {
     "chalk": "^4.1.2",
@@ -57,6 +70,7 @@
     "@strapi/icons": "^1.4.1",
     "@strapi/utils": "^4.5.5",
     "babel-eslint": "9.0.0",
+    "copyfiles": "^2.4.1",
     "eslint": "^7.32.0",
     "eslint-config-airbnb": "^18.2.1",
     "eslint-config-react-app": "^3.0.7",
@@ -76,7 +90,8 @@
     "react-intl": "^5.20.12",
     "react-redux": "^7.2.2",
     "redux": "^4.0.5",
-    "styled-components": "^5.2.3"
+    "styled-components": "^5.2.3",
+    "typescript": "^5.1.6"
   },
   "bugs": {
     "url": "https://github.com/boazpoolman/strapi-plugin-sitemap/issues"

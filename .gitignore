@@ -8,3 +8,9 @@ package-lock.json
 .DS_Store
 npm-debug.log
 .idea
+
+# Strapi
+.strapi-updater.json
+
+# Production build
+build
