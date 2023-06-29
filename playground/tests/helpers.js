@@ -48,9 +48,6 @@ async function setupStrapi() {
     }).load();
     await waitForServer();
 
-    // Seed DB with test data.
-    await exec("ENV_PATH='./.env' yarn playground:seed");
-
     instance = strapi; // strapi is global now
   }
   return instance;
