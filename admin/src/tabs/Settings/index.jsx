@@ -68,7 +68,7 @@ const Settings = () => {
       )}
       <GridItem col={12} s={12}>
         <ToggleInput
-          hint={formatMessage({ id: 'sitemap.Settings.Field.IncludeHomepage.Description', defaultMessage: "Include a '/' entry when none is present." })}
+          hint={formatMessage({ id: 'sitemap.Settings.Field.IncludeHomepage.Description', defaultMessage: 'Include a \'/\' entry when none is present.' })}
           label={formatMessage({ id: 'sitemap.Settings.Field.IncludeHomepage.Label', defaultMessage: 'Include home page' })}
           name="includeHomepage"
           onLabel="on"

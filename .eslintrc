@@ -2,5 +2,8 @@
   "extends": ["@uncinc/eslint-config"],
   "globals": {
     "strapi": true
+  },
+  "rules": {
+    "react-hooks/exhaustive-deps": "off"
   }
 }

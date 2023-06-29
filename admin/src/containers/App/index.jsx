@@ -9,7 +9,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { CheckPagePermissions } from '@strapi/helper-plugin';
 
-import { store } from "../../helpers/configureStore";
+import { store } from '../../helpers/configureStore';
 import pluginPermissions from '../../permissions';
 import Main from '../Main';
 

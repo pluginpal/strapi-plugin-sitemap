@@ -4,41 +4,41 @@ module.exports = {
   type: 'content-api',
   routes: [
     {
-      method: "GET",
-      path: "/index.xml",
-      handler: "core.getSitemap",
+      method: 'GET',
+      path: '/index.xml',
+      handler: 'core.getSitemap',
       config: {
         policies: [],
       },
     },
     {
-      method: "GET",
-      path: "/xsl/sitemap.xsl",
-      handler: "core.getSitemapXsl",
+      method: 'GET',
+      path: '/xsl/sitemap.xsl',
+      handler: 'core.getSitemapXsl',
       config: {
         policies: [],
       },
     },
     {
-      method: "GET",
-      path: "/xsl/sortable.min.js",
-      handler: "core.getSitemapXslSortable",
+      method: 'GET',
+      path: '/xsl/sortable.min.js',
+      handler: 'core.getSitemapXslSortable',
       config: {
         policies: [],
       },
     },
     {
-      method: "GET",
-      path: "/xsl/sitemap.xsl.js",
-      handler: "core.getSitemapXslJs",
+      method: 'GET',
+      path: '/xsl/sitemap.xsl.js',
+      handler: 'core.getSitemapXslJs',
       config: {
         policies: [],
       },
     },
     {
-      method: "GET",
-      path: "/xsl/sitemap.xsl.css",
-      handler: "core.getSitemapXslCss",
+      method: 'GET',
+      path: '/xsl/sitemap.xsl.css',
+      handler: 'core.getSitemapXslCss',
       config: {
         policies: [],
       },

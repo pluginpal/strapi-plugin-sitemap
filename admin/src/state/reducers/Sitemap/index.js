@@ -37,6 +37,7 @@ const initialState = fromJS({
   modifiedCustomEntries: Map({}),
 });
 
+// eslint-disable-next-line default-param-last
 export default function sitemapReducer(state = initialState, action) {
   switch (action.type) {
     case GET_SETTINGS_SUCCEEDED:
@@ -50,9 +51,9 @@ export default function sitemapReducer(state = initialState, action) {
         .update('modifiedContentTypes', () => fromJS(action.settings.get('contentTypes')))
         .update('modifiedCustomEntries', () => fromJS(action.settings.get('customEntries')));
     case UPDATE_SETTINGS:
-        return state
-          .update('modifiedContentTypes', () => fromJS(action.settings.get('contentTypes')))
-          .updateIn(['settings', 'contentTypes'], () => fromJS(action.settings.get('contentTypes')));
+      return state
+        .update('modifiedContentTypes', () => fromJS(action.settings.get('contentTypes')))
+        .updateIn(['settings', 'contentTypes'], () => fromJS(action.settings.get('contentTypes')));
     case ON_CHANGE_CONTENT_TYPES:
       if (action.lang) {
         return state
@@ -65,8 +66,8 @@ export default function sitemapReducer(state = initialState, action) {
       return state
         .updateIn(['modifiedCustomEntries', action.url, action.key], () => action.value);
     case ON_CHANGE_SETTINGS:
-        return state
-          .updateIn(['settings', action.key], () => action.value);
+      return state
+        .updateIn(['settings', action.key], () => action.value);
     case DISCARD_ALL_CHANGES:
       return state
         .update('settings', () => state.get('initialData'))

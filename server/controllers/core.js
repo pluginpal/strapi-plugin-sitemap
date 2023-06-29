@@ -2,7 +2,7 @@
 
 const fs = require('fs');
 const _ = require('lodash');
-const path = require("path");
+const path = require('path');
 
 const { getService } = require('../utils');
 
@@ -87,31 +87,31 @@ module.exports = {
       return;
     }
 
-    ctx.response.set("content-type", 'application/xml');
+    ctx.response.set('content-type', 'application/xml');
     ctx.body = sitemap.sitemap_string;
   },
 
   getSitemapXsl: async (ctx) => {
-    const xsl = fs.readFileSync(path.resolve(__dirname, "../../xsl/sitemap.xsl"), "utf8");
-    ctx.response.set("content-type", 'application/xml');
+    const xsl = fs.readFileSync(path.resolve(__dirname, '../../xsl/sitemap.xsl'), 'utf8');
+    ctx.response.set('content-type', 'application/xml');
     ctx.body = xsl;
   },
 
   getSitemapXslJs: async (ctx) => {
-    const xsl = fs.readFileSync(path.resolve(__dirname, "../../xsl/sitemap.xsl.js"), "utf8");
-    ctx.response.set("content-type", 'text/javascript');
+    const xsl = fs.readFileSync(path.resolve(__dirname, '../../xsl/sitemap.xsl.js'), 'utf8');
+    ctx.response.set('content-type', 'text/javascript');
     ctx.body = xsl;
   },
 
   getSitemapXslSortable: async (ctx) => {
-    const xsl = fs.readFileSync(path.resolve(__dirname, "../../xsl/sortable.min.js"), "utf8");
-    ctx.response.set("content-type", 'text/javascript');
+    const xsl = fs.readFileSync(path.resolve(__dirname, '../../xsl/sortable.min.js'), 'utf8');
+    ctx.response.set('content-type', 'text/javascript');
     ctx.body = xsl;
   },
 
   getSitemapXslCss: async (ctx) => {
-    const xsl = fs.readFileSync(path.resolve(__dirname, "../../xsl/sitemap.xsl.css"), "utf8");
-    ctx.response.set("content-type", 'text/css');
+    const xsl = fs.readFileSync(path.resolve(__dirname, '../../xsl/sitemap.xsl.css'), 'utf8');
+    ctx.response.set('content-type', 'text/css');
     ctx.body = xsl;
   },
 };

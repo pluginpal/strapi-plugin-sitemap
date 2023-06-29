@@ -10,12 +10,12 @@ module.exports = async () => {
     // Give the public role permissions to access the public API endpoints.
     if (strapi.plugin('users-permissions')) {
       const roles = await strapi
-        .service("plugin::users-permissions.role")
+        .service('plugin::users-permissions.role')
         .find();
 
       const _public = await strapi
-        .service("plugin::users-permissions.role")
-        .findOne(roles.filter((role) => role.type === "public")[0].id);
+        .service('plugin::users-permissions.role')
+        .findOne(roles.filter((role) => role.type === 'public')[0].id);
 
       _public.permissions['plugin::sitemap'] = {
         controllers: {
@@ -30,7 +30,7 @@ module.exports = async () => {
       };
 
       await strapi
-        .service("plugin::users-permissions.role")
+        .service('plugin::users-permissions.role')
         .updateRole(_public.id, _public);
     }
 

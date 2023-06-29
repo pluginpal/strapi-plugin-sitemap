@@ -45,7 +45,7 @@ const getLanguageLinks = async (config, page, contentType, defaultURL) => {
     const { pattern } = config.contentTypes[contentType]['languages'][locale];
     const translationUrl = await strapi.plugins.sitemap.services.pattern.resolvePattern(pattern, translation);
     let hostnameOverride = config.hostname_overrides[translation.locale] || '';
-    hostnameOverride = hostnameOverride.replace(/\/+$/, "");
+    hostnameOverride = hostnameOverride.replace(/\/+$/, '');
     links.push({
       lang: translation.locale,
       url: `${hostnameOverride}${translationUrl}`,
@@ -84,7 +84,7 @@ const getSitemapPageData = async (config, page, contentType) => {
   const { pattern } = config.contentTypes[contentType]['languages'][locale];
   const path = await strapi.plugins.sitemap.services.pattern.resolvePattern(pattern, page);
   let hostnameOverride = config.hostname_overrides[page.locale] || '';
-  hostnameOverride = hostnameOverride.replace(/\/+$/, "");
+  hostnameOverride = hostnameOverride.replace(/\/+$/, '');
   const url = `${hostnameOverride}${path}`;
 
   const pageData = {
@@ -202,7 +202,7 @@ const saveSitemap = async (filename, sitemap, isIndex) => {
  *
  * @returns {SitemapStream} - The sitemap stream.
  */
- const getSitemapStream = async (urlCount) => {
+const getSitemapStream = async (urlCount) => {
   const config = await getService('settings').getConfig();
   const LIMIT = strapi.config.get('plugin.sitemap.limit');
   const enableXsl = strapi.config.get('plugin.sitemap.xsl');
@@ -228,7 +228,7 @@ const saveSitemap = async (filename, sitemap, isIndex) => {
       getSitemapStream: (i) => {
         const sitemapStream = new SitemapStream({
           hostname: config.hostname,
-        ...xslObj,
+          ...xslObj,
         });
         const delta = i + 1;
         const path = `api/sitemap/index.xml?page=${delta}`;
@@ -275,7 +275,7 @@ const createSitemap = async (cache, invalidationObject) => {
     ];
 
     if (isEmpty(allEntries)) {
-      strapi.log.info(logMessage(`No sitemap XML was generated because there were 0 URLs configured.`));
+      strapi.log.info(logMessage('No sitemap XML was generated because there were 0 URLs configured.'));
       return;
     }
 
@@ -297,7 +297,7 @@ const createSitemap = async (cache, invalidationObject) => {
       }
     }
 
-    strapi.log.info(logMessage(`The sitemap XML has been generated. It can be accessed on /api/sitemap/index.xml.`));
+    strapi.log.info(logMessage('The sitemap XML has been generated. It can be accessed on /api/sitemap/index.xml.'));
   } catch (err) {
     strapi.log.error(logMessage(`Something went wrong while trying to build the SitemapStream. ${err}`));
     throw new Error();

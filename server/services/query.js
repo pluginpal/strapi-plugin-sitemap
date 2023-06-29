@@ -5,9 +5,9 @@
 const { get } = require('lodash');
 const xml2js = require('xml2js');
 
-const parser = new xml2js.Parser({ attrkey: "ATTR" });
+const parser = new xml2js.Parser({ attrkey: 'ATTR' });
 
-const { noLimit, getService, logMessage } = require("../utils");
+const { noLimit, getService, logMessage } = require('../utils');
 
 /**
  * Query service.
@@ -24,7 +24,7 @@ const { noLimit, getService, logMessage } = require("../utils");
  *
  * @returns {array} The fields.
  */
-const getFieldsFromConfig = (contentType, topLevel = false, isLocalized = false, relation) => {
+const getFieldsFromConfig = (contentType, topLevel = false, isLocalized = false, relation = null) => {
   let fields = [];
 
   if (contentType) {
@@ -276,7 +276,7 @@ const createSitemap = async (data) => {
       strapi.log.error(logMessage(`An error occurred while trying to parse the sitemap XML to json. ${error}`));
       throw new Error();
     } else if (type === 'index') {
-        linkCount = get(result, 'sitemapindex.sitemap.length') || 0;
+      linkCount = get(result, 'sitemapindex.sitemap.length') || 0;
     } else {
       linkCount = get(result, 'urlset.url.length') || 0;
     }
