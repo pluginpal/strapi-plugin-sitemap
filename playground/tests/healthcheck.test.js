@@ -1,4 +1,4 @@
-import { setupStrapi, stopStrapi } from "./helpers";
+const { setupStrapi, stopStrapi } = require("./helpers");
 
 jest.setTimeout(20000);
 

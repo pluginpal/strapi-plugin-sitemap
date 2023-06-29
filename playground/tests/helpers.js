@@ -1,18 +1,18 @@
-import Strapi from "@strapi/strapi";
-import fs from "fs";
-import _ from "lodash";
+const Strapi = require("@strapi/strapi");
+const fs = require("fs");
+const _ = require("lodash");
 
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 
 let instance;
 
-export const sleep = (milliseconds) => {
+const sleep = (milliseconds) => {
   return new Promise((resolve) => setTimeout(resolve, milliseconds));
 };
 
-export const waitForServer = () =>
-  new Promise<void>((resolve, reject) => {
+const waitForServer = () =>
+  new Promise((resolve, reject) => {
     const onListen = async (error) => {
       if (error) {
         return reject(error);
@@ -39,7 +39,7 @@ export const waitForServer = () =>
 /**
  * Setups strapi for futher testing
  */
-export async function setupStrapi() {
+async function setupStrapi() {
   if (!instance) {
     /** the follwing code in copied from `./node_modules/strapi/lib/Strapi.js` */
     await Strapi({
@@ -59,7 +59,7 @@ export async function setupStrapi() {
 /**
  * Closes strapi after testing
  */
-export async function stopStrapi() {
+async function stopStrapi() {
   if (instance) {
 
     instance.destroy();
@@ -79,7 +79,7 @@ export async function stopStrapi() {
  * Returns valid JWT token for authenticated
  * @param {String | number} idOrEmail, either user id, or email
  */
-export const jwt = (idOrEmail) =>
+const jwt = (idOrEmail) =>
   strapi.plugins["users-permissions"].services.jwt.issue({
     [Number.isInteger(idOrEmail) ? "id" : "email"]: idOrEmail,
   });
@@ -91,7 +91,7 @@ export const jwt = (idOrEmail) =>
  * @param {*} newValues
  * @param {*} environment
  */
-export const updatePluginStore = async (
+const updatePluginStore = async (
   pluginName,
   key,
   newValues,
@@ -115,7 +115,7 @@ export const updatePluginStore = async (
  * @param {*} key
  * @param {*} environment
  */
-export const getPluginStore = (pluginName, key, environment = "") => {
+const getPluginStore = (pluginName, key, environment = "") => {
   const pluginStore = strapi.store({
     environment: environment,
     type: "plugin",
@@ -142,6 +142,17 @@ export const getPluginStore = (pluginName, key, environment = "") => {
     }
  * responseHasError("ApplicationError", response) // true
  */
-export const responseHasError = (errorId, response) => {
+const responseHasError = (errorId, response) => {
   return response && response.error && response.error.name === errorId;
+};
+
+module.exports = {
+  setupStrapi,
+  stopStrapi,
+  sleep,
+  waitForServer,
+  jwt,
+  updatePluginStore,
+  getPluginStore,
+  responseHasError,
 };

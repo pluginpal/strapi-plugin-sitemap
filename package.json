@@ -23,7 +23,7 @@
     "eslint:fix": "eslint --fix './**/*.{js,jsx,ts,tsx}'",
     "test:install": "mv yarn.lock tmp-yarn.lock && mv package.json tmp-package.json && yarn add @types/jest typescript jest ts-jest supertest && rm -rf package.json yarn.lock && mv tmp-package.json package.json && mv tmp-yarn.lock yarn.lock",
     "test:unit": "ENV_PATH=./playground/.env jest --verbose --runInBand",
-    "test:integration": "ENV_PATH=./playground/.env jest --verbose --runInBand --testMatch **/healthcheck.test.ts",
+    "test:integration": "ENV_PATH=./playground/.env jest --verbose --runInBand --testMatch **/healthcheck.test.js",
     "docs:generate": "cd docs && yarn generate",
     "docs:dev": "cd docs && yarn dev",
     "playground:install": "cd playground && yarn install",
