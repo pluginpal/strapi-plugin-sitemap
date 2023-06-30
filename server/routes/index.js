@@ -5,5 +5,5 @@ const contentApi = require('./content-api');
 
 module.exports = {
   admin: adminRoutes,
-  "content-api": contentApi,
+  'content-api': contentApi,
 };

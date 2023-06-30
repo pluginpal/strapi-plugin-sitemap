@@ -11,7 +11,7 @@ export default () => {
     document.addEventListener('focusin', handleFocusIn);
     return () => {
       document.removeEventListener('focusin', handleFocusIn);
-  };
+    };
   }, []);
 
   return active;

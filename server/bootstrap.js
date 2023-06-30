@@ -10,28 +10,32 @@ module.exports = async () => {
     // Give the public role permissions to access the public API endpoints.
     if (strapi.plugin('users-permissions')) {
       const roles = await strapi
-        .service("plugin::users-permissions.role")
+        .service('plugin::users-permissions.role')
         .find();
 
-      const _public = await strapi
-        .service("plugin::users-permissions.role")
-        .findOne(roles.filter((role) => role.type === "public")[0].id);
+      const publicId = roles.filter((role) => role.type === 'public')[0]?.id;
 
-      _public.permissions['plugin::sitemap'] = {
-        controllers: {
-          core: {
-            getSitemap: { enabled: true },
-            getSitemapXsl: { enabled: true },
-            getSitemapXslCss: { enabled: true },
-            getSitemapXslJs: { enabled: true },
-            getSitemapXslSortable: { enabled: true },
+      if (publicId) {
+        const _public = await strapi
+          .service('plugin::users-permissions.role')
+          .findOne(publicId);
+
+        _public.permissions['plugin::sitemap'] = {
+          controllers: {
+            core: {
+              getSitemap: { enabled: true },
+              getSitemapXsl: { enabled: true },
+              getSitemapXslCss: { enabled: true },
+              getSitemapXslJs: { enabled: true },
+              getSitemapXslSortable: { enabled: true },
+            },
           },
-        },
-      };
+        };
 
-      await strapi
-        .service("plugin::users-permissions.role")
-        .updateRole(_public.id, _public);
+        await strapi
+          .service('plugin::users-permissions.role')
+          .updateRole(_public.id, _public);
+      }
     }
 
     // Load lifecycle methods for auto generation of sitemap.

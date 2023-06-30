@@ -6,7 +6,7 @@ import pluginPermissions from './permissions';
 // import getTrad from './helpers/getTrad';
 
 const pluginDescription = pluginPkg.strapi.description || pluginPkg.description;
-  const { name } = pluginPkg.strapi;
+const { name } = pluginPkg.strapi;
 
 export default {
   register(app) {

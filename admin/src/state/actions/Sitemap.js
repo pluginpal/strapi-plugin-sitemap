@@ -5,10 +5,10 @@
  *
  */
 
- import { request } from '@strapi/helper-plugin';
- import { Map } from 'immutable';
+import { request } from '@strapi/helper-plugin';
+import { Map } from 'immutable';
 
- import {
+import {
   SUBMIT_MODAL,
   ON_CHANGE_CONTENT_TYPES,
   ON_CHANGE_SETTINGS,

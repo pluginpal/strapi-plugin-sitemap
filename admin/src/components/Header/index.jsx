@@ -33,7 +33,7 @@ const Header = () => {
     <Box background="neutral100">
       <HeaderLayout
         primaryAction={(
-          <Box style={{ display: "flex" }}>
+          <Box style={{ display: 'flex' }}>
             <Button
               onClick={handleCancel}
               disabled={disabled}

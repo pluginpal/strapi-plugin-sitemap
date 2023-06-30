@@ -1,6 +1,6 @@
 'use strict';
 
-const { logMessage } = require("../utils");
+const { logMessage } = require('../utils');
 
 /**
  * Pattern service.
@@ -84,8 +84,9 @@ const getAllowedFields = (contentType, allowedFields = []) => {
  *
  * @returns {array} The fields.
  */
-const getFieldsFromPattern = (pattern, topLevel = false, relation) => {
+const getFieldsFromPattern = (pattern, topLevel = false, relation = null) => {
   let fields = pattern.match(/[[\w\d.]+]/g); // Get all substrings between [] as array.
+  // eslint-disable-next-line prefer-regex-literals
   fields = fields.map((field) => RegExp(/(?<=\[)(.*?)(?=\])/).exec(field)[0]); // Strip [] from string.
 
   if (relation) {
@@ -121,22 +122,22 @@ const getRelationsFromPattern = (pattern) => {
  * @returns {string} The path.
  */
 
- const resolvePattern = async (pattern, entity) => {
+const resolvePattern = async (pattern, entity) => {
   const fields = getFieldsFromPattern(pattern);
 
   fields.map((field) => {
     const relationalField = field.split('.').length > 1 ? field.split('.') : null;
 
-      if (!relationalField) {
-        pattern = pattern.replace(`[${field}]`, entity[field] || '');
-      } else if (Array.isArray(entity[relationalField[0]])) {
-        strapi.log.error(logMessage('Something went wrong whilst resolving the pattern.'));
-      } else if (typeof entity[relationalField[0]] === 'object') {
-        pattern = pattern.replace(`[${field}]`, entity[relationalField[0]] && entity[relationalField[0]][relationalField[1]] ? entity[relationalField[0]][relationalField[1]] : '');
-      }
+    if (!relationalField) {
+      pattern = pattern.replace(`[${field}]`, entity[field] || '');
+    } else if (Array.isArray(entity[relationalField[0]])) {
+      strapi.log.error(logMessage('Something went wrong whilst resolving the pattern.'));
+    } else if (typeof entity[relationalField[0]] === 'object') {
+      pattern = pattern.replace(`[${field}]`, entity[relationalField[0]] && entity[relationalField[0]][relationalField[1]] ? entity[relationalField[0]][relationalField[1]] : '');
+    }
   });
 
-  pattern = pattern.replace(/\/+/g, "/"); // Remove duplicate forward slashes.
+  pattern = pattern.replace(/\/+/g, '/'); // Remove duplicate forward slashes.
   pattern = pattern.startsWith('/') ? pattern : `/${pattern}`; // Make sure we only have on forward slash.
   return pattern;
 };
