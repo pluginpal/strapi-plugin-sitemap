@@ -16,6 +16,18 @@ global.strapi = {
       },
     },
   },
+  components: {
+    'core.link': {
+      attributes: {
+        slugField: {
+          type: 'uid',
+        },
+        textField: {
+          type: 'text',
+        },
+      },
+    },
+  },
 };
 
 describe('Pattern service', () => {
@@ -48,6 +60,16 @@ describe('Pattern service', () => {
             target: 'another-test-relation:target:api',
             relation: 'oneToOne',
           },
+          component: {
+            type: 'component',
+            component: 'core.link',
+            repeatable: false,
+          },
+          otherComponent: {
+            type: 'component',
+            component: 'core.link',
+            repeatable: true,
+          },
         },
       };
 
@@ -57,9 +79,14 @@ describe('Pattern service', () => {
       expect(result).toContain('urlField');
       expect(result).toContain('slugField');
       expect(result).not.toContain('textField');
+      expect(result).not.toContain('relation');
       expect(result).toContain('anotherRelation.id');
       expect(result).toContain('anotherRelation.slugField');
       expect(result).not.toContain('anotherRelation.textField');
+      expect(result).not.toContain('components');
+      expect(result).toContain('component.id');
+      expect(result).toContain('component.slugField');
+      expect(result).not.toContain('component.textField');
     });
   });
   describe('Get fields from pattern', () => {
