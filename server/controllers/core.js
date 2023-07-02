@@ -75,6 +75,8 @@ module.exports = {
       sitemapInfo.location = '/api/sitemap/index.xml';
     }
 
+    sitemapInfo.hasPro = !!strapi.plugin('sitemap-pro');
+
     ctx.send(sitemapInfo);
   },
 

@@ -69,7 +69,7 @@ const CollectionForm = (props) => {
   });
 
   return (
-    <form style={{ borderTop: '1px solid #f5f5f6', paddingTop: 30 }}>
+    <form>
       <Grid gap={6}>
         <GridItem col={6} s={12}>
           <Grid gap={4}>

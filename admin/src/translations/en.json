@@ -46,6 +46,8 @@
   "Settings.Field.SelectLanguage.SameForAll": "Same for all languages",
 
   "Modal.HeaderTitle": "Sitemap entries",
+  "Modal.Tabs.Basic.Title": "Basic settings",
+  "Modal.Tabs.Advanced.Title": "Advanced settings",
 
   "HostnameOverrides.Label": "Hostname overrides",
   "HostnameOverrides.Description": "Set a hostname for URLs of the {langcode} locale",

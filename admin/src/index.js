@@ -16,6 +16,11 @@ export default {
       isReady: true,
       isRequired: pluginPkg.strapi.required || false,
       name,
+      injectionZones: {
+        modal: {
+          advanced: [],
+        },
+      },
     });
 
     app.createSettingSection(
