@@ -4,6 +4,12 @@
     "strapi": true
   },
   "rules": {
-    "react-hooks/exhaustive-deps": "off"
+    "react-hooks/exhaustive-deps": "off",
+    "arrow-body-style": "off",
+    "no-param-reassign": "off",
+    "array-callback-return": "off",
+    "consistent-return": "off",
+    "max-len": "off",
+    "@typescript-eslint/unbound-method": "warn"
   }
 }

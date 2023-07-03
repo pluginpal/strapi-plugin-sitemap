@@ -1,8 +1,6 @@
-'use strict';
+import { logMessage, getService } from './utils';
 
-const { logMessage, getService } = require('./utils');
-
-module.exports = async () => {
+export default async () => {
   const sitemap = strapi.plugin('sitemap');
   const cron = strapi.config.get('plugin.sitemap.cron');
 
@@ -16,11 +14,11 @@ module.exports = async () => {
       const publicId = roles.filter((role) => role.type === 'public')[0]?.id;
 
       if (publicId) {
-        const _public = await strapi
+        const publicRole = await strapi
           .service('plugin::users-permissions.role')
           .findOne(publicId);
 
-        _public.permissions['plugin::sitemap'] = {
+        publicRole.permissions['plugin::sitemap'] = {
           controllers: {
             core: {
               getSitemap: { enabled: true },
@@ -34,7 +32,7 @@ module.exports = async () => {
 
         await strapi
           .service('plugin::users-permissions.role')
-          .updateRole(_public.id, _public);
+          .updateRole(publicRole.id, publicRole);
       }
     }
 

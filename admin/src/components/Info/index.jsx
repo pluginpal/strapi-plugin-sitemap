@@ -39,7 +39,10 @@ const Info = () => {
             <Button
               onClick={() => {
                 document.getElementById('tabs-2-tab').click();
-                setTimeout(() => document.querySelector('input[name="hostname"]').focus(), 0);
+                setTimeout(() => {
+                  const hostnameInput = document.querySelector('input[name="hostname"]');
+                  hostnameInput.focus();
+                }, 0);
               }}
               variant="secondary"
               style={{ marginTop: '15px' }}
@@ -49,7 +52,8 @@ const Info = () => {
           </div>
         </div>
       );
-    } else if (sitemapInfo.size === 0) {
+    }
+    if (sitemapInfo.size === 0) {
       return (
         <div>
           <Typography variant="delta" style={{ marginBottom: '10px' }}>
