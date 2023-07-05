@@ -5,7 +5,7 @@
 
 ### Requirements
 
-You need to be running **Strapi v4.12 or higher** to run v3.
+You need to be running **Strapi v4.11.4 or higher** to run v3.
 
 ### Migration steps
 
