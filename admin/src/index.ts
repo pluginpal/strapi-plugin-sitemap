@@ -5,6 +5,14 @@ import CMEditViewExclude from './components/CMEditViewExclude';
 import pluginPermissions from './permissions';
 // import getTrad from './helpers/getTrad';
 
+declare global {
+  interface Window {
+    strapi: {
+      backendURL: string
+    };
+  }
+}
+
 const pluginDescription = pluginPkg.strapi.description || pluginPkg.description;
 const { name } = pluginPkg.strapi;
 

@@ -1,4 +1,6 @@
-export default {
+import { PluginConfig, SitemapConfig } from '../types/config';
+
+const config: PluginConfig<SitemapConfig> = {
   default: {
     cron: '0 0 0 * * *',
     limit: 45000,
@@ -24,3 +26,5 @@ export default {
   },
   validator() {},
 };
+
+export default config;

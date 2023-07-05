@@ -1,8 +1,11 @@
+import { StrapiContext } from 'strapi-typed';
+
+import { SitemapConfig } from '../types/config';
 import { logMessage, getService } from './utils';
 
-export default async () => {
+export default async ({ strapi }: StrapiContext) => {
   const sitemap = strapi.plugin('sitemap');
-  const cron = strapi.config.get('plugin.sitemap.cron');
+  const { cron } = strapi.config.get('plugin.sitemap') as SitemapConfig;
 
   try {
     // Give the public role permissions to access the public API endpoints.
@@ -11,7 +14,7 @@ export default async () => {
         .service('plugin::users-permissions.role')
         .find();
 
-      const publicId = roles.filter((role) => role.type === 'public')[0]?.id;
+      const publicId = roles.filter((role) => role.type === 'public')[0]?.id as number;
 
       if (publicId) {
         const publicRole = await strapi
@@ -54,7 +57,7 @@ export default async () => {
     if (cron) {
       strapi.cron.add({
         generateSitemap: {
-          task: async ({ strapi }) => {
+          task: async () => {
             await getService('core').createSitemap();
           },
           options: {

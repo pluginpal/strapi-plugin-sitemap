@@ -35,6 +35,7 @@
     "./server/**/*",
     "./admin/**/*",
     "./bin/**/*",
+    "./types/**/*",
     "./strapi-server.*",
     "./strapi-admin.*"
   ],
