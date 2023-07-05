@@ -14,9 +14,10 @@
     "strapi-sitemap": "./bin/strapi-sitemap"
   },
   "scripts": {
-    "build": "tsc --outDir build && yarn build:copy-files",
+    "build": "tsc --outDir build && yarn build:copy-files && yarn build:clean",
     "build:install": "cp package.json build && cp yarn.lock build && cd build && yarn --frozen-lockfile --unsafe-perm --production",
-    "build:copy-files": "copyfiles -u 1 xsl/**/* build/xsl/",
+    "build:copy-files": "copyfiles -u 1 xsl/**/* build/xsl/ && copyfiles -u 1 bin/**/* build/bin/ && copyfiles LICENSE.md build/",
+    "build:clean": "rimraf build/tsconfig.tsbuildinfo",
     "develop": "yarn develop:copy-files && tsc -w",
     "develop:copy-files": "copyfiles -u 1 xsl/**/* build/xsl/",
     "eslint": "eslint --max-warnings=0 './**/*.{js,jsx,ts,tsx}'",
@@ -52,14 +53,6 @@
       "email": "info@boazpoolman.nl",
       "url": "https://github.com/boazpoolman"
     }
-  ],
-  "files": [
-    "admin",
-    "server",
-    "public",
-    "bin",
-    "strapi-admin.js",
-    "strapi-server.js"
   ],
   "peerDependencies": {
     "@strapi/strapi": "^4.0.0"
