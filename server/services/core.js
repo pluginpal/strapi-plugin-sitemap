@@ -4,7 +4,7 @@
  * Sitemap service.
  */
 
-const { getConfigUrls } = require('@strapi/utils/lib');
+const { getConfigUrls } = require('@strapi/utils');
 const { SitemapStream, streamToPromise, SitemapAndIndexStream } = require('sitemap');
 const { isEmpty } = require('lodash');
 
