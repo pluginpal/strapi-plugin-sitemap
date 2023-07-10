@@ -16,10 +16,10 @@
   "scripts": {
     "build": "tsc --outDir build && yarn build:copy-files && yarn build:clean",
     "build:install": "cp package.json build && cp yarn.lock build && cd build && yarn --frozen-lockfile --unsafe-perm --production",
-    "build:copy-files": "copyfiles -u 1 xsl/**/* build/xsl/ && copyfiles -u 1 bin/**/* build/bin/ && copyfiles LICENSE.md build/",
+    "build:copy-files": "copyfiles -u 1 xsl/**/* build/xsl/ && copyfiles -u 1 bin/**/* build/bin/ && copyfiles LICENSE.md build/ && copyfiles README.md build/",
     "build:clean": "rimraf build/tsconfig.tsbuildinfo",
     "develop": "yarn develop:copy-files && tsc -w",
-    "develop:copy-files": "copyfiles -u 1 xsl/**/* build/xsl/",
+    "develop:copy-files": "copyfiles -u 1 xsl/**/* playground/src/plugins/sitemap/xsl/",
     "eslint": "eslint --max-warnings=0 './**/*.{js,jsx,ts,tsx}'",
     "eslint:fix": "eslint --fix './**/*.{js,jsx,ts,tsx}'",
     "test:install": "mv yarn.lock tmp-yarn.lock && mv package.json tmp-package.json && yarn add @types/jest typescript jest ts-jest supertest && rm -rf package.json yarn.lock && mv tmp-package.json package.json && mv tmp-yarn.lock yarn.lock",
