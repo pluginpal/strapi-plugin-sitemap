@@ -1,0 +1,35 @@
+{
+  "kind": "collectionType",
+  "collectionName": "sitemap_cache",
+  "info": {
+    "singularName": "sitemap-cache",
+    "pluralName": "sitemap-caches",
+    "displayName": "sitemap-cache"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {
+    "content-manager": {
+      "visible": false
+    },
+    "content-type-builder": {
+      "visible": false
+    }
+  },
+  "attributes": {
+    "sitemap_json": {
+      "type": "json",
+      "required": true
+    },
+    "name": {
+      "type": "string",
+      "default": "default",
+      "required": true
+    },
+    "sitemap_id": {
+      "type": "integer",
+      "required": true
+    }
+  }
+}

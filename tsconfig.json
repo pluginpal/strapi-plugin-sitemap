@@ -1,0 +1,47 @@
+{
+  "compilerOptions": {
+    "rootDir": "./",
+    "outDir": "playground/src/plugins/sitemap",
+    "lib": ["DOM", "ES2015"],
+    "target": "esnext",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "allowJs": true,
+    "resolveJsonModule": true,
+    "strict": false,
+    "declaration": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "incremental": true,
+    "noEmitOnError": true,
+    "typeRoots": [
+      "node_modules/@types",
+      "types",
+      "server/strapi.d.ts"
+    ],
+    "jsx": "react",
+    "allowSyntheticDefaultImports": true,
+    // "noUnusedLocals": true,
+    // "noUnusedParameters": true,
+    // "removeComments": true,
+    // "sourceMap": true,
+    // "declarationMap": true,
+    // "downlevelIteration": true,
+    // "incremental": true,
+    // "skipLibCheck": true,
+  },
+  "include": [
+    "./server/**/*",
+    "./admin/**/*",
+    "./bin/**/*",
+    "./strapi-server.*",
+    "./strapi-admin.*"
+  ],
+  "exclude": [
+    "**/node_modules/**/*",
+    "**/build/**/*",
+    "**/playground/**/*",
+    "**/__tests__/**/*"
+  ]
+}

@@ -1,13 +1,12 @@
 import { prefixPluginTranslations } from '@strapi/helper-plugin';
 import pluginPkg from '../../package.json';
 import pluginId from './helpers/pluginId';
-import pluginIcon from './components/PluginIcon';
 import CMEditViewExclude from './components/CMEditViewExclude';
 import pluginPermissions from './permissions';
 // import getTrad from './helpers/getTrad';
 
 const pluginDescription = pluginPkg.strapi.description || pluginPkg.description;
-  const { name } = pluginPkg.strapi;
+const { name } = pluginPkg.strapi;
 
 export default {
   register(app) {
@@ -17,24 +16,40 @@ export default {
       isReady: true,
       isRequired: pluginPkg.strapi.required || false,
       name,
+      injectionZones: {
+        modal: {
+          advanced: [],
+        },
+      },
     });
 
-    app.addMenuLink({
-      to: `/plugins/${pluginId}`,
-      icon: pluginIcon,
-      intlLabel: {
-        id: `${pluginId}.plugin.name`,
-        defaultMessage: 'Sitemap',
+    app.createSettingSection(
+      {
+        id: pluginId,
+        intlLabel: {
+          id: `${pluginId}.plugin.name.extended`,
+          defaultMessage: 'Sitemap plugin',
+        },
       },
-      Component: async () => {
-        const component = await import(
-          /* webpackChunkName: "sitemap-settings-page" */ './containers/App'
-        );
+      [
+        {
+          intlLabel: {
+            id: `${pluginId}.Settings.Configuration.Title`,
+            defaultMessage: 'Configuration',
+          },
+          id: 'sitemap-page',
+          to: `/settings/${pluginId}`,
+          Component: async () => {
+            const component = await import(
+              /* webpackChunkName: "sitemap-settings-page" */ './containers/App'
+            );
 
-        return component;
-      },
-      permissions: pluginPermissions['menu-link'],
-    });
+            return component;
+          },
+          permissions: pluginPermissions['settings'],
+        },
+      ],
+    );
   },
   bootstrap(app) {
     app.injectContentManagerComponent('editView', 'informations', {

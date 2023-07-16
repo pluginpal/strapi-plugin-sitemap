@@ -4,8 +4,7 @@ We want this community to be friendly and respectful to each other. Please follo
 
 ## Development Workflow
 
-To get started with the project, make sure you have a local instance of Strapi running.
-See the [Strapi docs](https://github.com/strapi/strapi#getting-started) on how to setup a Strapi project.
+This plugin provides a local development instance of Strapi to develop it's features. We call this instance `playground` and it can be found in the playground folder in the root of the project. For that reason it is not needed to have your own Strapi instance running to work on this plugin. Just clone the repo and you're ready to go!
 
 #### 1. Fork the [repository](https://github.com/boazpoolman/strapi-plugin-sitemap)
 
@@ -14,8 +13,7 @@ See the [Strapi docs](https://github.com/strapi/strapi#getting-started) on how t
 #### 2. Clone from your repository into the plugins folder
 
 ```bash
-cd YOUR_STRAPI_PROJECT/src/plugins
-git clone git@github.com:YOUR_USERNAME/strapi-plugin-sitemap.git sitemap
+git clone git@github.com:YOUR_USERNAME/strapi-plugin-sitemap.git
 ```
 
 #### 3. Install the dependencies
@@ -23,41 +21,38 @@ git clone git@github.com:YOUR_USERNAME/strapi-plugin-sitemap.git sitemap
 Go to the plugin and install it's dependencies.
 
 ```bash
-cd YOUR_STRAPI_PROJECT/src/plugins/sitemap/ && yarn plugin:install
+cd strapi-plugin-sitemap && yarn install
 ```
 
-#### 4. Enable the plugin
+#### 4. Install the dependencies of the playground instance
 
-Add the following lines to the `config/plugins.js` file in your Strapi project.
-
-```
-const path = require('path');
-// ...
-{
-  'sitemap': {
-    enabled: true,
-    resolve: path.resolve(__dirname, '../src/plugins/sitemap'),
-  },
-}
-```
-
-#### 5. Rebuild your Strapi project
-
-Rebuild your strapi project to build the admin part of the plugin.
+Run the following command
 
 ```bash
-cd YOUR_STRAPI_PROJECT && yarn build
+yarn playground:install
 ```
 
-#### 6. Running the administration panel in development mode
+#### 5. Run the typescript compiler of the plugin 
 
-**Start the administration panel server for development**
+As the plugin is written using Typescript you will have to run the typescript compiler during development. Run the following command:
 
 ```bash
-cd YOUR_STRAPI_PROJECT && yarn develop --watch-admin
+yarn develop
 ```
 
-The administration panel will be available at http://localhost:8080/admin
+#### 6. Start the playground instance
+
+Leave the typescript compiler running, open up a new terminal window and browse back to the root of the plugin repo. Run the following command:
+
+```bash
+yarn playground:develop
+```
+
+This will start the playground instance that will have the plugin installed by default. Browse to http://localhost:1337 and create a test admin user to log in to the playground.
+
+#### 7. Start your contribution!
+
+You can now start working on your contribution. With the typescript compiler on every change to the plugin should lead to a reload of the Strapi instance in which you can then test your change. If you had trouble setting up this testing environment please feel free to report an issue on Github.
 
 ### Commit message convention
 
@@ -73,10 +68,8 @@ We follow the [conventional commits specification](https://www.conventionalcommi
 ### Linting and tests
 
 [ESLint](https://eslint.org/)
-[Yamllint](https://github.com/adrienverge/yamllint)
-[Jest](https://jestjs.io/)
 
-We use [ESLint](https://eslint.org/) for linting and formatting js code, [Yamllint](https://github.com/adrienverge/yamllint) for linting and formatting yaml code, and [Jest](https://jestjs.io/) for testing.
+We use [ESLint](https://eslint.org/) for linting and formatting the code, and [Jest](https://jestjs.io/) for testing.
 
 ### Scripts
 
@@ -85,6 +78,7 @@ The `package.json` file contains various scripts for common tasks:
 - `yarn eslint`: lint files with ESLint.
 - `yarn eslint:fix`: auto-fix ESLint issues.
 - `yarn test:unit`: run unit tests with Jest.
+- `yarn test:integration`: run integration tests with Jest.
 
 ### Sending a pull request
 

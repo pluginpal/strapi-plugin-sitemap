@@ -1,4 +1,6 @@
 {
+  "Settings.Configuration.Title": "Configuration",
+
   "Button.Save": "Save",
   "Button.Cancel": "Cancel",
   "Button.Add": "Add",
@@ -44,6 +46,8 @@
   "Settings.Field.SelectLanguage.SameForAll": "Same for all languages",
 
   "Modal.HeaderTitle": "Sitemap entries",
+  "Modal.Tabs.Basic.Title": "Basic settings",
+  "Modal.Tabs.Advanced.Title": "Advanced settings",
 
   "HostnameOverrides.Label": "Hostname overrides",
   "HostnameOverrides.Description": "Set a hostname for URLs of the {langcode} locale",
@@ -55,6 +59,7 @@
   "Info.SitemapIsPresent.Title": "Sitemap XML is present",
   "Info.SitemapIsPresent.LastUpdatedAt": "Last updated at:",
   "Info.SitemapIsPresent.AmountOfURLs": "Amount of URLs:",
+  "Info.SitemapIsPresent.AmountOfSitemaps": "Amount of sitemaps:",
 
   "EditView.ExcludeFromSitemap": "Exclude from Sitemap",
 
@@ -67,5 +72,6 @@
   "notification.success.submit": "Settings have been updated",
   "notification.success.generate": "Sitemap has been generated",
 
-  "plugin.name": "Sitemap"
+  "plugin.name": "Sitemap",
+  "plugin.name.extended": "Sitemap plugin"
 }

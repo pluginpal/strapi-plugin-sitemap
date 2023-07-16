@@ -24,11 +24,14 @@ This is a fork of the work done by the original author. This fork includes an ad
 ## ✨ Features
 
 - **Multilingual** (Implements `rel="alternate"` with `@strapi/plugin-i18n`)
-- **Auto-updating** (Uses lifecycle methods to keep the sitemap XML up-to-date)
 - **URL bundles** (Bundle URLs by type and add them to the sitemap XML)
 - **Dynamic paths** (Implements URL patterns in which you can inject dynamic fields)
+- **Virtual sitemap** (Sitemaps served from the database)
+- **Cron regeneration** (Automatically scheduled cron job for regeneration)
+- **Sitemap indexes** (Paginated sitemap indexes for large URL sets)
 - **Exclude URLs** (Exclude specified URLs from the sitemap)
 - **Custom URLs** (URLs of pages which are not managed in Strapi)
+- **CLI** (CLI for sitemap generation)
 - **Styled with XSL** (Human readable XML styling)
 
 ## ⏳ Installation
@@ -55,7 +58,7 @@ npm run build
 npm run develop
 ```
 
-The **Sitemap** plugin should appear in the **Plugins** section of Strapi sidebar after you run app again.
+The **Sitemap** plugin should now appear in the **Settings** section of your Strapi app.
 
 Enjoy 🎉
 
@@ -65,11 +68,10 @@ Complete installation requirements are the exact same as for Strapi itself and c
 
 **Supported Strapi versions**:
 
-- Strapi 4.3.2 (recently tested)
-- Strapi ^4.x (use `strapi-plugin-sitemap@^2.0.0`)
-- Strapi ^3.4.x (use `strapi-plugin-sitemap@1.2.5`)
+- Strapi ^4.11.4 (use `strapi-plugin-sitemap@^3`)
+- Strapi ^4.5.x (use `strapi-plugin-sitemap@^2`)
 
-(This plugin may work with older Strapi versions, but these are not tested nor officially supported at this time.)
+(This plugin may work with older Strapi versions, but these are not tested nor officially supported.)
 
 **We recommend always using the latest version of Strapi to start your new projects**.
 
@@ -99,15 +101,17 @@ Custom URLs will get the following XML attributes:
 To create dynamic URLs this plugin uses **URL patterns**. A URL pattern is used when adding URL bundles to the sitemap and has the following format:
 
 ```
-/pages/[my-uid-field]
+/pages/[category.slug]/[my-uid-field]
 ```
 
 Fields can be injected in the pattern by escaping them with `[]`.
 
+Also relations can be queried in the pattern like so: `[relation.fieldname]`.
+
 The following field types are by default allowed in a pattern:
 
-- id
-- uid
+- `id`
+- `uid`
 
 *Allowed field types can be altered with the `allowedFields` config. Read more about it below.*
 
@@ -126,10 +130,32 @@ This implementation is based on [Google's guidelines](https://developers.google.
 To make sure search engines are able to find the sitemap XML create a `robots.txt` file in the front-end of your website and add the following line:
 
 ```
-Sitemap: https://your-strapi-domain.com/sitemap/index.xml
+Sitemap: https://your-strapi-domain.com/api/sitemap/index.xml
 ```
 
 Read more about the `robots.txt` file [here](https://developers.google.com/search/docs/advanced/robots/create-robots-txt).
+
+## 📺 CLI
+
+This plugin comes with it's own `strapi-sitemap` CLI.
+You can add it to your project like so:
+
+```
+"scripts": {
+  // ...
+  "sitemap": "strapi-sitemap"
+},
+```
+
+You can now run the `generate` command like so:
+
+```bash
+# using yarn
+yarn sitemap generate
+
+# using npm
+npm run sitemap generate
+```
 
 ## ⚙️ Settings
 Settings can be changed in the admin section of the plugin. In the last tab (Settings) you will find the settings as described below.
@@ -183,28 +209,66 @@ module.exports = ({ env }) => ({
   'sitemap': {
     enabled: true,
     config: {
-      autoGenerate: true,
+      cron: '0 0 0 * * *',
+      limit: 45000,
+      xsl: true,
+      autoGenerate: false,
+      caching: true,
       allowedFields: ['id', 'uid'],
       excludedTypes: [],
     },
   },
 });
 ```
+### CRON
+
+To make sure the sitemap stays up-to-date this plugin will automatically schedule a cron job that generates the sitemap for you. That cron job is configured to run once a day at 00:00.
+
+If you want to change the cron interval you can alter the `cron` setting.
+
+###### Key: `cron `
+
+> `required:` NO | `type:` bool | `default:` 0 0 0 * * *
+
+### Limit
+
+When creating large sitemaps (50.000+ URLs) you might want to split the sitemap in to chunks that you bring together in a sitemap index.
+
+The limit is there to specify the maximum amount of URL a single sitemap may hold. If you try to add more URLs to a single sitemap.xml it will automatically be split up in to chunks which are brought together in a single sitemap index.
+
+###### Key: `limit `
+
+> `required:` NO | `type:` int | `default:` 45000
+
+### XSL
+
+This plugin ships with some XSL files to make your sitemaps human readable. It adds some styling and does some reordering of the links.
+
+These changes are by no means a requirement for your sitemap to be valid. It is really just there to make your sitemap look pretty.
+
+If you have a large sitemap you might encounter performance issues when accessing the sitemap.xml from the browser. In that case you can disable the XSL to fix these issues.
+
+###### Key: `xsl `
+
+> `required:` NO | `type:` bool | `default:` true
 
 ### Auto generate
 
-When adding URL bundles to your sitemap XML, and auto generate is set to true, the plugin will utilize the lifecycle methods to regenerate the sitemap  on `create`, `update` and `delete` for pages of the URL bundles type. This way your sitemap will always be up-to-date when making content changes.
+Alternatively to using cron to regenerate your sitemap, this plugin offers an automatic generation feature that will generate the sitemap through lifecycle methods. On `create`, `update` and `delete` this plugin will do a full sitemap regeneration. This way your sitemap will always be up-to-date when making content changes.
 
-You might want to disable this setting if you're experiencing performance issues. You could alternatively create a cronjob in which you generate the sitemap XML periodically. Like so:
+If you have a large sitemap the regeneration becomes an expensive task. Because of that this setting is disabled by default and it is not recommended to enable it for sitemaps with more than 1000 links.
 
-```
-// Generate the sitemap every 12 hours
-'0 */12 * * *': () => {
-  strapi.plugin('sitemap').service('core').createSitemap();
-},
-```
+Also the search engines don't even crawl your sitemap that often, so generating it once a day through cron should be suffecient.
 
 ###### Key: `autoGenerate `
+
+> `required:` NO | `type:` bool | `default:` false
+
+### Caching
+
+This setting works together with the `autoGenerate` setting. When enabled a JSON representation of the current sitemap will be stored in the database. Then, whenever the sitemap is being regenerated through lifecycles, the cache will be queried to build the sitemap instead of querying all individual (unchanged) pages.
+
+###### Key: `caching `
 
 > `required:` NO | `type:` bool | `default:` true
 
@@ -224,7 +288,7 @@ All types in this array will not be shown as an option when selecting the type o
 
 ###### Key: `excludedTypes `
 
-> `required:` NO | `type:` array | `default:` `['admin::permission', 'admin::role', 'admin::api-token', 'plugin::i18n.locale', 'plugin::users-permissions.permission', 'plugin::users-permissions.role']`
+> `required:` NO | `type:` array
 
 ## 🤝 Contributing
 

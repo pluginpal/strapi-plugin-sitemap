@@ -1,0 +1,46 @@
+{
+  "kind": "collectionType",
+  "collectionName": "sitemap",
+  "info": {
+    "singularName": "sitemap",
+    "pluralName": "sitemaps",
+    "displayName": "sitemap"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {
+    "content-manager": {
+      "visible": false
+    },
+    "content-type-builder": {
+      "visible": false
+    }
+  },
+  "attributes": {
+    "sitemap_string": {
+      "type": "text",
+      "required": true
+    },
+    "name": {
+      "type": "string",
+      "default": "default",
+      "required": true
+    },
+    "type": {
+      "type": "enumeration",
+      "enum": [
+        "default_hreflang",
+        "index"
+      ],
+      "default": "default_hreflang"
+    },
+    "delta": {
+      "type": "integer",
+      "default": 1
+    },
+    "link_count": {
+      "type": "integer"
+    }
+  }
+}

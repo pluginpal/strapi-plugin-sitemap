@@ -11,9 +11,9 @@
     <html>
       <head>
         <title>Sitemap file</title>
-        <script type="text/javascript" src="./xsl/sortable.min.js"/>
-        <script type="text/javascript" src="./xsl/sitemap.xsl.js"/>
-        <link href="./xsl/sitemap.xsl.css" type="text/css" rel="stylesheet"/>
+        <script type="text/javascript" src="xsl/sortable.min.js"/>
+        <script type="text/javascript" src="xsl/sitemap.xsl.js"/>
+        <link href="xsl/sitemap.xsl.css" type="text/css" rel="stylesheet"/>
       </head>
       <body>
         <h1>Sitemap file</h1>

@@ -20,6 +20,7 @@ const SelectContentTypes = (props) => {
       disabled={disabled}
       onChange={(newValue) => onChange(newValue)}
       value={value}
+      required
     >
       {Object.entries(contentTypes).map(([uid, { displayName }]) => {
         return <Option value={uid} key={uid}>{displayName}</Option>;

@@ -1,17 +1,38 @@
 import React, { useState, useEffect } from 'react';
 import { useIntl } from 'react-intl';
 
-import { request } from '@strapi/helper-plugin';
-import { ModalLayout, ModalFooter, ModalBody, ModalHeader, Button, Typography } from '@strapi/design-system';
+import { request, InjectionZone } from '@strapi/helper-plugin';
+
+import { useSelector } from 'react-redux';
+
+import {
+  ModalLayout,
+  ModalFooter,
+  ModalBody,
+  ModalHeader,
+  Button,
+  Typography,
+  TabGroup,
+  Tabs,
+  Tab,
+  TabPanels,
+  TabPanel,
+  Box,
+  Flex,
+  Divider,
+} from '@strapi/design-system';
 
 import CustomForm from './Custom';
 import CollectionForm from './Collection';
+import pluginId from '../../helpers/pluginId';
 
 const ModalForm = (props) => {
   const [uid, setUid] = useState('');
   const [langcode, setLangcode] = useState('und');
   const [patternInvalid, setPatternInvalid] = useState({ invalid: false });
   const { formatMessage } = useIntl();
+
+  const hasPro = useSelector((state) => state.getIn(['sitemap', 'info', 'hasPro'], false));
 
   const {
     onSubmit,
@@ -82,7 +103,31 @@ const ModalForm = (props) => {
         </Typography>
       </ModalHeader>
       <ModalBody>
-        {form()}
+        <TabGroup label="Settings" id="tabs" variant="simple">
+          {hasPro && (
+            <Box marginBottom="4">
+              <Flex>
+                <Tabs style={{ marginLeft: 'auto' }}>
+                  <Tab>{formatMessage({ id: 'sitemap.Modal.Tabs.Basic.Title', defaultMessage: 'Basic settings' })}</Tab>
+                  <Tab>{formatMessage({ id: 'sitemap.Modal.Tabs.Advanced.Title', defaultMessage: 'Advanced settings' })}</Tab>
+                </Tabs>
+              </Flex>
+
+              <Divider />
+            </Box>
+          )}
+
+          <TabPanels>
+            <TabPanel>
+              {form()}
+            </TabPanel>
+            <TabPanel>
+              <InjectionZone
+                area={`${pluginId}.modal.advanced`}
+              />
+            </TabPanel>
+          </TabPanels>
+        </TabGroup>
       </ModalBody>
       <ModalFooter
         startActions={(

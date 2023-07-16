@@ -3,11 +3,9 @@
 const fs = require('fs');
 const { values } = require('lodash');
 const _ = require('lodash');
-const xml2js = require('xml2js');
+const path = require('path');
 
-const { getService, logMessage } = require('../utils');
-
-const parser = new xml2js.Parser({ attrkey: "ATTR" });
+const { getService } = require('../utils');
 
 /**
  * Sitemap.js controller
@@ -70,26 +68,61 @@ module.exports = {
   },
 
   info: async (ctx) => {
+    const sitemap = await getService('query').getSitemap('default', 0, ['link_count', 'updated_at', 'type']);
     const sitemapInfo = {};
-    const hasSitemap = fs.existsSync('public/sitemap/index.xml');
 
-    if (hasSitemap) {
-      const xmlString = fs.readFileSync("public/sitemap/index.xml", "utf8");
-      const fileStats = fs.statSync("public/sitemap/index.xml");
+    if (sitemap) {
+      if (sitemap.type === 'index') {
+        sitemapInfo.sitemaps = sitemap.link_count;
+        sitemapInfo.urls = 0;
+      } else {
+        sitemapInfo.urls = sitemap.link_count;
+        sitemapInfo.sitemaps = 0;
+      }
 
-      parser.parseString(xmlString, (error, result) => {
-        if (error) {
-          strapi.log.error(logMessage(`An error occurred while trying to parse the sitemap XML to json. ${error}`));
-          throw new Error();
-        } else {
-          sitemapInfo.urls = _.get(result, 'urlset.url.length') || 0;
-        }
-      });
-
-      sitemapInfo.updateTime = fileStats.mtime;
-      sitemapInfo.location = '/sitemap/index.xml';
+      sitemapInfo.updateTime = sitemap.updatedAt;
+      sitemapInfo.location = '/api/sitemap/index.xml';
     }
 
+    sitemapInfo.hasPro = !!strapi.plugin('sitemap-pro');
+
     ctx.send(sitemapInfo);
+  },
+
+  getSitemap: async (ctx) => {
+    const { page = 0 } = ctx.query;
+    const sitemap = await getService('query').getSitemap('default', page);
+
+    if (!sitemap) {
+      ctx.notFound('Not found');
+      return;
+    }
+
+    ctx.response.set('content-type', 'application/xml');
+    ctx.body = sitemap.sitemap_string;
+  },
+
+  getSitemapXsl: async (ctx) => {
+    const xsl = fs.readFileSync(path.resolve(__dirname, '../../xsl/sitemap.xsl'), 'utf8');
+    ctx.response.set('content-type', 'application/xml');
+    ctx.body = xsl;
+  },
+
+  getSitemapXslJs: async (ctx) => {
+    const xsl = fs.readFileSync(path.resolve(__dirname, '../../xsl/sitemap.xsl.js'), 'utf8');
+    ctx.response.set('content-type', 'text/javascript');
+    ctx.body = xsl;
+  },
+
+  getSitemapXslSortable: async (ctx) => {
+    const xsl = fs.readFileSync(path.resolve(__dirname, '../../xsl/sortable.min.js'), 'utf8');
+    ctx.response.set('content-type', 'text/javascript');
+    ctx.body = xsl;
+  },
+
+  getSitemapXslCss: async (ctx) => {
+    const xsl = fs.readFileSync(path.resolve(__dirname, '../../xsl/sitemap.xsl.css'), 'utf8');
+    ctx.response.set('content-type', 'text/css');
+    ctx.body = xsl;
   },
 };

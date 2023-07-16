@@ -1,37 +1,31 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 
 import { useIntl } from 'react-intl';
 import { isEmpty } from 'lodash/fp';
-import styled from 'styled-components';
 
 import {
   Grid,
   GridItem,
-  TextInput,
   Select,
   Option,
-  Popover,
-  Box,
-  Stack,
   Checkbox,
   Typography,
   Flex,
-  Button
+  Button,
+  Combobox,
+  ComboboxOption,
 } from '@strapi/design-system';
 
 import SelectContentTypes from '../../SelectContentTypes';
 
 import form from '../mapper';
 import SelectLanguage from '../../SelectLanguage';
-import useActiveElement from '../../../helpers/useActiveElement';
 import SelectConditional from '../../SelectConditional';
 
 const CollectionForm = (props) => {
   const { formatMessage } = useIntl();
-  const activeElement = useActiveElement();
-  const [showPopover, setShowPopover] = useState(false);
   const [conditionCount, setConditionCount] = useState(0);
-  const patternRef = useRef();
+  const [tmpValue, setTmpValue] = useState(null);
 
   const {
     contentTypes,
@@ -55,21 +49,10 @@ const CollectionForm = (props) => {
   };
 
   useEffect(() => {
-    if (
-      modifiedState.getIn([uid, 'languages', langcode, 'pattern'], '').endsWith('[')
-      && activeElement.name === 'pattern'
-    ) {
-      setShowPopover(true);
-    } else {
-      setShowPopover(false);
-    }
-  }, [modifiedState.getIn([uid, 'languages', langcode, 'pattern'], ''), activeElement]);
-
-  useEffect(() => {
     // get the initial condition count
     let count = 0;
     while (modifiedState.getIn([uid, 'languages', langcode, `condition${count}`], '') !== '') {
-      count++;
+      count = count + 1;
     }
     setConditionCount(count);
   }, [uid, langcode]);
@@ -100,15 +83,14 @@ const CollectionForm = (props) => {
     setConditionCount(conditionCount - 1)
   };
 
-  const HoverBox = styled(Box)`
-    cursor: pointer;
-    &:hover:not([aria-disabled='true']) {
-      background: ${({ theme }) => theme.colors.primary100};
-    }
-  `;
+  const dropdownIsOpened = useCallback((value) => {
+    if (value.endsWith('[')) return true;
+    if ((value.match(/\[/g) || []).length > (value.match(/\]/g) || []).length) return true;
+    return false;
+  });
 
   return (
-    <form style={{ paddingTop: 30 }}>
+    <form>
       <Grid gap={6}>
         <GridItem col={6} s={12}>
           <Grid gap={4}>
@@ -133,45 +115,49 @@ const CollectionForm = (props) => {
         <GridItem col={6} s={12}>
           <Grid gap={4}>
             <GridItem col={12}>
-              <div ref={patternRef}>
-                <TextInput
-                  label={formatMessage({ id: 'sitemap.Settings.Field.Pattern.Label', defaultMessage: 'Pattern' })}
-                  name="pattern"
-                  value={modifiedState.getIn([uid, 'languages', langcode, 'pattern'], '')}
-                  hint={patternHint()}
-                  disabled={!uid || (contentTypes[uid].locales && !langcode)}
-                  error={patternInvalid.invalid ? patternInvalid.message : ''}
-                  placeholder="/en/pages/[id]"
-                  onChange={async (e) => {
-                    if (e.target.value.match(/^[A-Za-z0-9-_.~[\]/]*$/)) {
-                      onChange(uid, langcode, 'pattern', e.target.value);
-                      setPatternInvalid({ invalid: false });
+              <Combobox
+                autocomplete="both"
+                placeholder="/en/pages/[id]"
+                required
+                disabled={!uid || (contentTypes[uid].locales && !langcode)}
+                name="pattern"
+                label={formatMessage({ id: 'sitemap.Settings.Field.Pattern.Label', defaultMessage: 'Pattern' })}
+                error={patternInvalid.invalid ? patternInvalid.message : ''}
+                hint={patternHint()}
+                onChange={(v) => {
+                  if (modifiedState.getIn([uid, 'languages', langcode, 'pattern'], '') === v) return;
+                  const lastIndex = modifiedState.getIn([uid, 'languages', langcode, 'pattern'], '').lastIndexOf('[');
+                  onChange(uid, langcode, 'pattern', `${modifiedState.getIn([uid, 'languages', langcode, 'pattern'], '').slice(0, lastIndex)}[${v}]`);
+                  setTmpValue(null);
+                }}
+                onInputChange={(e) => {
+                  if (e.target.value.match(/^[A-Za-z0-9-_.~[\]/]*$/)) {
+                    onChange(uid, langcode, 'pattern', e.target.value);
+                    setPatternInvalid({ invalid: false });
+
+                    if (dropdownIsOpened(e.target.value)) {
+                      if (!tmpValue) {
+                        const lastIndex = e.target.value.lastIndexOf('[');
+                        setTmpValue(`${e.target.value.slice(0, lastIndex)}[`);
+                      }
+                    } else {
+                      setTmpValue(null);
                     }
-                  }}
-                />
-              </div>
-              {(patternRef && showPopover) && (
-                <Popover
-                  source={patternRef}
-                  spacing={-14}
-                  fullWidth
-                >
-                  <Stack size={1}>
-                    {allowedFields[uid].map((fieldName) => (
-                      <HoverBox
-                        key={fieldName}
-                        padding={2}
-                        onClick={() => {
-                          const newPattern = `${modifiedState.getIn([uid, 'languages', langcode, 'pattern'], '')}${fieldName}]`;
-                          onChange(uid, langcode, 'pattern', newPattern);
-                        }}
-                      >
-                        {fieldName}
-                      </HoverBox>
-                    ))}
-                  </Stack>
-                </Popover>
-              )}
+                  }
+                }}
+                textValue={modifiedState.getIn([uid, 'languages', langcode, 'pattern'], '')}
+                allowCustomValue
+                open={() => dropdownIsOpened(modifiedState.getIn([uid, 'languages', langcode, 'pattern'], ''))}
+              >
+                {allowedFields[uid]?.map((fieldName) => (
+                  <ComboboxOption
+                    value={fieldName}
+                    key={fieldName}
+                  >
+                    <span style={{ display: 'none' }}>{tmpValue}</span>{fieldName}
+                  </ComboboxOption>
+                ))}
+              </Combobox>
             </GridItem>
             {Object.keys(form).map((input) => (
               <GridItem col={12} key={input}>
@@ -204,10 +190,10 @@ const CollectionForm = (props) => {
           </Grid>
         </GridItem>
       </Grid>
-      {conditionCount === 0
-        ? <Flex direction={"column"} alignItems={"stretch"} style={{ marginTop: '3rem' }}>
-          <Flex direction={"row"} justifyContent={"space-between"}>
-            <Flex direction={"column"} justifyContent={"center"} alignItems={"flex-start"}>
+      {conditionCount === 0 ? (
+        <Flex direction="column" alignItems="stretch" style={{ marginTop: '3rem' }}>
+          <Flex direction="row" justifyContent="space-between">
+            <Flex direction="column" justifyContent="center" alignItems="flex-start">
               <Typography variant="pi" fontWeight="bold">
                 {formatMessage({ id: 'sitemap.Settings.Field.Condition.Label', defaultMessage: 'Conditional Filtering' })}
               </Typography>
@@ -215,19 +201,20 @@ const CollectionForm = (props) => {
                 {formatMessage({ id: 'sitemap.Settings.Field.Condition.Description', defaultMessage: 'Only include URLs that match the following condition.' })}
               </Typography>
             </Flex>
-            <Flex direction={"row"} alignItems={"center"} gap={2}>
+            <Flex direction="row" alignItems="center" gap={2}>
               <Button onClick={() => setConditionCount(conditionCount + 1)}>
                 {formatMessage({ id: 'sitemap.Settings.Field.Condition.Add', defaultMessage: 'Add' })}
               </Button>
-              <Button variant={"secondary"} onClick={() => handleRemoveCondition()}>
+              <Button variant="secondary" onClick={() => handleRemoveCondition()}>
                 {formatMessage({ id: 'sitemap.Settings.Field.Condition.Remove', defaultMessage: 'Remove' })}
               </Button>
             </Flex>
           </Flex>
         </Flex>
-        : <Flex direction={"column"} alignItems={"stretch"} style={{ marginTop: '3rem' }}>
-          <Flex direction={"row"} justifyContent={"space-between"} style={{ marginBottom: '2rem' }}>
-            <Flex direction={"column"} justifyContent={"center"} alignItems={"flex-start"}>
+      ) : (
+        <Flex direction="column" alignItems="stretch" style={{ marginTop: '3rem' }}>
+          <Flex direction="row" justifyContent="space-between" style={{ marginBottom: '2rem' }}>
+            <Flex direction="column" justifyContent="center" alignItems="flex-start">
               <Typography variant="pi" fontWeight="bold">
                 {formatMessage({ id: 'sitemap.Settings.Field.Condition.Label', defaultMessage: 'Conditional Filtering' })}
               </Typography>
@@ -235,11 +222,11 @@ const CollectionForm = (props) => {
                 {formatMessage({ id: 'sitemap.Settings.Field.Condition.Description', defaultMessage: 'Only include URLs that match the following conditions.' })}
               </Typography>
             </Flex>
-            <Flex direction={"row"} alignItems={"center"} gap={2}>
+            <Flex direction="row" alignItems="center" gap={2}>
               <Button onClick={() => setConditionCount(conditionCount + 1)}>
                 {formatMessage({ id: 'sitemap.Settings.Field.Condition.Add', defaultMessage: 'Add' })}
               </Button>
-              <Button variant={"secondary"} onClick={() => handleRemoveCondition()}>
+              <Button variant="secondary" onClick={() => handleRemoveCondition()}>
                 {formatMessage({ id: 'sitemap.Settings.Field.Condition.Remove', defaultMessage: 'Remove' })}
               </Button>
             </Flex>
@@ -256,10 +243,10 @@ const CollectionForm = (props) => {
                 conditionOperator={modifiedState.getIn([uid, 'languages', langcode, `conditionOperator${i}`], '')}
                 conditionValue={modifiedState.getIn([uid, 'languages', langcode, `conditionValue${i}`], '')}
               />
-            </Grid>))
-          }
+            </Grid>
+          ))}
         </Flex>
-      }
+      )}
     </form>
   );
 };

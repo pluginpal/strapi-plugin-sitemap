@@ -1,26 +1,45 @@
 'use strict';
 
-const fs = require('fs');
-const { logMessage } = require('./utils');
-const copyPublicFolder = require('./utils/copyPublicFolder');
+const { logMessage, getService } = require('./utils');
 
 module.exports = async () => {
   const sitemap = strapi.plugin('sitemap');
+  const cron = strapi.config.get('plugin.sitemap.cron');
 
   try {
-    // Load lifecycle methods for auto generation of sitemap.
-    await sitemap.service('lifecycle').loadAllLifecycleMethods();
+    // Give the public role permissions to access the public API endpoints.
+    if (strapi.plugin('users-permissions')) {
+      const roles = await strapi
+        .service('plugin::users-permissions.role')
+        .find();
 
-    // Copy the plugins /public folder to the /public/sitemap/ folder in the root of your project.
-    if (!fs.existsSync('public/sitemap/xsl/')) {
-      if (fs.existsSync('./src/extensions/sitemap/public/')) {
-        await copyPublicFolder('./src/extensions/sitemap/public/', 'public/sitemap/');
-      } else if (fs.existsSync('./src/plugins/sitemap/public/')) {
-        await copyPublicFolder('./src/plugins/sitemap/public/', 'public/sitemap/');
-      } else if (fs.existsSync('./node_modules/strapi-plugin-sitemap/public/')) {
-        await copyPublicFolder('./node_modules/strapi-plugin-sitemap/public/', 'public/sitemap/');
+      const publicId = roles.filter((role) => role.type === 'public')[0]?.id;
+
+      if (publicId) {
+        const _public = await strapi
+          .service('plugin::users-permissions.role')
+          .findOne(publicId);
+
+        _public.permissions['plugin::sitemap'] = {
+          controllers: {
+            core: {
+              getSitemap: { enabled: true },
+              getSitemapXsl: { enabled: true },
+              getSitemapXslCss: { enabled: true },
+              getSitemapXslJs: { enabled: true },
+              getSitemapXslSortable: { enabled: true },
+            },
+          },
+        };
+
+        await strapi
+          .service('plugin::users-permissions.role')
+          .updateRole(_public.id, _public);
       }
     }
+
+    // Load lifecycle methods for auto generation of sitemap.
+    await sitemap.service('lifecycle').loadAllLifecycleMethods();
 
     // Register permission actions.
     const actions = [
@@ -30,15 +49,22 @@ module.exports = async () => {
         uid: 'settings.read',
         pluginName: 'sitemap',
       },
-      {
-        section: 'plugins',
-        displayName: 'Menu link to plugin settings',
-        uid: 'menu-link',
-        pluginName: 'sitemap',
-      },
     ];
     await strapi.admin.services.permission.actionProvider.registerMany(actions);
 
+    // Schedule cron to generate the sitemap
+    if (cron) {
+      strapi.cron.add({
+        generateSitemap: {
+          task: async ({ strapi }) => {
+            await getService('core').createSitemap();
+          },
+          options: {
+            rule: cron,
+          },
+        },
+      });
+    }
   } catch (error) {
     strapi.log.error(logMessage(`Bootstrap failed with error "${error.message}".`));
   }

@@ -9,7 +9,7 @@ const _ = require('lodash');
  *
  * @returns {void}
  */
- const extendContentTypesWithExcludeField = async (strapi) => {
+const extendContentTypesWithExcludeField = async (strapi) => {
   Object.values(strapi.contentTypes).forEach((contentType) => {
     if (strapi.config.get('plugin.sitemap.excludedTypes').includes(contentType.uid)) return;
 
