@@ -122,7 +122,7 @@ const createSitemapEntries = async (invalidationObject) => {
 
     cacheEntries[contentType] = {};
 
-    const current = config.contentTypes[contentType]['languages']['und']
+    const current = config.contentTypes[contentType]['languages']['und'];
     const filters = {};
     for (let i = 0; i <= Object.keys(current).length; i++) {
       let exists = current[`condition${i}`] && current[`conditionOperator${i}`] && current[`conditionValue${i}`];

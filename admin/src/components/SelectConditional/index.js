@@ -21,8 +21,8 @@ const operators = [
   '$startsWith',
   '$endsWith',
   '$null',
-  '$notNull'
-]
+  '$notNull',
+];
 
 const SelectConditional = (props) => {
   const { formatMessage } = useIntl();
@@ -35,7 +35,7 @@ const SelectConditional = (props) => {
     onValueChange,
     condition,
     conditionOperator,
-    conditionValue
+    conditionValue,
   } = props;
 
   return (
@@ -74,7 +74,7 @@ const SelectConditional = (props) => {
           label={formatMessage({ id: 'sitemap.Settings.Field.SelectConditionValue.Label', defaultMessage: 'Value' })}
           name="conditionValue"
           hint={formatMessage({ id: 'sitemap.Settings.Field.SelectConditionValue.Description', defaultMessage: '"Text", true, 2, etc' })}
-          onChange={e => onValueChange(e.target.value)}
+          onChange={(e) => onValueChange(e.target.value)}
           value={conditionValue}
         />
       </GridItem>

@@ -1,7 +1,6 @@
 'use strict';
 
 const fs = require('fs');
-const { values } = require('lodash');
 const _ = require('lodash');
 const path = require('path');
 
@@ -42,7 +41,7 @@ module.exports = {
           if (contentType.attributes[key].type === 'relation') return false;
           if (contentType.attributes[key].private === true) return false;
           return true;
-        }) ?? []
+        }) ?? [],
       };
 
       if (strapi.plugin('i18n') && _.get(contentType, 'pluginOptions.i18n.localized')) {

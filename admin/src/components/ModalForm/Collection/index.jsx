@@ -77,10 +77,10 @@ const CollectionForm = (props) => {
   };
 
   const handleRemoveCondition = () => {
-    onChange(uid, langcode, `condition${conditionCount - 1}`, '')
-    onChange(uid, langcode, `conditionOperator${conditionCount - 1}`, '')
-    onChange(uid, langcode, `conditionValue${conditionCount - 1}`, '')
-    setConditionCount(conditionCount - 1)
+    onChange(uid, langcode, `condition${conditionCount - 1}`, '');
+    onChange(uid, langcode, `conditionOperator${conditionCount - 1}`, '');
+    onChange(uid, langcode, `conditionValue${conditionCount - 1}`, '');
+    setConditionCount(conditionCount - 1);
   };
 
   const dropdownIsOpened = useCallback((value) => {
@@ -232,7 +232,7 @@ const CollectionForm = (props) => {
             </Flex>
           </Flex>
           {Array.from(Array(conditionCount).keys()).map((i) => (
-            <Grid gap={4} style={{ marginBottom: "1rem" }}>
+            <Grid gap={4} style={{ marginBottom: '1rem' }}>
               <SelectConditional
                 disabled={!uid || (contentTypes[uid].locales && !langcode)}
                 contentType={contentTypes[uid]}
