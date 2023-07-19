@@ -7,35 +7,34 @@ import {
   Button,
 } from '@strapi/design-system';
 import { useIntl } from 'react-intl';
+import { useDispatch } from 'react-redux';
 
 import SelectConditional from '../../../SelectConditional';
+import { onChangeContentTypes } from '../../../../state/actions/Sitemap';
 
 // eslint-disable-next-line arrow-body-style
 const Filters = (props) => {
   // eslint-disable-next-line @typescript-eslint/unbound-method
   const { formatMessage } = useIntl();
+  const dispatch = useDispatch();
   const [conditionCount, setConditionCount] = React.useState(0);
   const {
     modifiedState,
     uid,
-    onChange,
     langcode,
     contentTypes,
   } = props;
 
   React.useEffect(() => {
     // get the initial condition count
-    let count = 0;
-    while (modifiedState.getIn([uid, 'languages', langcode, `condition${count}`], '') !== '') {
-      count += 1;
-    }
+    const count = Object.keys(modifiedState.getIn([uid, 'filters'], []).toJS()).length;
     setConditionCount(count);
   }, [uid, langcode]);
 
   const handleRemoveCondition = () => {
-    onChange(uid, langcode, `condition${conditionCount - 1}`, '');
-    onChange(uid, langcode, `conditionOperator${conditionCount - 1}`, '');
-    onChange(uid, langcode, `conditionValue${conditionCount - 1}`, '');
+    dispatch(onChangeContentTypes(uid, null, ['filters', conditionCount, 'field'], ''));
+    dispatch(onChangeContentTypes(uid, null, ['filters', conditionCount, 'operator'], ''));
+    dispatch(onChangeContentTypes(uid, null, ['filters', conditionCount, 'value'], ''));
     setConditionCount(conditionCount - 1);
   };
   return (
@@ -86,12 +85,12 @@ const Filters = (props) => {
               <SelectConditional
                 disabled={!uid || (contentTypes[uid].locales && !langcode)}
                 contentType={contentTypes[uid]}
-                onConditionChange={(value) => onChange(uid, langcode, `condition${i}`, value)}
-                onOperatorChange={(value) => onChange(uid, langcode, `conditionOperator${i}`, value)}
-                onValueChange={(value) => onChange(uid, langcode, `conditionValue${i}`, value)}
-                condition={modifiedState.getIn([uid, 'languages', langcode, `condition${i}`], '')}
-                conditionOperator={modifiedState.getIn([uid, 'languages', langcode, `conditionOperator${i}`], '')}
-                conditionValue={modifiedState.getIn([uid, 'languages', langcode, `conditionValue${i}`], '')}
+                onConditionChange={(value) => dispatch(onChangeContentTypes(uid, null, ['filters', String(i), 'field'], value))}
+                onOperatorChange={(value) => dispatch(onChangeContentTypes(uid, null, ['filters', String(i), 'operator'], value))}
+                onValueChange={(value) => dispatch(onChangeContentTypes(uid, null, ['filters', String(i), 'value'], value))}
+                condition={modifiedState.getIn([uid, 'filters', String(i), 'field'], '')}
+                conditionOperator={modifiedState.getIn([uid, 'filters', String(i), 'operator'], '')}
+                conditionValue={modifiedState.getIn([uid, 'filters', String(i), 'value'], '')}
               />
             </Grid>
           ))}
