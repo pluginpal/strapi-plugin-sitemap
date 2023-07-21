@@ -22,8 +22,10 @@ jobs:
         run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
       - name: Set package version
         run: yarn version --new-version "${{ steps.get_version.outputs.VERSION }}" --no-git-tag-version
+      - name: Build the plugin
+        run: yarn run build
       - name: Publish package
-        run: yarn publish --access public
+        run: cd build && yarn publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Push version bump
@@ -31,4 +33,4 @@ jobs:
         with:
           commit_message: 'chore: Bump version to ${{ steps.get_version.outputs.VERSION }}'
           file_pattern: 'package.json'
-          branch: HEAD:master
+          branch: master
