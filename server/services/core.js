@@ -206,7 +206,7 @@ const getSitemapStream = async (urlCount) => {
   const config = await getService('settings').getConfig();
   const LIMIT = strapi.config.get('plugin.sitemap.limit');
   const enableXsl = strapi.config.get('plugin.sitemap.xsl');
-  const serverUrl = getAbsoluteServerUrl(strapi.config);
+  const serverUrl = getAbsoluteServerUrl(strapi.config, true);
 
   const xslObj = {};
 
