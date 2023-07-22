@@ -123,6 +123,17 @@ For each localization of a page the `<url>` in the sitemap XML will get an extra
 
 This implementation is based on [Google's guidelines](https://developers.google.com/search/docs/advanced/crawling/localized-versions) on localized sitemaps.
 
+## 🔗 Sitemap index
+
+Large sitemaps (larger then 45.000 urls) will automatically be split up in to seperate sitemaps. <br />
+A sitemap index will be created that links to all the different sitemap chunks. <br />
+That sitemap index will be accessible on the default `/api/sitemap/index.xml` location.
+
+It is required to set the `url` in the `./config/server.js` file in your Strapi installation.
+That will be used to create the links to the different chunks.
+
+You can alter the 45.000 magic number through plugin config.
+
 ## 🤖 Robots.txt
 
 To make sure search engines are able to find the sitemap XML create a `robots.txt` file in the front-end of your website and add the following line:

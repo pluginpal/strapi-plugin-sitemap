@@ -4,7 +4,7 @@
  * Sitemap service.
  */
 
-const { getAbsoluteServerUrl } = require('@strapi/utils');
+const { getConfigUrls } = require('@strapi/utils');
 const { SitemapStream, streamToPromise, SitemapAndIndexStream } = require('sitemap');
 const { isEmpty } = require('lodash');
 
@@ -206,7 +206,7 @@ const getSitemapStream = async (urlCount) => {
   const config = await getService('settings').getConfig();
   const LIMIT = strapi.config.get('plugin.sitemap.limit');
   const enableXsl = strapi.config.get('plugin.sitemap.xsl');
-  const serverUrl = getAbsoluteServerUrl(strapi.config, true);
+  const { serverUrl } = getConfigUrls(strapi.config);
 
   const xslObj = {};
 
