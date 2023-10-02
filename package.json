@@ -1,12 +1,12 @@
 {
-  "name": "strapi-plugin-sitemap",
-  "version": "3.0.3",
-  "description": "Generate a highly customizable sitemap XML in Strapi CMS.",
+  "name": "strapi-plugin-dynamic-sitemap",
+  "version": "3.0.4",
+  "description": "Generate a highly customizable dynamic sitemap XML in Strapi CMS.",
   "strapi": {
     "displayName": "Sitemap",
     "name": "sitemap",
     "icon": "sitemap",
-    "description": "Generate a highly customizable sitemap XML in Strapi CMS.",
+    "description": "Generate a highly customizable dynamic sitemap XML in Strapi CMS.",
     "required": false,
     "kind": "plugin"
   },
@@ -40,7 +40,8 @@
     "redux-immutable": "^4.0.0",
     "redux-thunk": "^2.3.0",
     "sitemap": "^7.1.0",
-    "xml2js": "^0.5.0"
+    "xml2js": "^0.5.0",
+    "axios": "^1.4.0"
   },
   "author": {
     "name": "Boaz Poolman",
@@ -76,9 +77,9 @@
     "typescript": "^5.1.6"
   },
   "bugs": {
-    "url": "https://github.com/boazpoolman/strapi-plugin-sitemap/issues"
+    "url": "https://github.com/GoksalCosar/strapi-plugin-dynamic-sitemap/issues"
   },
-  "homepage": "https://github.com/boazpoolman/strapi-plugin-sitemap#readme",
+  "homepage": "https://github.com/GoksalCosar/strapi-plugin-dynamic-sitemap#readme",
   "engines": {
     "node": ">=16.0.0",
     "npm": ">=6.0.0"

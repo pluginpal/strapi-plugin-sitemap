@@ -1,34 +1,71 @@
-'use strict';
+"use strict";
+
+const axios = require("axios").default;
 
 const getCoreStore = () => {
-  return strapi.store({ type: 'plugin', name: 'sitemap' });
+  return strapi.store({ type: "plugin", name: "sitemap" });
 };
 
 const getService = (name) => {
-  return strapi.plugin('sitemap').service(name);
+  return strapi.plugin("sitemap").service(name);
 };
 
-const logMessage = (msg = '') => `[strapi-plugin-sitemap]: ${msg}`;
+const logMessage = (msg = "") => `[strapi-plugin-sitemap]: ${msg}`;
 
 const noLimit = async (strapi, queryString, parameters, limit = 5000) => {
-  let entries = [];
-  const amountOfEntries = await strapi.entityService.count(queryString, parameters);
+  const amountOfEntries = await strapi.entityService.count(
+    queryString,
+    parameters
+  );
 
-  for (let i = 0; i < (amountOfEntries / limit); i++) {
+  let chunk;
+  let formatedChunk = [];
+  for (let i = 0; i < amountOfEntries / limit; i++) {
     /* eslint-disable-next-line */
-    const chunk = await strapi.entityService.findMany(queryString, {
-      ...parameters,
-      limit: limit,
-      start: (i * limit),
+    chunk = await strapi.entityService.findMany(queryString, {
+      populate: {
+        route_parameters: {
+          populate: {
+            dynamic_parameter: {
+              populate: "*",
+            },
+          },
+        },
+      },
     });
-    if (chunk.id) {
-      entries = [chunk, ...entries];
-    } else {
-      entries = [...chunk, ...entries];
-    }
-  }
 
-  return entries;
+    let itemObj = {};
+    chunk.map(async (item) => {
+      item?.route_parameters.length > 0 ? (itemObj = item) : null;
+      item.route.includes(":") === false ? formatedChunk.push(item) : null;
+    });
+
+    const { parameter, dynamic_parameter } = itemObj?.route_parameters[0];
+    const slugParameter = parameter;
+
+    let result = null;
+    try {
+      result = await axios.post(dynamic_parameter?.integration?.endpoint, {
+        query: dynamic_parameter?.sitemapQuery,
+      });
+    } catch (error) {
+      console.log("error", error);
+    }
+    const resp = new Function(dynamic_parameter?.sitemapTransform)(
+      result?.data
+    );
+
+    resp.map((slug) => {
+      formatedChunk.push({
+        id: itemObj?.id,
+        route: itemObj?.route.replace(":" + slugParameter, slug),
+        createdAt: itemObj?.createdAt,
+        updatedAt: itemObj?.updatedAt,
+        publishedAt: itemObj?.publishedAt,
+      });
+    });
+  }
+  return formatedChunk;
 };
 
 const formatCache = (cache, invalidationObject) => {
@@ -39,7 +76,9 @@ const formatCache = (cache, invalidationObject) => {
       Object.keys(invalidationObject).map((contentType) => {
         // Remove the items from the cache that will be refreshed.
         if (contentType && invalidationObject[contentType].ids) {
-          invalidationObject[contentType].ids.map((id) => delete cache[contentType]?.[id]);
+          invalidationObject[contentType].ids.map(
+            (id) => delete cache[contentType]?.[id]
+          );
         } else if (contentType) {
           delete cache[contentType];
         }
@@ -47,10 +86,7 @@ const formatCache = (cache, invalidationObject) => {
 
       Object.values(cache).map((values) => {
         if (values) {
-          formattedCache = [
-            ...formattedCache,
-            ...Object.values(values),
-          ];
+          formattedCache = [...formattedCache, ...Object.values(values)];
         }
       });
     }
