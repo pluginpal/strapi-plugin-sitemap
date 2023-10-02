@@ -38,10 +38,10 @@ Install the plugin in your Strapi project.
 
 ```bash
 # using yarn
-yarn add strapi-plugin-sitemap
+yarn add strapi-plugin-dynamic-sitemap
 
 # using npm
-npm install strapi-plugin-sitemap --save
+npm install strapi-plugin-dynamic-sitemap --save
 ```
 
 After successful installation you have to rebuild the admin UI so it'll include this plugin. To rebuild and restart Strapi run:
@@ -74,9 +74,11 @@ Complete installation requirements are the exact same as for Strapi itself and c
 **We recommend always using the latest version of Strapi to start your new projects**.
 
 ## 💡 Usage
+
 With this plugin you have full control over which URLs you add to your sitemap XML. Go to the admin section of the plugin and start adding URLs. Here you will find that there are two ways to add URLs to the sitemap. With **URL bundles** and **Custom URLs**.
 
 ### URL bundles
+
 A URL bundle is a set of URLs grouped by type. When adding a URL bundle to the sitemap you can define a **URL pattern** which will be used to generate all URLs in this bundle. (Read more about URL patterns below)
 
 URLs coming from a URL bundle will get the following XML attributes:
@@ -87,6 +89,7 @@ URLs coming from a URL bundle will get the following XML attributes:
 - `<changefreq>`
 
 ### Custom URLs
+
 A custom URL is meant to add URLs to the sitemap which are not managed in Strapi. It might be that you have custom route like `/account` that is hardcoded in your front-end. If you'd want to add such a route (URL) to the sitemap you can add it as a custom URL.
 
 Custom URLs will get the following XML attributes:
@@ -96,6 +99,7 @@ Custom URLs will get the following XML attributes:
 - `<changefreq>`
 
 ## 🔌 URL pattern
+
 To create dynamic URLs this plugin uses **URL patterns**. A URL pattern is used when adding URL bundles to the sitemap and has the following format:
 
 ```
@@ -111,7 +115,7 @@ The following field types are by default allowed in a pattern:
 - `id`
 - `uid`
 
-*Allowed field types can be altered with the `allowedFields` config. Read more about it below.*
+_Allowed field types can be altered with the `allowedFields` config. Read more about it below._
 
 ## 🌍 Multilingual
 
@@ -167,6 +171,7 @@ npm run sitemap generate
 ```
 
 ## ⚙️ Settings
+
 Settings can be changed in the admin section of the plugin. In the last tab (Settings) you will find the settings as described below.
 
 ### Hostname (required)
@@ -209,6 +214,7 @@ This setting will add a default `/` entry to the sitemap XML when none is presen
 > `required:` NO | `type:` bool | `default:` true
 
 ## 🔧 Config
+
 Config can be changed in the `config/plugins.js` file in your Strapi project.
 You can overwrite the config like so:
 
@@ -229,6 +235,7 @@ module.exports = ({ env }) => ({
   },
 });
 ```
+
 ### CRON
 
 To make sure the sitemap stays up-to-date this plugin will automatically schedule a cron job that generates the sitemap for you. That cron job is configured to run once a day at 00:00.
@@ -237,7 +244,7 @@ If you want to change the cron interval you can alter the `cron` setting.
 
 ###### Key: `cron `
 
-> `required:` NO | `type:` bool | `default:` 0 0 0 * * *
+> `required:` NO | `type:` bool | `default:` 0 0 0 \* \* \*
 
 ### Limit
 
@@ -282,18 +289,20 @@ This setting works together with the `autoGenerate` setting. When enabled a JSON
 > `required:` NO | `type:` bool | `default:` true
 
 ### Allowed fields
+
 When defining a URL pattern you can populate it with dynamic fields. The fields allowed in the pattern can be manipulated with this setting. Fields can be specified either by type or by name. By default the plugin allows `id` and `uid`.
 
-*If you are missing a key field type of which you think it should be allowed by default please create an issue and explain why it is needed.*
+_If you are missing a key field type of which you think it should be allowed by default please create an issue and explain why it is needed._
 
 ###### Key: `allowedFields `
 
 > `required:` NO | `type:` array | `default:` `['id', 'uid']`
 
 ### Excluded types
+
 This setting is just here for mere convenience. When adding a URL bundle to the sitemap you can specify the type for the bundle. This will show all types in Strapi, however some types should never be it's own page in a website and are therefor excluded in this setting.
 
-All types in this array will not be shown as an option when selecting the type of a URL bundle. 
+All types in this array will not be shown as an option when selecting the type of a URL bundle.
 
 ###### Key: `excludedTypes `
 
