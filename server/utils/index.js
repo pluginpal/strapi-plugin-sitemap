@@ -40,30 +40,32 @@ const noLimit = async (strapi, queryString, parameters, limit = 5000) => {
       item.route.includes(":") === false ? formatedChunk.push(item) : null;
     });
 
-    const { parameter, dynamic_parameter } = itemObj?.route_parameters[0];
-    const slugParameter = parameter;
+    if (Object.keys(itemObj).length > 0) {
+      const { parameter, dynamic_parameter } = itemObj?.route_parameters[0];
+      const slugParameter = parameter;
 
-    let result = null;
-    try {
-      result = await axios.post(dynamic_parameter?.integration?.endpoint, {
-        query: dynamic_parameter?.sitemapQuery,
+      let result = null;
+      try {
+        result = await axios.post(dynamic_parameter?.integration?.endpoint, {
+          query: dynamic_parameter?.sitemapQuery,
+        });
+      } catch (error) {
+        console.log("error", error);
+      }
+      const resp = new Function(dynamic_parameter?.sitemapTransform)(
+        result?.data
+      );
+
+      resp.map((slug) => {
+        formatedChunk.push({
+          id: itemObj?.id,
+          route: itemObj?.route.replace(":" + slugParameter, slug),
+          createdAt: itemObj?.createdAt,
+          updatedAt: itemObj?.updatedAt,
+          publishedAt: itemObj?.publishedAt,
+        });
       });
-    } catch (error) {
-      console.log("error", error);
     }
-    const resp = new Function(dynamic_parameter?.sitemapTransform)(
-      result?.data
-    );
-
-    resp.map((slug) => {
-      formatedChunk.push({
-        id: itemObj?.id,
-        route: itemObj?.route.replace(":" + slugParameter, slug),
-        createdAt: itemObj?.createdAt,
-        updatedAt: itemObj?.updatedAt,
-        publishedAt: itemObj?.publishedAt,
-      });
-    });
   }
   return formatedChunk;
 };
