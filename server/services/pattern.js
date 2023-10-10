@@ -1,7 +1,5 @@
 'use strict';
 
-const { logMessage } = require('../utils');
-
 /**
  * Pattern service.
  */
@@ -108,6 +106,7 @@ const getFieldsFromPattern = (pattern, topLevel = false, relation = null) => {
   if (relation) {
     fields = fields.filter(
       (field) =>
+        // eslint-disable-next-line implicit-arrow-linebreak
         field.startsWith(`${relation}.`) || field.startsWith(`${relation}[`),
     );
     fields = fields.map((field) => field.split('.')[1]);

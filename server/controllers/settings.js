@@ -18,7 +18,7 @@ module.exports = {
   updateSettings: async (ctx) => {
     const config = await getService('settings').getConfig();
     const newContentTypes = Object.keys(ctx.request.body.contentTypes).filter(
-      (x) => !Object.keys(config.contentTypes).includes(x)
+      (x) => !Object.keys(config.contentTypes).includes(x),
     );
 
     await strapi
