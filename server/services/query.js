@@ -1,13 +1,13 @@
 /* eslint-disable camelcase */
 
-"use strict";
+'use strict';
 
-const { get } = require("lodash");
-const xml2js = require("xml2js");
+const { get } = require('lodash');
+const xml2js = require('xml2js');
 
-const parser = new xml2js.Parser({ attrkey: "ATTR" });
+const parser = new xml2js.Parser({ attrkey: 'ATTR' });
 
-const { noLimit, getService, logMessage } = require("../utils");
+const { noLimit, getService, logMessage } = require('../utils');
 
 /**
  * Query service.
@@ -33,9 +33,9 @@ const getFieldsFromConfig = (
   let fields = [];
 
   if (contentType) {
-    Object.entries(contentType["languages"]).map(([langcode, { pattern }]) => {
+    Object.entries(contentType['languages']).map(([langcode, { pattern }]) => {
       fields.push(
-        ...getService("pattern").getFieldsFromPattern(
+        ...getService('pattern').getFieldsFromPattern(
           pattern,
           topLevel,
           relation
@@ -46,10 +46,10 @@ const getFieldsFromConfig = (
 
   if (topLevel) {
     if (isLocalized) {
-      fields.push("locale");
+      fields.push('locale');
     }
 
-    fields.push("updatedAt");
+    fields.push('updatedAt');
   }
 
   // Remove duplicates
@@ -70,8 +70,8 @@ const getRelationsFromConfig = (contentType) => {
   const relationsObject = {};
 
   if (contentType) {
-    Object.entries(contentType["languages"]).map(([langcode, { pattern }]) => {
-      const relations = getService("pattern").getRelationsFromPattern(pattern);
+    Object.entries(contentType['languages']).map(([langcode, { pattern }]) => {
+      const relations = getService('pattern').getRelationsFromPattern(pattern);
       relations.map((relation) => {
         relationsObject[relation] = {
           fields: getFieldsFromConfig(contentType, false, false, relation),
@@ -126,7 +126,7 @@ const getPages = async (config, contentType, ids) => {
           }
         : {},
     },
-    locale: "all",
+    locale: 'all',
     fields,
     populate: {
       localizations: {
@@ -135,8 +135,8 @@ const getPages = async (config, contentType, ids) => {
       },
       ...relations,
     },
-    orderBy: "id",
-    publicationState: excludeDrafts ? "live" : "preview",
+    orderBy: 'id',
+    publicationState: excludeDrafts ? 'live' : 'preview',
   });
 
   return pages;
@@ -158,8 +158,8 @@ const getLocalizationIds = async (contentType, ids) => {
   if (isLocalized) {
     const response = await strapi.entityService.findMany(contentType, {
       filters: { localizations: ids },
-      locale: "all",
-      fields: ["id"],
+      locale: 'all',
+      fields: ['id'],
     });
 
     response.map((localization) => localizationIds.push(localization.id));
@@ -189,7 +189,7 @@ const composeInvalidationObject = async (
   if (ids.length === 0) {
     const updatedIds = await strapi.entityService.findMany(type, {
       filters: queryFilters,
-      fields: ["id"],
+      fields: ['id'],
     });
     updatedIds.map((page) => mainIds.push(page.id));
   }
@@ -220,7 +220,7 @@ const composeInvalidationObject = async (
               contentType,
               {
                 filters: { [relation]: mainIds },
-                fields: ["id"],
+                fields: ['id'],
               }
             );
 
@@ -256,9 +256,9 @@ const composeInvalidationObject = async (
  *
  * @returns {void}
  */
-const getSitemap = async (name, delta, fields = ["sitemap_string"]) => {
+const getSitemap = async (name, delta, fields = ['sitemap_string']) => {
   const sitemap = await strapi.entityService.findMany(
-    "plugin::sitemap.sitemap",
+    'plugin::sitemap.sitemap',
     {
       filters: {
         name,
@@ -280,18 +280,18 @@ const getSitemap = async (name, delta, fields = ["sitemap_string"]) => {
  */
 const deleteSitemap = async (name) => {
   const sitemaps = await strapi.entityService.findMany(
-    "plugin::sitemap.sitemap",
+    'plugin::sitemap.sitemap',
     {
       filters: {
         name,
       },
-      fields: ["id"],
+      fields: ['id'],
     }
   );
 
   await Promise.all(
     sitemaps.map(async (sm) => {
-      await strapi.entityService.delete("plugin::sitemap.sitemap", sm.id);
+      await strapi.entityService.delete('plugin::sitemap.sitemap', sm.id);
     })
   );
 };
@@ -316,14 +316,14 @@ const createSitemap = async (data) => {
         )
       );
       throw new Error();
-    } else if (type === "index") {
-      linkCount = get(result, "sitemapindex.sitemap.length") || 0;
+    } else if (type === 'index') {
+      linkCount = get(result, 'sitemapindex.sitemap.length') || 0;
     } else {
-      linkCount = get(result, "urlset.url.length") || 0;
+      linkCount = get(result, 'urlset.url.length') || 0;
     }
   });
 
-  const sitemap = await strapi.entityService.create("plugin::sitemap.sitemap", {
+  const sitemap = await strapi.entityService.create('plugin::sitemap.sitemap', {
     data: {
       sitemap_string,
       name,
@@ -347,23 +347,23 @@ const createSitemap = async (data) => {
  */
 const createSitemapCache = async (sitemapJson, name, sitemapId) => {
   const sitemap = await strapi.entityService.findMany(
-    "plugin::sitemap.sitemap-cache",
+    'plugin::sitemap.sitemap-cache',
     {
       filters: {
         name,
       },
-      fields: ["id"],
+      fields: ['id'],
     }
   );
 
   if (sitemap[0]) {
     await strapi.entityService.delete(
-      "plugin::sitemap.sitemap-cache",
+      'plugin::sitemap.sitemap-cache',
       sitemap[0].id
     );
   }
 
-  await strapi.entityService.create("plugin::sitemap.sitemap-cache", {
+  await strapi.entityService.create('plugin::sitemap.sitemap-cache', {
     data: {
       sitemap_json: sitemapJson,
       sitemap_id: sitemapId,
@@ -383,18 +383,18 @@ const createSitemapCache = async (sitemapJson, name, sitemapId) => {
  */
 const updateSitemapCache = async (sitemapJson, name, sitemapId) => {
   const sitemap = await strapi.entityService.findMany(
-    "plugin::sitemap.sitemap-cache",
+    'plugin::sitemap.sitemap-cache',
     {
       filters: {
         name,
       },
-      fields: ["id"],
+      fields: ['id'],
     }
   );
 
   if (sitemap[0]) {
     await strapi.entityService.update(
-      "plugin::sitemap.sitemap-cache",
+      'plugin::sitemap.sitemap-cache',
       sitemap[0].id,
       {
         data: {
@@ -416,7 +416,7 @@ const updateSitemapCache = async (sitemapJson, name, sitemapId) => {
  */
 const getSitemapCache = async (name) => {
   const sitemap = await strapi.entityService.findMany(
-    "plugin::sitemap.sitemap-cache",
+    'plugin::sitemap.sitemap-cache',
     {
       filters: {
         name,

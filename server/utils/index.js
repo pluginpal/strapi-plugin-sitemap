@@ -1,14 +1,14 @@
-"use strict";
+'use strict';
 
 const getCoreStore = () => {
-  return strapi.store({ type: "plugin", name: "sitemap" });
+  return strapi.store({ type: 'plugin', name: 'sitemap' });
 };
 
 const getService = (name) => {
-  return strapi.plugin("sitemap").service(name);
+  return strapi.plugin('sitemap').service(name);
 };
 
-const logMessage = (msg = "") => `[strapi-plugin-sitemap]: ${msg}`;
+const logMessage = (msg = '') => `[strapi-plugin-sitemap]: ${msg}`;
 
 const noLimit = async (strapi, queryString, parameters, limit = 5000) => {
   let entries = [];

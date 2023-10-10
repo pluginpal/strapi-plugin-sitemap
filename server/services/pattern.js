@@ -1,6 +1,6 @@
-"use strict";
+'use strict';
 
-const { logMessage } = require("../utils");
+const { logMessage } = require('../utils');
 
 /**
  * Pattern service.
@@ -19,25 +19,25 @@ const getAllowedFields = (contentType, allowedFields = []) => {
   const fieldTypes =
     allowedFields.length > 0
       ? allowedFields
-      : strapi.config.get("plugin.sitemap.allowedFields");
+      : strapi.config.get('plugin.sitemap.allowedFields');
   fieldTypes.map((fieldType) => {
     Object.entries(contentType.attributes).map(([fieldName, field]) => {
       if (
         (field.type === fieldType || fieldName === fieldType) &&
-        field.type !== "relation"
+        field.type !== 'relation'
       ) {
         fields.push(fieldName);
       } else if (
-        field.type === "relation" &&
+        field.type === 'relation' &&
         field.target &&
-        field.relation.endsWith("ToOne") &&
-        fieldName !== "localizations" &&
-        fieldName !== "createdBy" &&
-        fieldName !== "updatedBy"
+        field.relation.endsWith('ToOne') &&
+        fieldName !== 'localizations' &&
+        fieldName !== 'createdBy' &&
+        fieldName !== 'updatedBy'
       ) {
         const relation = strapi.contentTypes[field.target];
 
-        if (fieldTypes.includes("id") && !fields.includes(`${fieldName}.id`)) {
+        if (fieldTypes.includes('id') && !fields.includes(`${fieldName}.id`)) {
           fields.push(`${fieldName}.id`);
         }
 
@@ -47,13 +47,13 @@ const getAllowedFields = (contentType, allowedFields = []) => {
           }
         });
       } else if (
-        field.type === "relation" &&
+        field.type === 'relation' &&
         field.target &&
         field.mappedBy &&
-        field.relation.endsWith("ToMany") &&
-        fieldName !== "localizations" &&
-        fieldName !== "createdBy" &&
-        fieldName !== "updatedBy"
+        field.relation.endsWith('ToMany') &&
+        fieldName !== 'localizations' &&
+        fieldName !== 'createdBy' &&
+        fieldName !== 'updatedBy'
       ) {
         const relation = strapi.contentTypes[field.target];
 
@@ -63,13 +63,13 @@ const getAllowedFields = (contentType, allowedFields = []) => {
           }
         });
       } else if (
-        field.type === "component" &&
+        field.type === 'component' &&
         field.component &&
         field.repeatable !== true // TODO: implement repeatable components (#78).
       ) {
         const relation = strapi.components[field.component];
 
-        if (fieldTypes.includes("id") && !fields.includes(`${fieldName}.id`)) {
+        if (fieldTypes.includes('id') && !fields.includes(`${fieldName}.id`)) {
           fields.push(`${fieldName}.id`);
         }
 
@@ -83,8 +83,8 @@ const getAllowedFields = (contentType, allowedFields = []) => {
   });
 
   // Add id field manually because it is not on the attributes object of a content type.
-  if (fieldTypes.includes("id")) {
-    fields.push("id");
+  if (fieldTypes.includes('id')) {
+    fields.push('id');
   }
 
   return fields;
@@ -103,16 +103,16 @@ const getFieldsFromPattern = (pattern, topLevel = false, relation = null) => {
   let fields = pattern.match(/(?<=\/)(\[.*?\])(?=\/|$)/g); // Get all substrings between [] as array.
 
   // eslint-disable-next-line prefer-regex-literals
-  fields = fields.map((field) => field.replace(/^.|.$/g, "")); // Strip [] from string.
+  fields = fields.map((field) => field.replace(/^.|.$/g, '')); // Strip [] from string.
 
   if (relation) {
     fields = fields.filter(
       (field) =>
         field.startsWith(`${relation}.`) || field.startsWith(`${relation}[0].`)
     );
-    fields = fields.map((field) => field.split(".")[1]);
+    fields = fields.map((field) => field.split('.')[1]);
   } else if (topLevel) {
-    fields = fields.filter((field) => field.split(".").length === 1);
+    fields = fields.filter((field) => field.split('.').length === 1);
   }
 
   return fields;
@@ -128,10 +128,10 @@ const getFieldsFromPattern = (pattern, topLevel = false, relation = null) => {
 const getRelationsFromPattern = (pattern) => {
   let fields = getFieldsFromPattern(pattern);
 
-  fields = fields.filter((field) => field.split(".").length > 1); // Filter on fields containing a dot (.)
+  fields = fields.filter((field) => field.split('.').length > 1); // Filter on fields containing a dot (.)
   fields = fields
-    .map((field) => field.split(".")[0]) // Extract the first part of the fields. Ex: categories[0].slug -> categories[0]
-    .map((field) => field.split("[")[0]); // Extract the first part of the fields. Ex: categories[0] -> categories
+    .map((field) => field.split('.')[0]) // Extract the first part of the fields. Ex: categories[0].slug -> categories[0]
+    .map((field) => field.split('[')[0]); // Extract the first part of the fields. Ex: categories[0] -> categories
 
   return fields;
 };
@@ -149,16 +149,16 @@ const resolvePattern = async (pattern, entity) => {
   const fields = getFieldsFromPattern(pattern);
 
   fields.map((field) => {
-    let relationalField = field.split(".").length > 1 ? field.split(".") : null;
+    let relationalField = field.split('.').length > 1 ? field.split('.') : null;
 
-    if (field && field.includes("[")) {
+    if (field && field.includes('[')) {
       // If the relational field many to many
-      const childField = field.split("[")[0];
+      const childField = field.split('[')[0];
       relationalField = [childField, relationalField[1]];
     }
 
     if (!relationalField) {
-      pattern = pattern.replace(`[${field}]`, entity[field] || "");
+      pattern = pattern.replace(`[${field}]`, entity[field] || '');
     } else if (Array.isArray(entity[relationalField[0]])) {
       // Many to Many relationship
       pattern = pattern.replace(
@@ -167,21 +167,21 @@ const resolvePattern = async (pattern, entity) => {
           entity[relationalField[0]][0] &&
           entity[relationalField[0]][0][relationalField[1]]
           ? entity[relationalField[0]][0][relationalField[1]]
-          : ""
+          : ''
       );
-    } else if (typeof entity[relationalField[0]] === "object") {
+    } else if (typeof entity[relationalField[0]] === 'object') {
       pattern = pattern.replace(
         `[${field}]`,
         entity[relationalField[0]] &&
           entity[relationalField[0]][relationalField[1]]
           ? entity[relationalField[0]][relationalField[1]]
-          : ""
+          : ''
       );
     }
   });
 
-  pattern = pattern.replace(/\/+/g, "/"); // Remove duplicate forward slashes.
-  pattern = pattern.startsWith("/") ? pattern : `/${pattern}`; // Make sure we only have on forward slash.
+  pattern = pattern.replace(/\/+/g, '/'); // Remove duplicate forward slashes.
+  pattern = pattern.startsWith('/') ? pattern : `/${pattern}`; // Make sure we only have on forward slash.
   return pattern;
 };
 
@@ -199,24 +199,24 @@ const validatePattern = async (pattern, allowedFieldNames) => {
   if (!pattern) {
     return {
       valid: false,
-      message: "Pattern can not be empty",
+      message: 'Pattern can not be empty',
     };
   }
 
-  const preCharCount = pattern.split("[").length - 1;
-  const postCharount = pattern.split("]").length - 1;
+  const preCharCount = pattern.split('[').length - 1;
+  const postCharount = pattern.split(']').length - 1;
 
   if (preCharCount < 1 || postCharount < 1) {
     return {
       valid: false,
-      message: "Pattern should contain at least one field",
+      message: 'Pattern should contain at least one field',
     };
   }
 
   if (preCharCount !== postCharount) {
     return {
       valid: false,
-      message: "Fields in the pattern are not escaped correctly",
+      message: 'Fields in the pattern are not escaped correctly',
     };
   }
 
@@ -229,13 +229,13 @@ const validatePattern = async (pattern, allowedFieldNames) => {
   if (!fieldsAreAllowed) {
     return {
       valid: false,
-      message: "Pattern contains forbidden fields",
+      message: 'Pattern contains forbidden fields',
     };
   }
 
   return {
     valid: true,
-    message: "Valid pattern",
+    message: 'Valid pattern',
   };
 };
 
