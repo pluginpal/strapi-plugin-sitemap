@@ -14,7 +14,7 @@ const noLimit = async (strapi, queryString, parameters, limit = 5000) => {
   let entries = [];
   const amountOfEntries = await strapi.entityService.count(
     queryString,
-    parameters
+    parameters,
   );
 
   for (let i = 0; i < amountOfEntries / limit; i++) {
@@ -43,7 +43,7 @@ const formatCache = (cache, invalidationObject) => {
         // Remove the items from the cache that will be refreshed.
         if (contentType && invalidationObject[contentType].ids) {
           invalidationObject[contentType].ids.map(
-            (id) => delete cache[contentType]?.[id]
+            (id) => delete cache[contentType]?.[id],
           );
         } else if (contentType) {
           delete cache[contentType];

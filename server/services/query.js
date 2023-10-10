@@ -28,7 +28,7 @@ const getFieldsFromConfig = (
   contentType,
   topLevel = false,
   isLocalized = false,
-  relation = null
+  relation = null,
 ) => {
   let fields = [];
 
@@ -38,8 +38,8 @@ const getFieldsFromConfig = (
         ...getService('pattern').getFieldsFromPattern(
           pattern,
           topLevel,
-          relation
-        )
+          relation,
+        ),
       );
     });
   }
@@ -103,7 +103,7 @@ const getPages = async (config, contentType, ids) => {
   const fields = getFieldsFromConfig(
     config.contentTypes[contentType],
     true,
-    isLocalized
+    isLocalized,
   );
 
   const pages = await noLimit(strapi, contentType, {
@@ -182,7 +182,7 @@ const composeInvalidationObject = async (
   config,
   type,
   queryFilters,
-  ids = []
+  ids = [],
 ) => {
   const mainIds = [...ids];
 
@@ -207,7 +207,7 @@ const composeInvalidationObject = async (
   await Promise.all(
     Object.keys(config.contentTypes).map(async (contentType) => {
       const relations = Object.keys(
-        getRelationsFromConfig(config.contentTypes[contentType])
+        getRelationsFromConfig(config.contentTypes[contentType]),
       );
 
       await Promise.all(
@@ -221,7 +221,7 @@ const composeInvalidationObject = async (
               {
                 filters: { [relation]: mainIds },
                 fields: ['id'],
-              }
+              },
             );
 
             if (pagesToUpdate.length > 0 && !invalidationObject[contentType]) {
@@ -232,16 +232,16 @@ const composeInvalidationObject = async (
             pagesToUpdate.map((page) => relatedIds.push(page.id));
             const relatedLocaleIds = await getLocalizationIds(
               contentType,
-              relatedIds
+              relatedIds,
             );
 
             invalidationObject[contentType] = {
               ids: [...relatedLocaleIds, ...relatedIds],
             };
           }
-        })
+        }),
       );
-    })
+    }),
   );
 
   return invalidationObject;
@@ -265,7 +265,7 @@ const getSitemap = async (name, delta, fields = ['sitemap_string']) => {
         delta,
       },
       fields,
-    }
+    },
   );
 
   return sitemap[0];
@@ -286,13 +286,13 @@ const deleteSitemap = async (name) => {
         name,
       },
       fields: ['id'],
-    }
+    },
   );
 
   await Promise.all(
     sitemaps.map(async (sm) => {
       await strapi.entityService.delete('plugin::sitemap.sitemap', sm.id);
-    })
+    }),
   );
 };
 
@@ -312,8 +312,8 @@ const createSitemap = async (data) => {
     if (error) {
       strapi.log.error(
         logMessage(
-          `An error occurred while trying to parse the sitemap XML to json. ${error}`
-        )
+          `An error occurred while trying to parse the sitemap XML to json. ${error}`,
+        ),
       );
       throw new Error();
     } else if (type === 'index') {
@@ -353,13 +353,13 @@ const createSitemapCache = async (sitemapJson, name, sitemapId) => {
         name,
       },
       fields: ['id'],
-    }
+    },
   );
 
   if (sitemap[0]) {
     await strapi.entityService.delete(
       'plugin::sitemap.sitemap-cache',
-      sitemap[0].id
+      sitemap[0].id,
     );
   }
 
@@ -389,7 +389,7 @@ const updateSitemapCache = async (sitemapJson, name, sitemapId) => {
         name,
       },
       fields: ['id'],
-    }
+    },
   );
 
   if (sitemap[0]) {
@@ -402,7 +402,7 @@ const updateSitemapCache = async (sitemapJson, name, sitemapId) => {
           sitemap_id: sitemapId,
           name,
         },
-      }
+      },
     );
   }
 };
@@ -421,7 +421,7 @@ const getSitemapCache = async (name) => {
       filters: {
         name,
       },
-    }
+    },
   );
 
   return sitemap[0];

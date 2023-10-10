@@ -52,7 +52,7 @@ const getLanguageLinks = async (config, page, contentType, defaultURL) => {
       const translationUrl =
         await strapi.plugins.sitemap.services.pattern.resolvePattern(
           pattern,
-          translation
+          translation,
         );
       let hostnameOverride =
         config.hostname_overrides[translation.locale] || '';
@@ -61,7 +61,7 @@ const getLanguageLinks = async (config, page, contentType, defaultURL) => {
         lang: translation.locale,
         url: `${hostnameOverride}${translationUrl}`,
       });
-    })
+    }),
   );
 
   return links;
@@ -96,7 +96,7 @@ const getSitemapPageData = async (config, page, contentType) => {
   const { pattern } = config.contentTypes[contentType]['languages'][locale];
   const path = await strapi.plugins.sitemap.services.pattern.resolvePattern(
     pattern,
-    page
+    page,
   );
 
   let hostnameOverride = config.hostname_overrides[page.locale] || '';
@@ -112,7 +112,7 @@ const getSitemapPageData = async (config, page, contentType) => {
       'monthly',
     priority:
       parseFloat(
-        config.contentTypes[contentType]['languages'][locale].priority
+        config.contentTypes[contentType]['languages'][locale].priority,
       ) || 0.5,
   };
 
@@ -154,7 +154,7 @@ const createSitemapEntries = async (invalidationObject) => {
       const pages = await getService('query').getPages(
         config,
         contentType,
-        invalidationObject?.[contentType]?.ids
+        invalidationObject?.[contentType]?.ids,
       );
 
       // Add formatted sitemap page data to the array.
@@ -167,9 +167,9 @@ const createSitemapEntries = async (invalidationObject) => {
             // Add page to the cache.
             cacheEntries[contentType][page.id] = pageData;
           }
-        })
+        }),
       );
-    })
+    }),
   );
 
   // Custom entries.
@@ -180,13 +180,13 @@ const createSitemapEntries = async (invalidationObject) => {
         changefreq: config.customEntries[customEntry].changefreq,
         priority: parseFloat(config.customEntries[customEntry].priority),
       });
-    })
+    }),
   );
 
   // Custom homepage entry.
   if (config.includeHomepage) {
     const hasHomePage = !isEmpty(
-      sitemapEntries.filter((entry) => entry.url === '')
+      sitemapEntries.filter((entry) => entry.url === ''),
     );
 
     // Only add it when no other '/' entry is present.
@@ -224,8 +224,8 @@ const saveSitemap = async (filename, sitemap, isIndex) => {
       } catch (e) {
         strapi.log.error(
           logMessage(
-            `Something went wrong while trying to write the sitemap XML to the database. ${e}`
-          )
+            `Something went wrong while trying to write the sitemap XML to the database. ${e}`,
+          ),
         );
         throw new Error();
       }
@@ -233,8 +233,8 @@ const saveSitemap = async (filename, sitemap, isIndex) => {
     .catch((err) => {
       strapi.log.error(
         logMessage(
-          `Something went wrong while trying to build the sitemap with streamToPromise. ${err}`
-        )
+          `Something went wrong while trying to build the sitemap with streamToPromise. ${err}`,
+        ),
       );
       throw new Error();
     });
@@ -312,12 +312,12 @@ const getSitemapStream = async (urlCount) => {
 const createSitemap = async (cache, invalidationObject) => {
   const cachingEnabled = strapi.config.get('plugin.sitemap.caching');
   const autoGenerationEnabled = strapi.config.get(
-    'plugin.sitemap.autoGenerate'
+    'plugin.sitemap.autoGenerate',
   );
 
   try {
     const { sitemapEntries, cacheEntries } = await createSitemapEntries(
-      invalidationObject
+      invalidationObject,
     );
     // Format cache to regular entries
     const formattedCache = formatCache(cache, invalidationObject);
@@ -327,8 +327,8 @@ const createSitemap = async (cache, invalidationObject) => {
     if (isEmpty(allEntries)) {
       strapi.log.info(
         logMessage(
-          'No sitemap XML was generated because there were 0 URLs configured.'
-        )
+          'No sitemap XML was generated because there were 0 URLs configured.',
+        ),
       );
       return;
     }
@@ -347,7 +347,7 @@ const createSitemap = async (cache, invalidationObject) => {
         getService('query').createSitemapCache(
           cacheEntries,
           'default',
-          sitemapId
+          sitemapId,
         );
       } else {
         const newCache = mergeCache(cache, cacheEntries);
@@ -357,14 +357,14 @@ const createSitemap = async (cache, invalidationObject) => {
 
     strapi.log.info(
       logMessage(
-        'The sitemap XML has been generated. It can be accessed on /api/sitemap/index.xml.'
-      )
+        'The sitemap XML has been generated. It can be accessed on /api/sitemap/index.xml.',
+      ),
     );
   } catch (err) {
     strapi.log.error(
       logMessage(
-        `Something went wrong while trying to build the SitemapStream. ${err}`
-      )
+        `Something went wrong while trying to build the SitemapStream. ${err}`,
+      ),
     );
     throw new Error();
   }
