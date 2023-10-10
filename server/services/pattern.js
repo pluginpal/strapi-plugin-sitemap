@@ -167,6 +167,7 @@ const resolvePattern = async (pattern, entity) => {
     if (!relationalField) {
       pattern = pattern.replace(`[${field}]`, entity[field] || "");
     } else if (Array.isArray(entity[relationalField[0]])) {
+      // Many to Many relationship
       pattern = pattern.replace(
         `[${field}]`,
         entity[relationalField[0]] &&
