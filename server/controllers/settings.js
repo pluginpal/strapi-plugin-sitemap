@@ -1,6 +1,6 @@
-'use strict';
+"use strict";
 
-const { getService } = require('../utils');
+const { getService } = require("../utils");
 
 /**
  * Sitemap.js controller
@@ -10,26 +10,29 @@ const { getService } = require('../utils');
 
 module.exports = {
   getSettings: async (ctx) => {
-    const config = await getService('settings').getConfig();
+    const config = await getService("settings").getConfig();
 
     ctx.send(config);
   },
 
   updateSettings: async (ctx) => {
-    const config = await getService('settings').getConfig();
-    const newContentTypes = Object.keys(ctx.request.body.contentTypes).filter((x) => !Object.keys(config.contentTypes).includes(x));
+    const config = await getService("settings").getConfig();
+    const newContentTypes = Object.keys(ctx.request.body.contentTypes).filter(
+      (x) => !Object.keys(config.contentTypes).includes(x)
+    );
 
+    console.log("[updateSettings] newContentTypes", newContentTypes);
     await strapi
       .store({
-        environment: '',
-        type: 'plugin',
-        name: 'sitemap',
+        environment: "",
+        type: "plugin",
+        name: "sitemap",
       })
-      .set({ key: 'settings', value: ctx.request.body });
+      .set({ key: "settings", value: ctx.request.body });
 
     // Load lifecycle methods for auto generation of sitemap.
     await newContentTypes.map(async (contentType) => {
-      await getService('lifecycle').loadLifecycleMethod(contentType);
+      await getService("lifecycle").loadLifecycleMethod(contentType);
     });
 
     ctx.send({ ok: true });
