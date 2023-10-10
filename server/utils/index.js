@@ -11,7 +11,6 @@ const getService = (name) => {
 const logMessage = (msg = "") => `[strapi-plugin-sitemap]: ${msg}`;
 
 const noLimit = async (strapi, queryString, parameters, limit = 5000) => {
-  console.log("[noLimit]", queryString, parameters);
   let entries = [];
   const amountOfEntries = await strapi.entityService.count(
     queryString,

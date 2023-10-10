@@ -21,7 +21,6 @@ module.exports = {
       (x) => !Object.keys(config.contentTypes).includes(x)
     );
 
-    console.log("[updateSettings] newContentTypes", newContentTypes);
     await strapi
       .store({
         environment: "",

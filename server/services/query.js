@@ -72,7 +72,6 @@ const getRelationsFromConfig = (contentType) => {
   if (contentType) {
     Object.entries(contentType["languages"]).map(([langcode, { pattern }]) => {
       const relations = getService("pattern").getRelationsFromPattern(pattern);
-      console.log("[getRelationsFromConfig] relations", relations);
       relations.map((relation) => {
         relationsObject[relation] = {
           fields: getFieldsFromConfig(contentType, false, false, relation),
@@ -80,8 +79,6 @@ const getRelationsFromConfig = (contentType) => {
       });
     });
   }
-
-  console.log("[getRelationsFromConfig] relationsObject", relationsObject);
 
   return relationsObject;
 };
@@ -103,15 +100,11 @@ const getPages = async (config, contentType, ids) => {
     strapi.contentTypes[contentType].pluginOptions?.i18n?.localized;
 
   const relations = getRelationsFromConfig(config.contentTypes[contentType]);
-  console.log("[getPages] relations", relations);
-
   const fields = getFieldsFromConfig(
     config.contentTypes[contentType],
     true,
     isLocalized
   );
-
-  console.log("[getPages] fields", fields);
 
   const pages = await noLimit(strapi, contentType, {
     filters: {

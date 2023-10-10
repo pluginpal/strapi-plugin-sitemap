@@ -101,8 +101,6 @@ const getAllowedFields = (contentType, allowedFields = []) => {
  * @returns {array} The fields.
  */
 const getFieldsFromPattern = (pattern, topLevel = false, relation = null) => {
-  console.log("[getFieldsFromPattern] pattern", pattern);
-
   let fields = pattern.match(/(?<=\/)(\[.*?\])(?=\/|$)/g); // Get all substrings between [] as array. // PR - Now it works with [value[0].field]
 
   // eslint-disable-next-line prefer-regex-literals
@@ -118,8 +116,6 @@ const getFieldsFromPattern = (pattern, topLevel = false, relation = null) => {
     fields = fields.filter((field) => field.split(".").length === 1);
   }
 
-  console.log("[getFieldsFromPattern] fields", fields);
-
   return fields;
 };
 
@@ -132,8 +128,6 @@ const getFieldsFromPattern = (pattern, topLevel = false, relation = null) => {
  */
 const getRelationsFromPattern = (pattern) => {
   let fields = getFieldsFromPattern(pattern);
-
-  console.log("[getRelationsFromPattern] fields", fields);
 
   fields = fields.filter((field) => field.split(".").length > 1); // Filter on fields containing a dot (.)
   fields = fields

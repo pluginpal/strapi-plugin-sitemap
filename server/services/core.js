@@ -48,7 +48,6 @@ const getLanguageLinks = async (config, page, contentType, defaultURL) => {
       }
 
       const { pattern } = config.contentTypes[contentType]["languages"][locale];
-      console.log("[getLanguageLinks] pattern", pattern);
 
       const translationUrl =
         await strapi.plugins.sitemap.services.pattern.resolvePattern(
@@ -108,14 +107,10 @@ const getSitemapPageData = async (config, page, contentType) => {
   }
 
   const { pattern } = config.contentTypes[contentType]["languages"][locale];
-  console.log("[getSitemapPageData] pattern", pattern);
-
   const path = await strapi.plugins.sitemap.services.pattern.resolvePattern(
     pattern,
     page
   );
-
-  console.log("[getSitemapPageData] path", path);
 
   let hostnameOverride = config.hostname_overrides[page.locale] || "";
   hostnameOverride = hostnameOverride.replace(/\/+$/, "");
@@ -174,8 +169,6 @@ const createSitemapEntries = async (invalidationObject) => {
         contentType,
         invalidationObject?.[contentType]?.ids
       );
-
-      console.log("[createSitemapEntries] pages", pages);
 
       // Add formatted sitemap page data to the array.
       await Promise.all(
