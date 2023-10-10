@@ -22,7 +22,6 @@ const getAllowedFields = (contentType, allowedFields = []) => {
       : strapi.config.get("plugin.sitemap.allowedFields");
   fieldTypes.map((fieldType) => {
     Object.entries(contentType.attributes).map(([fieldName, field]) => {
-      // console.warn("[getAllowedFields] fieldName", fieldName, "field", field);
       if (
         (field.type === fieldType || fieldName === fieldType) &&
         field.type !== "relation"
@@ -101,10 +100,10 @@ const getAllowedFields = (contentType, allowedFields = []) => {
  * @returns {array} The fields.
  */
 const getFieldsFromPattern = (pattern, topLevel = false, relation = null) => {
-  let fields = pattern.match(/(?<=\/)(\[.*?\])(?=\/|$)/g); // Get all substrings between [] as array. // PR - Now it works with [value[0].field]
+  let fields = pattern.match(/(?<=\/)(\[.*?\])(?=\/|$)/g); // Get all substrings between [] as array.
 
   // eslint-disable-next-line prefer-regex-literals
-  fields = fields.map((field) => field.replace(/^.|.$/g, "")); // Strip [] from string. // PR - Simplify regex
+  fields = fields.map((field) => field.replace(/^.|.$/g, "")); // Strip [] from string.
 
   if (relation) {
     fields = fields.filter(
