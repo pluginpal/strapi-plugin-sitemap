@@ -108,7 +108,7 @@ const getFieldsFromPattern = (pattern, topLevel = false, relation = null) => {
   if (relation) {
     fields = fields.filter(
       (field) =>
-        field.startsWith(`${relation}.`) || field.startsWith(`${relation}[0].`)
+        field.startsWith(`${relation}.`) || field.startsWith(`${relation}[`),
     );
     fields = fields.map((field) => field.split('.')[1]);
   } else if (topLevel) {
@@ -152,9 +152,14 @@ const resolvePattern = async (pattern, entity) => {
     let relationalField = field.split('.').length > 1 ? field.split('.') : null;
 
     if (field && field.includes('[')) {
-      // If the relational field many to many
+      // If the relational field many to many. Ex: categories[0].slug
       const childField = field.split('[')[0];
-      relationalField = [childField, relationalField[1]];
+
+      // Extract array index
+      const indexExecArray = /\[(\d+)\]/g.exec(field);
+      const childIndexField = parseInt(indexExecArray[1], 10);
+
+      relationalField = [childField, relationalField[1], childIndexField]; // ['categories', 'slug', 0]
     }
 
     if (!relationalField) {
@@ -164,10 +169,10 @@ const resolvePattern = async (pattern, entity) => {
       pattern = pattern.replace(
         `[${field}]`,
         entity[relationalField[0]] &&
-          entity[relationalField[0]][0] &&
-          entity[relationalField[0]][0][relationalField[1]]
-          ? entity[relationalField[0]][0][relationalField[1]]
-          : ''
+          entity[relationalField[0]][relationalField[2]] &&
+          entity[relationalField[0]][relationalField[2]][relationalField[1]]
+          ? entity[relationalField[0]][relationalField[2]][relationalField[1]]
+          : '',
       );
     } else if (typeof entity[relationalField[0]] === 'object') {
       pattern = pattern.replace(
@@ -175,7 +180,7 @@ const resolvePattern = async (pattern, entity) => {
         entity[relationalField[0]] &&
           entity[relationalField[0]][relationalField[1]]
           ? entity[relationalField[0]][relationalField[1]]
-          : ''
+          : '',
       );
     }
   });
@@ -223,7 +228,16 @@ const validatePattern = async (pattern, allowedFieldNames) => {
   let fieldsAreAllowed = true;
 
   getFieldsFromPattern(pattern).map((field) => {
-    if (!allowedFieldNames.includes(field)) fieldsAreAllowed = false;
+    if (field.includes('[')) {
+      // Validate value with array. Ex: categories[10].slug
+      const fieldReplaced = field.replace(/\[(\d+)\]/, '[0]');
+
+      if (!allowedFieldNames.includes(fieldReplaced)) {
+        fieldsAreAllowed = false;
+      }
+    } else if (!allowedFieldNames.includes(field)) {
+      fieldsAreAllowed = false;
+    }
   });
 
   if (!fieldsAreAllowed) {
