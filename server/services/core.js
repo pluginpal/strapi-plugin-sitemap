@@ -78,19 +78,6 @@ const getLanguageLinks = async (config, page, contentType, defaultURL) => {
  * @returns {object} The sitemap entry data.
  */
 const getSitemapPageData = async (config, page, contentType) => {
-  console.log(
-    "[getSitemapPageData] config",
-    config,
-    "page",
-    page,
-    "contentType",
-    contentType
-  );
-
-  console.log(
-    "[getSitemapPageData] config",
-    config.contentTypes["api::attraction.attraction"].languages
-  );
   let locale = page.locale || "und";
 
   // Return when there is no pattern for the page.
