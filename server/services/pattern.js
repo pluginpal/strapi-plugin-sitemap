@@ -31,7 +31,7 @@ const getAllowedFields = (contentType, allowedFields = []) => {
       } else if (
         field.type === "relation" &&
         field.target &&
-        field.relation.endsWith("ToOne") && // TODO: implement `ToMany` relations (#78).
+        field.relation.endsWith("ToOne") &&
         fieldName !== "localizations" &&
         fieldName !== "createdBy" &&
         fieldName !== "updatedBy"
@@ -57,10 +57,6 @@ const getAllowedFields = (contentType, allowedFields = []) => {
         fieldName !== "updatedBy"
       ) {
         const relation = strapi.contentTypes[field.target];
-
-        // if (fieldTypes.includes("id") && !fields.includes(`${fieldName}.id`)) {
-        //   fields.push(`${fieldName}[0].id`);
-        // }
 
         Object.entries(relation.attributes).map(([subFieldName, subField]) => {
           if (subField.type === fieldType || subFieldName === fieldType) {
@@ -105,22 +101,12 @@ const getAllowedFields = (contentType, allowedFields = []) => {
  * @returns {array} The fields.
  */
 const getFieldsFromPattern = (pattern, topLevel = false, relation = null) => {
-  console.log(
-    "[getFieldsFromPattern] pattern",
-    pattern,
-    "topLevel",
-    topLevel,
-    "relation",
-    relation
-  );
+  console.log("[getFieldsFromPattern] pattern", pattern);
 
   let fields = pattern.match(/(?<=\/)(\[.*?\])(?=\/|$)/g); // Get all substrings between [] as array. // PR - Now it works with [value[0].field]
 
-  console.log("[getFieldsFromPattern] fields 1", fields);
-
   // eslint-disable-next-line prefer-regex-literals
   fields = fields.map((field) => field.replace(/^.|.$/g, "")); // Strip [] from string. // PR - Simplify regex
-  console.log("[getFieldsFromPattern] fields 2", fields);
 
   if (relation) {
     fields = fields.filter(
@@ -131,6 +117,8 @@ const getFieldsFromPattern = (pattern, topLevel = false, relation = null) => {
   } else if (topLevel) {
     fields = fields.filter((field) => field.split(".").length === 1);
   }
+
+  console.log("[getFieldsFromPattern] fields", fields);
 
   return fields;
 };
@@ -144,8 +132,14 @@ const getFieldsFromPattern = (pattern, topLevel = false, relation = null) => {
  */
 const getRelationsFromPattern = (pattern) => {
   let fields = getFieldsFromPattern(pattern);
+
+  console.log("[getRelationsFromPattern] fields", fields);
+
   fields = fields.filter((field) => field.split(".").length > 1); // Filter on fields containing a dot (.)
-  fields = fields.map((field) => field.split(".")[0]); // Extract the first part of the fields
+  fields = fields
+    .map((field) => field.split(".")[0]) // Extract the first part of the fields. Ex: categories[0].slug -> categories[0]
+    .map((field) => field.split("[")[0]); // Extract the first part of the fields. Ex: categories[0] -> categories
+
   return fields;
 };
 
@@ -162,14 +156,24 @@ const resolvePattern = async (pattern, entity) => {
   const fields = getFieldsFromPattern(pattern);
 
   fields.map((field) => {
-    const relationalField =
-      field.split(".").length > 1 ? field.split(".") : null;
+    let relationalField = field.split(".").length > 1 ? field.split(".") : null;
+
+    if (field && field.includes("[")) {
+      // If the relational field many to many
+      const childField = field.split("[")[0];
+      relationalField = [childField, relationalField[1]];
+    }
 
     if (!relationalField) {
       pattern = pattern.replace(`[${field}]`, entity[field] || "");
     } else if (Array.isArray(entity[relationalField[0]])) {
-      strapi.log.error(
-        logMessage("Something went wrong whilst resolving the pattern.")
+      pattern = pattern.replace(
+        `[${field}]`,
+        entity[relationalField[0]] &&
+          entity[relationalField[0]][0] &&
+          entity[relationalField[0]][0][relationalField[1]]
+          ? entity[relationalField[0]][0][relationalField[1]]
+          : ""
       );
     } else if (typeof entity[relationalField[0]] === "object") {
       pattern = pattern.replace(
@@ -198,12 +202,6 @@ const resolvePattern = async (pattern, entity) => {
  * @returns {string} object.message Validation string.
  */
 const validatePattern = async (pattern, allowedFieldNames) => {
-  console.log(
-    "[validatePattern] pattern",
-    pattern,
-    "allowedFieldNames",
-    allowedFieldNames
-  );
   if (!pattern) {
     return {
       valid: false,
