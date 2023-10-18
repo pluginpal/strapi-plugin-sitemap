@@ -14,16 +14,10 @@
  */
 const getAllowedFields = (contentType, allowedFields = []) => {
   const fields = [];
-  const fieldTypes =
-    allowedFields.length > 0
-      ? allowedFields
-      : strapi.config.get('plugin.sitemap.allowedFields');
+  const fieldTypes = allowedFields.length > 0 ? allowedFields : strapi.config.get('plugin.sitemap.allowedFields');
   fieldTypes.map((fieldType) => {
     Object.entries(contentType.attributes).map(([fieldName, field]) => {
-      if (
-        (field.type === fieldType || fieldName === fieldType) &&
-        field.type !== 'relation'
-      ) {
+      if ((field.type === fieldType || fieldName === fieldType) && field.type !== 'relation') {
         fields.push(fieldName);
       } else if (
         field.type === 'relation' &&
@@ -67,7 +61,10 @@ const getAllowedFields = (contentType, allowedFields = []) => {
       ) {
         const relation = strapi.components[field.component];
 
-        if (fieldTypes.includes('id') && !fields.includes(`${fieldName}.id`)) {
+        if (
+          fieldTypes.includes('id')
+          && !fields.includes(`${fieldName}.id`)
+        ) {
           fields.push(`${fieldName}.id`);
         }
 
