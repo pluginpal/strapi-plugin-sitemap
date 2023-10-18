@@ -120,11 +120,7 @@ const getPages = async (config, contentType, ids) => {
           },
         },
       ],
-      id: ids
-        ? {
-            $in: ids,
-          }
-        : {},
+      id: ids ? { $in: ids } : {},
     },
     locale: 'all',
     fields,
