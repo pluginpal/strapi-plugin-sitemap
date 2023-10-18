@@ -24,23 +24,12 @@ const { noLimit, getService, logMessage } = require('../utils');
  *
  * @returns {array} The fields.
  */
-const getFieldsFromConfig = (
-  contentType,
-  topLevel = false,
-  isLocalized = false,
-  relation = null,
-) => {
+const getFieldsFromConfig = (contentType, topLevel = false, isLocalized = false, relation = null) => {
   let fields = [];
 
   if (contentType) {
     Object.entries(contentType['languages']).map(([langcode, { pattern }]) => {
-      fields.push(
-        ...getService('pattern').getFieldsFromPattern(
-          pattern,
-          topLevel,
-          relation,
-        ),
-      );
+      fields.push(...getService('pattern').getFieldsFromPattern(pattern, topLevel, relation));
     });
   }
 
@@ -93,18 +82,11 @@ const getRelationsFromConfig = (contentType) => {
  * @returns {object} The pages.
  */
 const getPages = async (config, contentType, ids) => {
-  const excludeDrafts =
-    config.excludeDrafts &&
-    strapi.contentTypes[contentType].options.draftAndPublish;
-  const isLocalized =
-    strapi.contentTypes[contentType].pluginOptions?.i18n?.localized;
+  const excludeDrafts = config.excludeDrafts && strapi.contentTypes[contentType].options.draftAndPublish;
+  const isLocalized = strapi.contentTypes[contentType].pluginOptions?.i18n?.localized;
 
   const relations = getRelationsFromConfig(config.contentTypes[contentType]);
-  const fields = getFieldsFromConfig(
-    config.contentTypes[contentType],
-    true,
-    isLocalized,
-  );
+  const fields = getFieldsFromConfig(config.contentTypes[contentType], true, isLocalized);
 
   const pages = await noLimit(strapi, contentType, {
     filters: {
@@ -120,7 +102,9 @@ const getPages = async (config, contentType, ids) => {
           },
         },
       ],
-      id: ids ? { $in: ids } : {},
+      id: ids ? {
+        $in: ids,
+      } : {},
     },
     locale: 'all',
     fields,
@@ -147,8 +131,7 @@ const getPages = async (config, contentType, ids) => {
  * @returns {object} The pages.
  */
 const getLocalizationIds = async (contentType, ids) => {
-  const isLocalized =
-    strapi.contentTypes[contentType].pluginOptions?.i18n?.localized;
+  const isLocalized = strapi.contentTypes[contentType].pluginOptions?.i18n?.localized;
   const localizationIds = [];
 
   if (isLocalized) {
@@ -174,12 +157,7 @@ const getLocalizationIds = async (contentType, ids) => {
  *
  * @returns {object} The invalidation object.
  */
-const composeInvalidationObject = async (
-  config,
-  type,
-  queryFilters,
-  ids = [],
-) => {
+const composeInvalidationObject = async (config, type, queryFilters, ids = []) => {
   const mainIds = [...ids];
 
   if (ids.length === 0) {
@@ -195,50 +173,42 @@ const composeInvalidationObject = async (
   // Add the updated entity.
   const invalidationObject = {
     [type]: {
-      ids: [...mainLocaleIds, ...mainIds],
+      ids: [
+        ...mainLocaleIds,
+        ...mainIds,
+      ],
     },
   };
 
   // Add all pages that have a relation to the updated entity.
-  await Promise.all(
-    Object.keys(config.contentTypes).map(async (contentType) => {
-      const relations = Object.keys(
-        getRelationsFromConfig(config.contentTypes[contentType]),
-      );
+  await Promise.all(Object.keys(config.contentTypes).map(async (contentType) => {
+    const relations = Object.keys(getRelationsFromConfig(config.contentTypes[contentType]));
 
-      await Promise.all(
-        relations.map(async (relation) => {
-          if (
-            strapi.contentTypes[contentType].attributes[relation].target ===
-            type
-          ) {
-            const pagesToUpdate = await strapi.entityService.findMany(
-              contentType,
-              {
-                filters: { [relation]: mainIds },
-                fields: ['id'],
-              },
-            );
+    await Promise.all(relations.map(async (relation) => {
+      if (strapi.contentTypes[contentType].attributes[relation].target === type) {
 
-            if (pagesToUpdate.length > 0 && !invalidationObject[contentType]) {
-              invalidationObject[contentType] = {};
-            }
+        const pagesToUpdate = await strapi.entityService.findMany(contentType, {
+          filters: { [relation]: mainIds },
+          fields: ['id'],
+        });
 
-            const relatedIds = [];
-            pagesToUpdate.map((page) => relatedIds.push(page.id));
-            const relatedLocaleIds = await getLocalizationIds(
-              contentType,
-              relatedIds,
-            );
+        if (pagesToUpdate.length > 0 && !invalidationObject[contentType]) {
+          invalidationObject[contentType] = {};
+        }
 
-            invalidationObject[contentType] = {
-              ids: [...relatedLocaleIds, ...relatedIds],
-            };
-          }
-        }),
-      );
-    }),
-  );
+        const relatedIds = [];
+        pagesToUpdate.map((page) => relatedIds.push(page.id));
+        const relatedLocaleIds = await getLocalizationIds(contentType, relatedIds);
+
+        invalidationObject[contentType] = {
+          ids: [
+            ...relatedLocaleIds,
+            ...relatedIds,
+          ],
+        };
+      }
+    }));
+  }));
 
   return invalidationObject;
 };
@@ -253,16 +223,13 @@ const composeInvalidationObject = async (
  * @returns {void}
  */
 const getSitemap = async (name, delta, fields = ['sitemap_string']) => {
-  const sitemap = await strapi.entityService.findMany(
-    'plugin::sitemap.sitemap',
-    {
-      filters: {
-        name,
-        delta,
-      },
-      fields,
+  const sitemap = await strapi.entityService.findMany('plugin::sitemap.sitemap', {
+    filters: {
+      name,
+      delta,
     },
-  );
+    fields,
+  });
 
   return sitemap[0];
 };
@@ -275,21 +242,16 @@ const getSitemap = async (name, delta, fields = ['sitemap_string']) => {
  * @returns {void}
  */
 const deleteSitemap = async (name) => {
-  const sitemaps = await strapi.entityService.findMany(
-    'plugin::sitemap.sitemap',
-    {
-      filters: {
-        name,
-      },
-      fields: ['id'],
+  const sitemaps = await strapi.entityService.findMany('plugin::sitemap.sitemap', {
+    filters: {
+      name,
     },
-  );
+    fields: ['id'],
+  });
 
-  await Promise.all(
-    sitemaps.map(async (sm) => {
-      await strapi.entityService.delete('plugin::sitemap.sitemap', sm.id);
-    }),
-  );
+  await Promise.all(sitemaps.map(async (sm) => {
+    await strapi.entityService.delete('plugin::sitemap.sitemap', sm.id);
+  }));
 };
 
 /**
@@ -300,17 +262,18 @@ const deleteSitemap = async (name) => {
  * @returns {void}
  */
 const createSitemap = async (data) => {
-  const { name, delta, type, sitemap_string } = data;
+  const {
+    name,
+    delta,
+    type,
+    sitemap_string,
+  } = data;
 
   let linkCount = null;
 
   parser.parseString(sitemap_string, (error, result) => {
     if (error) {
-      strapi.log.error(
-        logMessage(
-          `An error occurred while trying to parse the sitemap XML to json. ${error}`,
-        ),
-      );
+      strapi.log.error(logMessage(`An error occurred while trying to parse the sitemap XML to json. ${error}`));
       throw new Error();
     } else if (type === 'index') {
       linkCount = get(result, 'sitemapindex.sitemap.length') || 0;
@@ -342,21 +305,15 @@ const createSitemap = async (data) => {
  * @returns {void}
  */
 const createSitemapCache = async (sitemapJson, name, sitemapId) => {
-  const sitemap = await strapi.entityService.findMany(
-    'plugin::sitemap.sitemap-cache',
-    {
-      filters: {
-        name,
-      },
-      fields: ['id'],
+  const sitemap = await strapi.entityService.findMany('plugin::sitemap.sitemap-cache', {
+    filters: {
+      name,
     },
-  );
+    fields: ['id'],
+  });
 
   if (sitemap[0]) {
-    await strapi.entityService.delete(
-      'plugin::sitemap.sitemap-cache',
-      sitemap[0].id,
-    );
+    await strapi.entityService.delete('plugin::sitemap.sitemap-cache', sitemap[0].id);
   }
 
   await strapi.entityService.create('plugin::sitemap.sitemap-cache', {
@@ -378,28 +335,21 @@ const createSitemapCache = async (sitemapJson, name, sitemapId) => {
  * @returns {void}
  */
 const updateSitemapCache = async (sitemapJson, name, sitemapId) => {
-  const sitemap = await strapi.entityService.findMany(
-    'plugin::sitemap.sitemap-cache',
-    {
-      filters: {
-        name,
-      },
-      fields: ['id'],
+  const sitemap = await strapi.entityService.findMany('plugin::sitemap.sitemap-cache', {
+    filters: {
+      name,
     },
-  );
+    fields: ['id'],
+  });
 
   if (sitemap[0]) {
-    await strapi.entityService.update(
-      'plugin::sitemap.sitemap-cache',
-      sitemap[0].id,
-      {
-        data: {
-          sitemap_json: sitemapJson,
-          sitemap_id: sitemapId,
-          name,
-        },
+    await strapi.entityService.update('plugin::sitemap.sitemap-cache', sitemap[0].id, {
+      data: {
+        sitemap_json: sitemapJson,
+        sitemap_id: sitemapId,
+        name,
       },
-    );
+    });
   }
 };
 
@@ -411,14 +361,11 @@ const updateSitemapCache = async (sitemapJson, name, sitemapId) => {
  * @returns {void}
  */
 const getSitemapCache = async (name) => {
-  const sitemap = await strapi.entityService.findMany(
-    'plugin::sitemap.sitemap-cache',
-    {
-      filters: {
-        name,
-      },
+  const sitemap = await strapi.entityService.findMany('plugin::sitemap.sitemap-cache', {
+    filters: {
+      name,
     },
-  );
+  });
 
   return sitemap[0];
 };
