@@ -12,17 +12,14 @@ const logMessage = (msg = '') => `[strapi-plugin-sitemap]: ${msg}`;
 
 const noLimit = async (strapi, queryString, parameters, limit = 5000) => {
   let entries = [];
-  const amountOfEntries = await strapi.entityService.count(
-    queryString,
-    parameters,
-  );
+  const amountOfEntries = await strapi.entityService.count(queryString, parameters);
 
-  for (let i = 0; i < amountOfEntries / limit; i++) {
+  for (let i = 0; i < (amountOfEntries / limit); i++) {
     /* eslint-disable-next-line */
     const chunk = await strapi.entityService.findMany(queryString, {
       ...parameters,
       limit: limit,
-      start: i * limit,
+      start: (i * limit),
     });
     if (chunk.id) {
       entries = [chunk, ...entries];
@@ -42,9 +39,7 @@ const formatCache = (cache, invalidationObject) => {
       Object.keys(invalidationObject).map((contentType) => {
         // Remove the items from the cache that will be refreshed.
         if (contentType && invalidationObject[contentType].ids) {
-          invalidationObject[contentType].ids.map(
-            (id) => delete cache[contentType]?.[id],
-          );
+          invalidationObject[contentType].ids.map((id) => delete cache[contentType]?.[id]);
         } else if (contentType) {
           delete cache[contentType];
         }
@@ -52,7 +47,10 @@ const formatCache = (cache, invalidationObject) => {
 
       Object.values(cache).map((values) => {
         if (values) {
-          formattedCache = [...formattedCache, ...Object.values(values)];
+          formattedCache = [
+            ...formattedCache,
+            ...Object.values(values),
+          ];
         }
       });
     }
