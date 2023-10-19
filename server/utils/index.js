@@ -23,6 +23,12 @@ const noLimit = async (strapi, queryString, parameters, limit = 5000) => {
   for (let i = 0; i < amountOfEntries / limit; i++) {
     /* eslint-disable-next-line */
     chunk = await strapi.entityService.findMany(queryString, {
+      publicationState: "live",
+      filters: {
+        publishedAt: {
+          $null: false,
+        },
+      },
       populate: {
         route_parameters: {
           populate: {
