@@ -38,10 +38,10 @@ Install the plugin in your Strapi project.
 
 ```bash
 # using yarn
-yarn add strapi-plugin-dynamic-sitemap
+yarn add strapi-plugin-dynamic-route-sitemap
 
 # using npm
-npm install strapi-plugin-dynamic-sitemap --save
+npm install strapi-plugin-dynamic-route-sitemap --save
 ```
 
 After successful installation you have to rebuild the admin UI so it'll include this plugin. To rebuild and restart Strapi run:

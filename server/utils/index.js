@@ -36,6 +36,7 @@ const noLimit = async (strapi, queryString, parameters, limit = 5000) => {
 
     let itemObj = {};
     chunk.map(async (item) => {
+      item.route = item.route === "/homepage/" ? "" : item.route;
       item?.route_parameters.length > 0 ? (itemObj = item) : null;
       item.route.includes(":") === false ? formatedChunk.push(item) : null;
     });
