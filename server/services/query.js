@@ -78,46 +78,28 @@ const getRelationsFromConfig = (contentType) => {
  * @param {obj} config - The config object
  * @param {string} contentType - Query only entities of this type.
  * @param {array} ids - Query only these ids.
+ *@param {string} contentTypeLocale
  *
  * @returns {object} The pages.
  */
-const getPages = async (config, contentType, ids) => {
+const getPages = async (config, contentType, ids,contentTypeLocale) => {
   const excludeDrafts = config.excludeDrafts && strapi.contentTypes[contentType].options.draftAndPublish;
   const isLocalized = strapi.contentTypes[contentType].pluginOptions?.i18n?.localized;
 
   const relations = getRelationsFromConfig(config.contentTypes[contentType]);
   const fields = getFieldsFromConfig(config.contentTypes[contentType], true, isLocalized);
 
+  console.log("relations",relations)
+  console.log("fields",fields)
+  console.log("contentType",contentType)
+  console.log("contentTypeLocale",contentTypeLocale)
   const pages = await noLimit(strapi, contentType, {
-    filters: {
-      $or: [
-        {
-          sitemap_exclude: {
-            $null: true,
-          },
-        },
-        {
-          sitemap_exclude: {
-            $eq: false,
-          },
-        },
-      ],
-      id: ids ? {
-        $in: ids,
-      } : {},
-    },
-    locale: 'all',
-    fields,
-    populate: {
-      localizations: {
-        fields,
-        populate: relations,
-      },
-      ...relations,
-    },
+    locale: contentTypeLocale,
     orderBy: 'id',
     publicationState: excludeDrafts ? 'live' : 'preview',
   });
+
+  console.log("DATALARPAGE",pages)
 
   return pages;
 };
@@ -262,6 +244,7 @@ const deleteSitemap = async (name) => {
  * @returns {void}
  */
 const createSitemap = async (data) => {
+  console.log("RESPcreateSitemap",data)
   const {
     name,
     delta,
@@ -291,6 +274,8 @@ const createSitemap = async (data) => {
       link_count: linkCount,
     },
   });
+
+  console.log("strapi.entityService.create",sitemap)
 
   return sitemap.id;
 };
@@ -355,7 +340,7 @@ const updateSitemapCache = async (sitemapJson, name, sitemapId) => {
 
 /**
  * Get a sitemap_cache from the database
- *
+ *Ω
  * @param {string} name - The name of the sitemap
  *
  * @returns {void}

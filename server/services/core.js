@@ -66,20 +66,25 @@ const getLanguageLinks = async (config, page, contentType, defaultURL) => {
  * @returns {object} The sitemap entry data.
  */
 const getSitemapPageData = async (config, page, contentType) => {
-  let locale = page.locale || 'und';
+  console.log("page",page)
+  let locale = page.locale
 
   // Return when there is no pattern for the page.
   if (
     !config.contentTypes[contentType]['languages'][locale]
     && config.contentTypes[contentType]['languages']['und']
   ) {
+    console.log("İF'E GİRDİ")
     locale = 'und';
   } else if (
     !config.contentTypes[contentType]['languages'][locale]
     && !config.contentTypes[contentType]['languages']['und']
   ) {
+    console.log("ELSE İF'E GİRDİ")
     return null;
   }
+
+  console.log("SEVICEpage",page)
 
   const { pattern } = config.contentTypes[contentType]['languages'][locale];
   const path = await strapi.plugins.sitemap.services.pattern.resolvePattern(pattern, page);
@@ -110,6 +115,7 @@ const getSitemapPageData = async (config, page, contentType) => {
  * @returns {object} The cache and regular entries.
  */
 const createSitemapEntries = async (invalidationObject) => {
+  console.log("invalidationObject",invalidationObject)
   const config = await getService('settings').getConfig();
   const sitemapEntries = [];
   const cacheEntries = {};
@@ -122,22 +128,28 @@ const createSitemapEntries = async (invalidationObject) => {
 
     cacheEntries[contentType] = {};
 
+    console.log("contentTypes",config.contentTypes)
+
     // Query all the pages
-    const pages = await getService('query').getPages(config, contentType, invalidationObject?.[contentType]?.ids);
+    console.log("invalidationObject?.[contentType]?.ids",invalidationObject?.[contentType]?.ids)
+    const contentTypeKeys = Object.keys(config.contentTypes)
+    const contentTypeLocale = Object.keys(config.contentTypes[contentTypeKeys].languages)
+    const pages = await getService('query').getPages(config, contentType, invalidationObject?.[contentType]?.ids, contentTypeLocale);
+    console.log("RESULT_PAGE",pages)
 
     // Add formatted sitemap page data to the array.
     await Promise.all(pages.map(async (page, i) => {
-      const pageData = await getSitemapPageData(config, page, contentType);
-      if (pageData) {
-        sitemapEntries.push(pageData);
+        const pageData = await getSitemapPageData(config, page, contentType);
+        if (pageData) {
+          //console.log("pageData",pageData)
+          sitemapEntries.push(pageData);
 
-        // Add page to the cache.
-        cacheEntries[contentType][page.id] = pageData;
-      }
+          // Add page to the cache.
+          cacheEntries[contentType][page.id] = pageData;
+        }
     }));
 
   }));
-
 
   // Custom entries.
   await Promise.all(Object.keys(config.customEntries).map(async (customEntry) => {
@@ -161,6 +173,8 @@ const createSitemapEntries = async (invalidationObject) => {
       });
     }
   }
+
+  console.log("GELDİ",sitemapEntries)
 
   return { cacheEntries, sitemapEntries };
 };
@@ -258,26 +272,38 @@ const getSitemapStream = async (urlCount) => {
  * @returns {void}
  */
 const createSitemap = async (cache, invalidationObject) => {
+  console.log("cache",cache);
+  console.log("invalidationObject",invalidationObject);
   const cachingEnabled = strapi.config.get('plugin.sitemap.caching');
   const autoGenerationEnabled = strapi.config.get('plugin.sitemap.autoGenerate');
+
+  console.log("invalidationObject",invalidationObject)
 
   try {
     const {
       sitemapEntries,
       cacheEntries,
     } = await createSitemapEntries(invalidationObject);
+    //console.log("sitemapEntries",sitemapEntries)
+    //console.log("cacheEntries",cacheEntries)
     // Format cache to regular entries
     const formattedCache = formatCache(cache, invalidationObject);
-
+    //console.log("CORESITEMAPE",sitemapEntries)
     const allEntries = [
       ...sitemapEntries,
       ...formattedCache,
     ];
 
+    //console.log("allEntries",allEntries)
+
+
     if (isEmpty(allEntries)) {
+      console.log("if'e girdi")
       strapi.log.info(logMessage('No sitemap XML was generated because there were 0 URLs configured.'));
       return;
     }
+
+    console.log("if'den çıktı")
 
     await getService('query').deleteSitemap('default');
 
@@ -286,7 +312,11 @@ const createSitemap = async (cache, invalidationObject) => {
     allEntries.map((sitemapEntry) => sitemap.write(sitemapEntry));
     sitemap.end();
 
+    console.log("sitemap",sitemap)
+    console.log("isIndex",isIndex)
+
     const sitemapId = await saveSitemap('default', sitemap, isIndex);
+    console.log("sitemapId",sitemapId)
 
     if (cachingEnabled && autoGenerationEnabled) {
       if (!cache) {

@@ -3,6 +3,7 @@
 const { logMessage, getService } = require('./utils');
 
 module.exports = async () => {
+  console.log("BOOT")
   const sitemap = strapi.plugin('sitemap');
   const cron = strapi.config.get('plugin.sitemap.cron');
 
@@ -54,6 +55,7 @@ module.exports = async () => {
 
     // Schedule cron to generate the sitemap
     if (cron) {
+      console.log("cron",cron)
       strapi.cron.add({
         generateSitemap: {
           task: async ({ strapi }) => {

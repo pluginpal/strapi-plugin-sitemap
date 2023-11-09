@@ -13,22 +13,22 @@ const getService = (name) => {
 const logMessage = (msg = "") => `[strapi-plugin-sitemap]: ${msg}`;
 
 const noLimit = async (strapi, queryString, parameters, limit = 5000) => {
+  console.log("queryString",queryString)
+  console.log("INDEXParam",parameters)
   const amountOfEntries = await strapi.entityService.count(
     queryString,
     parameters
   );
+
+  console.log("amountOfEntries",amountOfEntries)
+  console.log("queryString",queryString)
 
   let chunk;
   let formatedChunk = [];
   for (let i = 0; i < amountOfEntries / limit; i++) {
     /* eslint-disable-next-line */
     chunk = await strapi.entityService.findMany(queryString, {
-      publicationState: "live",
-      filters: {
-        publishedAt: {
-          $null: false,
-        },
-      },
+     ...parameters,
       populate: {
         route_parameters: {
           populate: {
@@ -40,38 +40,54 @@ const noLimit = async (strapi, queryString, parameters, limit = 5000) => {
       },
     });
 
-    let itemObj = {};
+    console.log("Result_Chunk",chunk[0].route_parameters)
+
+    let itemObj = [];
     chunk.map(async (item) => {
       item.route = item.route === "/homepage/" ? "" : item.route;
-      item?.route_parameters.length > 0 ? (itemObj = item) : null;
+      item?.route_parameters.length > 0 ? (itemObj.push(item)) : null;
       item.route.includes(":") === false ? formatedChunk.push(item) : null;
     });
 
-    if (Object.keys(itemObj).length > 0) {
-      const { parameter, dynamic_parameter } = itemObj?.route_parameters[0];
-      const slugParameter = parameter;
+    console.log("itemObj",itemObj)
+    if (itemObj.length > 0) {
+      for (const item of itemObj) {
+        console.log("FORITEM",item)
+        let { parameter, dynamic_parameter } = item?.route_parameters[0];
+        console.log("dynamic_parameter",dynamic_parameter)
+        const slugParameter = parameter;
 
-      let result = null;
-      try {
-        result = await axios.post(dynamic_parameter?.integration?.endpoint, {
-          query: dynamic_parameter?.sitemapQuery,
+        let result = null;
+        console.log("parameters?.locale",parameters?.locale)
+        // ${itemObj?.locale}
+        console.log("QUERYYY", dynamic_parameter?.sitemapQuery)
+        console.log("item?.locale", item?.locale)
+        const sitemapQuery = dynamic_parameter?.sitemapQuery.replace('$locale', `"${item?.locale}"`)
+        try {
+          result = await axios.post(dynamic_parameter?.integration?.endpoint, {
+            query: sitemapQuery,
+          });
+        } catch (error) {
+          console.log("error", error);
+        }
+        console.log("result",result.data.data.symbols)
+        const resp = new Function(dynamic_parameter?.sitemapTransform)(
+            result?.data
+        );
+
+        console.log("resp",resp)
+
+        resp.map((slug) => {
+          formatedChunk.push({
+            id: item?.id,
+            route: item?.route.replace(":" + slugParameter, slug),
+            createdAt: item?.createdAt,
+            updatedAt: item?.updatedAt,
+            publishedAt: item?.publishedAt,
+            locale: item?.locale
+          });
         });
-      } catch (error) {
-        console.log("error", error);
       }
-      const resp = new Function(dynamic_parameter?.sitemapTransform)(
-        result?.data
-      );
-
-      resp.map((slug) => {
-        formatedChunk.push({
-          id: itemObj?.id,
-          route: itemObj?.route.replace(":" + slugParameter, slug),
-          createdAt: itemObj?.createdAt,
-          updatedAt: itemObj?.updatedAt,
-          publishedAt: itemObj?.publishedAt,
-        });
-      });
     }
   }
   return formatedChunk;
