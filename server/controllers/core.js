@@ -4,7 +4,7 @@ const fs = require('fs');
 const _ = require('lodash');
 const path = require('path');
 
-const { getService } = require('../utils');
+const { getService, parseLocale } = require('../utils');
 
 /**
  * Sitemap.js controller
@@ -59,7 +59,7 @@ module.exports = {
   },
 
   info: async (ctx) => {
-    const sitemap = await getService('query').getSitemap('default', 0, ['link_count', 'updated_at', 'type']);
+    const sitemap = await getService('query').getSitemap('default - en', 0, ['link_count', 'updated_at', 'type']);
     const sitemapInfo = {};
 
     if (sitemap) {
@@ -82,7 +82,8 @@ module.exports = {
 
   getSitemap: async (ctx) => {
     const { page = 0 } = ctx.query;
-    const sitemap = await getService('query').getSitemap('default', page);
+    const locale = parseLocale(ctx.url)
+    const sitemap = await getService('query').getSitemap(`default - ${locale}`, page);
 
     if (!sitemap) {
       ctx.notFound('Not found');

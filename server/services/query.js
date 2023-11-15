@@ -205,6 +205,7 @@ const composeInvalidationObject = async (config, type, queryFilters, ids = []) =
  * @returns {void}
  */
 const getSitemap = async (name, delta, fields = ['sitemap_string']) => {
+  console.log("getSitemap",name)
   const sitemap = await strapi.entityService.findMany('plugin::sitemap.sitemap', {
     filters: {
       name,
@@ -244,7 +245,7 @@ const deleteSitemap = async (name) => {
  * @returns {void}
  */
 const createSitemap = async (data) => {
-  console.log("RESPcreateSitemap",data)
+  // console.log("RESPcreateSitemap",data)
   const {
     name,
     delta,
@@ -275,7 +276,7 @@ const createSitemap = async (data) => {
     },
   });
 
-  console.log("strapi.entityService.create",sitemap)
+  // console.log("strapi.entityService.create",sitemap)
 
   return sitemap.id;
 };
@@ -290,6 +291,9 @@ const createSitemap = async (data) => {
  * @returns {void}
  */
 const createSitemapCache = async (sitemapJson, name, sitemapId) => {
+  console.log("sitemapJson",sitemapJson)
+  console.log("name",name)
+  console.log("sitemapId",sitemapId)
   const sitemap = await strapi.entityService.findMany('plugin::sitemap.sitemap-cache', {
     filters: {
       name,

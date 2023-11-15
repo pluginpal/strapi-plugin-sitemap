@@ -5,7 +5,7 @@ module.exports = {
   routes: [
     {
       method: 'GET',
-      path: '/index.xml',
+      path: '/:locale/index.xml',
       handler: 'core.getSitemap',
       config: {
         policies: [],
@@ -43,5 +43,13 @@ module.exports = {
         policies: [],
       },
     },
+    {
+      method: 'GET',
+      path: '/settings',
+      handler: 'settings.getSettings',
+      config: {
+        policies: [],
+      },
+    }
   ],
 };

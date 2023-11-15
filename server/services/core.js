@@ -114,11 +114,10 @@ const getSitemapPageData = async (config, page, contentType) => {
  *
  * @returns {object} The cache and regular entries.
  */
-const createSitemapEntries = async (invalidationObject) => {
+const createSitemapEntries = async (invalidationObject,config, contentTypeLocale) => {
   console.log("invalidationObject",invalidationObject)
-  const config = await getService('settings').getConfig();
   const sitemapEntries = [];
-  const cacheEntries = {};
+  const cacheEntries = [];
 
   // Collection entries.
   await Promise.all(Object.keys(config.contentTypes).map(async (contentType) => {
@@ -126,16 +125,11 @@ const createSitemapEntries = async (invalidationObject) => {
       return;
     }
 
-    cacheEntries[contentType] = {};
-
     console.log("contentTypes",config.contentTypes)
 
     // Query all the pages
-    console.log("invalidationObject?.[contentType]?.ids",invalidationObject?.[contentType]?.ids)
-    const contentTypeKeys = Object.keys(config.contentTypes)
-    const contentTypeLocale = Object.keys(config.contentTypes[contentTypeKeys].languages)
     const pages = await getService('query').getPages(config, contentType, invalidationObject?.[contentType]?.ids, contentTypeLocale);
-    console.log("RESULT_PAGE",pages)
+    // console.log("RESULT_PAGE",pages)
 
     // Add formatted sitemap page data to the array.
     await Promise.all(pages.map(async (page, i) => {
@@ -145,7 +139,13 @@ const createSitemapEntries = async (invalidationObject) => {
           sitemapEntries.push(pageData);
 
           // Add page to the cache.
-          cacheEntries[contentType][page.id] = pageData;
+          cacheEntries.push({
+            [contentType]: {
+              [page.id]: {
+                pageData
+              }
+            }
+          });
         }
     }));
 
@@ -175,6 +175,7 @@ const createSitemapEntries = async (invalidationObject) => {
   }
 
   console.log("GELDİ",sitemapEntries)
+  console.log("cacheEntries",cacheEntries)
 
   return { cacheEntries, sitemapEntries };
 };
@@ -194,7 +195,7 @@ const saveSitemap = async (filename, sitemap, isIndex) => {
       try {
         return await getService('query').createSitemap({
           sitemap_string: sm.toString(),
-          name: 'default',
+          name: filename,
           delta: 0,
           type: isIndex ? 'index' : 'default_hreflang',
         });
@@ -228,6 +229,9 @@ const getSitemapStream = async (urlCount) => {
     xslObj.xslUrl = 'xsl/sitemap.xsl';
   }
 
+  console.log("LIMIT",LIMIT)
+  console.log("urlCount",urlCount)
+
   if (urlCount <= LIMIT) {
     return [new SitemapStream({
       hostname: config.hostname,
@@ -246,12 +250,13 @@ const getSitemapStream = async (urlCount) => {
         });
         const delta = i + 1;
         const path = `api/sitemap/index.xml?page=${delta}`;
+        console.log("PATH",path)
 
         streamToPromise(sitemapStream)
           .then((sm) => {
             getService('query').createSitemap({
               sitemap_string: sm.toString(),
-              name: 'default',
+              name: 'default - en',
               type: 'default_hreflang',
               delta,
             });
@@ -276,61 +281,79 @@ const createSitemap = async (cache, invalidationObject) => {
   console.log("invalidationObject",invalidationObject);
   const cachingEnabled = strapi.config.get('plugin.sitemap.caching');
   const autoGenerationEnabled = strapi.config.get('plugin.sitemap.autoGenerate');
+  const config = await getService('settings').getConfig();
 
   console.log("invalidationObject",invalidationObject)
-
-  try {
-    const {
-      sitemapEntries,
-      cacheEntries,
-    } = await createSitemapEntries(invalidationObject);
-    //console.log("sitemapEntries",sitemapEntries)
-    //console.log("cacheEntries",cacheEntries)
-    // Format cache to regular entries
-    const formattedCache = formatCache(cache, invalidationObject);
-    //console.log("CORESITEMAPE",sitemapEntries)
-    const allEntries = [
-      ...sitemapEntries,
-      ...formattedCache,
-    ];
-
-    //console.log("allEntries",allEntries)
+  console.log("config",config)
 
 
-    if (isEmpty(allEntries)) {
-      console.log("if'e girdi")
-      strapi.log.info(logMessage('No sitemap XML was generated because there were 0 URLs configured.'));
-      return;
-    }
+  // const contentTypeLocale = Object.keys(config.contentTypes[contentTypeKeys].languages)
+  const configLocaleKeys = Object.keys(config.contentTypes[Object.keys(config.contentTypes)]?.languages)
+  console.log("configLocaleKeys",configLocaleKeys)
 
-    console.log("if'den çıktı")
+  for (const configLocaleKey of configLocaleKeys) {
+    try {
+      const {
+        sitemapEntries,
+        cacheEntries,
+      } = await createSitemapEntries(invalidationObject,config,configLocaleKey);
+      console.log("sitemapEntries",sitemapEntries)
+      console.log("cacheEntries",cacheEntries)
+      // Format cache to regular entries
+      const formattedCache = formatCache(cache, invalidationObject);
+      //console.log("CORESITEMAPE",sitemapEntries)
+      const allEntries = [
+        ...sitemapEntries,
+        ...formattedCache,
+      ];
 
-    await getService('query').deleteSitemap('default');
+      //console.log("allEntries",allEntries)
 
-    const [sitemap, isIndex] = await getSitemapStream(allEntries.length);
 
-    allEntries.map((sitemapEntry) => sitemap.write(sitemapEntry));
-    sitemap.end();
-
-    console.log("sitemap",sitemap)
-    console.log("isIndex",isIndex)
-
-    const sitemapId = await saveSitemap('default', sitemap, isIndex);
-    console.log("sitemapId",sitemapId)
-
-    if (cachingEnabled && autoGenerationEnabled) {
-      if (!cache) {
-        getService('query').createSitemapCache(cacheEntries, 'default', sitemapId);
-      } else {
-        const newCache = mergeCache(cache, cacheEntries);
-        getService('query').updateSitemapCache(newCache, 'default', sitemapId);
+      if (isEmpty(allEntries)) {
+        console.log("if'e girdi")
+        strapi.log.info(logMessage('No sitemap XML was generated because there were 0 URLs configured.'));
+        return;
       }
-    }
 
-    strapi.log.info(logMessage('The sitemap XML has been generated. It can be accessed on /api/sitemap/index.xml.'));
-  } catch (err) {
-    strapi.log.error(logMessage(`Something went wrong while trying to build the SitemapStream. ${err}`));
-    throw new Error();
+      console.log("if'den çıktı")
+
+      await getService('query').deleteSitemap(`default - ${configLocaleKey}`);
+
+      const [sitemap, isIndex] = await getSitemapStream(allEntries.length);
+
+      console.log("allEntries",allEntries)
+
+      allEntries.map((sitemapEntry) => {
+        sitemap.write(sitemapEntry)
+      });
+      sitemap.end();
+
+      console.log("RESULT_FILE",sitemap)
+
+
+      console.log("CORE_Result_Sitemap",sitemap)
+      console.log("isIndex",isIndex)
+
+      const sitemapId = await saveSitemap(`default - ${configLocaleKey}`, sitemap, isIndex);
+      console.log("sitemapId",sitemapId)
+
+      if (cachingEnabled && autoGenerationEnabled) {
+        if (!cache) {
+          console.log("NOT CACHE")
+          getService('query').createSitemapCache(cacheEntries, `default - ${configLocaleKey}`, sitemapId);
+        } else {
+          console.log("CACHE")
+          const newCache = mergeCache(cache, cacheEntries);
+          getService('query').updateSitemapCache(newCache, `default - ${configLocaleKey}`, sitemapId);
+        }
+      }
+
+      strapi.log.info(logMessage('The sitemap XML has been generated. It can be accessed on /api/sitemap/index.xml.'));
+    } catch (err) {
+      strapi.log.error(logMessage(`Something went wrong while trying to build the SitemapStream. ${err}`));
+      throw new Error();
+    }
   }
 };
 

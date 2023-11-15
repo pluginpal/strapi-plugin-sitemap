@@ -132,6 +132,12 @@ const mergeCache = (oldCache, newCache) => {
   return mergedCache;
 };
 
+const parseLocale = (route) => {
+  const regex = /\/api\/sitemap\/([^\/]+)\/index\.xml/;
+  const match = regex.exec(route);
+  return match ? match[1] : null;
+}
+
 module.exports = {
   getService,
   getCoreStore,
@@ -139,4 +145,5 @@ module.exports = {
   noLimit,
   formatCache,
   mergeCache,
+  parseLocale
 };

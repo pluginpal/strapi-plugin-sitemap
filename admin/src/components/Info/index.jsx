@@ -1,14 +1,15 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 
 import { Map } from 'immutable';
 import { useIntl } from 'react-intl';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { useNotification } from '@strapi/helper-plugin';
-import { Typography, Box, Button, Link } from '@strapi/design-system';
+import { Typography, Box, Button, Link, SingleSelect, SingleSelectOption } from '@strapi/design-system';
 
 import { generateSitemap } from '../../state/actions/Sitemap';
 import { formatTime } from '../../helpers/timeFormat';
+import axios from "axios";
 
 const Info = () => {
   const hasHostname = useSelector((state) => state.getIn(['sitemap', 'initialData', 'hostname'], Map()));
@@ -26,6 +27,18 @@ const Info = () => {
   const time = formatTime(updateDate, true);
 
   const content = () => {
+
+      const [locale, setLocale] = useState()
+      const [checkedLocale, setCheckedLocale] = useState()
+
+      useEffect(async () => {
+          const result = await axios.get('http://localhost:1337/api/sitemap/settings')
+          const localeKey = Object.keys(result.data.contentTypes)
+          const locales = Object.keys(result.data.contentTypes[localeKey].languages)
+          setLocale(locales)
+          setCheckedLocale(locales[0])
+      }, [])
+
     if (!hasHostname) {
       return (
         <div>
@@ -110,8 +123,21 @@ const Info = () => {
             >
               {formatMessage({ id: 'sitemap.Header.Button.Generate', defaultMessage: 'Generate sitemap' })}
             </Button>
+
+            <SingleSelect label="Locale" value={checkedLocale} onChange={setCheckedLocale}>
+                {locale && locale.map((value) => (
+                    <SingleSelectOption value={value}>{value}</SingleSelectOption>
+                ))}
+            </SingleSelect>
+
             <Link
-              href={`${strapi.backendURL}${sitemapInfo.get('location')}`}
+              href={
+                  checkedLocale
+                      ? strapi.backendURL +
+                      sitemapInfo.get('location')
+                       .replace(/^\/api\/sitemap\//, '/api/sitemap/' + checkedLocale + '/')
+                      : strapi.backendURL + sitemapInfo.get('location')
+              }
               target="_blank"
             >
               {formatMessage({ id: 'sitemap.Header.Button.SitemapLink', defaultMessage: 'Go to the sitemap' })}

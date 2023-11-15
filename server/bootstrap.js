@@ -30,6 +30,9 @@ module.exports = async () => {
               getSitemapXslJs: { enabled: true },
               getSitemapXslSortable: { enabled: true },
             },
+            settings: {
+              getSettings: { enabled: true }
+            }
           },
         };
 
