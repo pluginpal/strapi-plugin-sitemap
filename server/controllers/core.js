@@ -62,7 +62,6 @@ module.exports = {
     const config = await getService('settings').getConfig()
     const configLocaleKeys = Object.keys(config.contentTypes[Object.keys(config.contentTypes)]?.languages)
 
-    console.log("CONF",configLocaleKeys)
     let sitemap = {}
     let sitemapLinkCount = 0
     for (const configLocaleKey of configLocaleKeys) {

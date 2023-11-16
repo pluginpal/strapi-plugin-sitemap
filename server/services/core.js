@@ -277,19 +277,12 @@ const getSitemapStream = async (urlCount) => {
  * @returns {void}
  */
 const createSitemap = async (cache, invalidationObject) => {
-  console.log("cache",cache);
-  console.log("invalidationObject",invalidationObject);
   const cachingEnabled = strapi.config.get('plugin.sitemap.caching');
   const autoGenerationEnabled = strapi.config.get('plugin.sitemap.autoGenerate');
   const config = await getService('settings').getConfig();
 
-  console.log("invalidationObject",invalidationObject)
-  console.log("config",config)
-
-
   // const contentTypeLocale = Object.keys(config.contentTypes[contentTypeKeys].languages)
   const configLocaleKeys = Object.keys(config.contentTypes[Object.keys(config.contentTypes)]?.languages)
-  console.log("configLocaleKeys",configLocaleKeys)
 
   for (const configLocaleKey of configLocaleKeys) {
     try {
@@ -297,8 +290,6 @@ const createSitemap = async (cache, invalidationObject) => {
         sitemapEntries,
         cacheEntries,
       } = await createSitemapEntries(invalidationObject,config,configLocaleKey);
-      console.log("sitemapEntries",sitemapEntries)
-      console.log("cacheEntries",cacheEntries)
       // Format cache to regular entries
       const formattedCache = formatCache(cache, invalidationObject);
       //console.log("CORESITEMAPE",sitemapEntries)
@@ -311,39 +302,25 @@ const createSitemap = async (cache, invalidationObject) => {
 
 
       if (isEmpty(allEntries)) {
-        console.log("if'e girdi")
         strapi.log.info(logMessage('No sitemap XML was generated because there were 0 URLs configured.'));
         return;
       }
 
-      console.log("if'den çıktı")
-
       await getService('query').deleteSitemap(`default - ${configLocaleKey}`);
 
       const [sitemap, isIndex] = await getSitemapStream(allEntries.length);
-
-      console.log("allEntries",allEntries)
 
       allEntries.map((sitemapEntry) => {
         sitemap.write(sitemapEntry)
       });
       sitemap.end();
 
-      console.log("RESULT_FILE",sitemap)
-
-
-      console.log("CORE_Result_Sitemap",sitemap)
-      console.log("isIndex",isIndex)
-
       const sitemapId = await saveSitemap(`default - ${configLocaleKey}`, sitemap, isIndex);
-      console.log("sitemapId",sitemapId)
 
       if (cachingEnabled && autoGenerationEnabled) {
         if (!cache) {
-          console.log("NOT CACHE")
           getService('query').createSitemapCache(cacheEntries, `default - ${configLocaleKey}`, sitemapId);
         } else {
-          console.log("CACHE")
           const newCache = mergeCache(cache, cacheEntries);
           getService('query').updateSitemapCache(newCache, `default - ${configLocaleKey}`, sitemapId);
         }

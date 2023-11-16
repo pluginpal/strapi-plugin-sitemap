@@ -13,15 +13,10 @@ const getService = (name) => {
 const logMessage = (msg = "") => `[strapi-plugin-sitemap]: ${msg}`;
 
 const noLimit = async (strapi, queryString, parameters, limit = 5000) => {
-  console.log("queryString",queryString)
-  console.log("INDEXParam",parameters)
   const amountOfEntries = await strapi.entityService.count(
     queryString,
     parameters
   );
-
-  console.log("amountOfEntries",amountOfEntries)
-  console.log("queryString",queryString)
 
   let chunk;
   let formatedChunk = [];
@@ -40,8 +35,6 @@ const noLimit = async (strapi, queryString, parameters, limit = 5000) => {
       },
     });
 
-    console.log("Result_Chunk",chunk[0].route_parameters)
-
     let itemObj = [];
     chunk.map(async (item) => {
       item.route = item.route === "/homepage/" ? "" : item.route;
@@ -49,19 +42,12 @@ const noLimit = async (strapi, queryString, parameters, limit = 5000) => {
       item.route.includes(":") === false ? formatedChunk.push(item) : null;
     });
 
-    console.log("itemObj",itemObj)
     if (itemObj.length > 0) {
       for (const item of itemObj) {
-        console.log("FORITEM",item)
         let { parameter, dynamic_parameter } = item?.route_parameters[0];
-        console.log("dynamic_parameter",dynamic_parameter)
         const slugParameter = parameter;
 
         let result = null;
-        console.log("parameters?.locale",parameters?.locale)
-        // ${itemObj?.locale}
-        console.log("QUERYYY", dynamic_parameter?.sitemapQuery)
-        console.log("item?.locale", item?.locale)
         const sitemapQuery = dynamic_parameter?.sitemapQuery.replace('$locale', `"${item?.locale}"`)
         try {
           result = await axios.post(dynamic_parameter?.integration?.endpoint, {
@@ -70,12 +56,9 @@ const noLimit = async (strapi, queryString, parameters, limit = 5000) => {
         } catch (error) {
           console.log("error", error);
         }
-        console.log("result",result.data.data.symbols)
         const resp = new Function(dynamic_parameter?.sitemapTransform)(
             result?.data
         );
-
-        console.log("resp",resp)
 
         resp.map((slug) => {
           formatedChunk.push({

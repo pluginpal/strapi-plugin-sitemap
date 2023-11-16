@@ -3,14 +3,9 @@
 const { getService, logMessage } = require('../utils');
 
 const generateSitemapAfterUpdate = async (modelName, queryFilters, object, ids) => {
-  console.log("modelName",modelName)
-  console.log("queryFilters",queryFilters)
-  console.log("object",object)
-  console.log("ids",ids)
   const cachingEnabled = strapi.config.get('plugin.sitemap.caching');
 
   if (!cachingEnabled) {
-    console.log("Girdi")
     await getService('core').createSitemap();
     return;
   }
@@ -43,32 +38,26 @@ const subscribeLifecycleMethods = async (modelName) => {
   const cachingEnabled = strapi.config.get('plugin.sitemap.caching');
 
   if (strapi.contentTypes[modelName]) {
-      console.log("if'e girdi");
     await strapi.db.lifecycles.subscribe({
       models: [modelName],
 
       async afterCreate(event) {
-        console.log("afterCreate",event)
         await generateSitemapAfterUpdate(modelName, event.params.where, null, [event.result.id]);
       },
 
       async afterCreateMany(event) {
-          console.log("afterCreateMany")
         await generateSitemapAfterUpdate(modelName, event.params.where, null, event.result.ids);
       },
 
       async afterUpdate(event) {
-          console.log("afterUpdate")
         await generateSitemapAfterUpdate(modelName, event.params.where, null, [event.result.id]);
       },
 
       async afterUpdateMany(event) {
-          console.log("afterUpdateMany")
         await generateSitemapAfterUpdate(modelName, event.params.where);
       },
 
       async beforeDelete(event) {
-          console.log("beforeDelete")
         if (!cachingEnabled) return;
 
         const config = await getService('settings').getConfig();

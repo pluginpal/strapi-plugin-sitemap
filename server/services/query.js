@@ -89,17 +89,11 @@ const getPages = async (config, contentType, ids,contentTypeLocale) => {
   const relations = getRelationsFromConfig(config.contentTypes[contentType]);
   const fields = getFieldsFromConfig(config.contentTypes[contentType], true, isLocalized);
 
-  console.log("relations",relations)
-  console.log("fields",fields)
-  console.log("contentType",contentType)
-  console.log("contentTypeLocale",contentTypeLocale)
   const pages = await noLimit(strapi, contentType, {
     locale: contentTypeLocale,
     orderBy: 'id',
     publicationState: excludeDrafts ? 'live' : 'preview',
   });
-
-  console.log("DATALARPAGE",pages)
 
   return pages;
 };
@@ -205,7 +199,6 @@ const composeInvalidationObject = async (config, type, queryFilters, ids = []) =
  * @returns {void}
  */
 const getSitemap = async (name, delta, fields = ['sitemap_string']) => {
-  console.log("getSitemap",name)
   const sitemap = await strapi.entityService.findMany('plugin::sitemap.sitemap', {
     filters: {
       name,
@@ -291,9 +284,6 @@ const createSitemap = async (data) => {
  * @returns {void}
  */
 const createSitemapCache = async (sitemapJson, name, sitemapId) => {
-  console.log("sitemapJson",sitemapJson)
-  console.log("name",name)
-  console.log("sitemapId",sitemapId)
   const sitemap = await strapi.entityService.findMany('plugin::sitemap.sitemap-cache', {
     filters: {
       name,
