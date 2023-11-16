@@ -107,7 +107,7 @@ const Info = ({getLocales, locale, checkedLocale, setCheckedLocale}) => {
               </Typography>
             </div>
           )}
-          <div style={{ display: 'flex', flexDirection: 'row' }}>
+          <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'end', gap: 20 }}>
             <Button
               onClick={async () => {
                  const result = await dispatch(generateSitemap(toggleNotification))
