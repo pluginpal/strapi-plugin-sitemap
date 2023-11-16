@@ -1,6 +1,6 @@
 {
   "name": "strapi-plugin-dynamic-route-sitemap",
-  "version": "3.0.7",
+  "version": "3.0.8",
   "description": "Generate a highly customizable dynamic sitemap XML in Strapi CMS.",
   "strapi": {
     "displayName": "Sitemap",
