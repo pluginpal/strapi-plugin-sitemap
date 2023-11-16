@@ -9,7 +9,7 @@ import { Check } from '@strapi/icons';
 
 import { discardAllChanges, submit } from '../../state/actions/Sitemap';
 
-const Header = () => {
+const Header = ({getLocales}) => {
   const settings = useSelector((state) => state.getIn(['sitemap', 'settings'], Map()));
   const initialData = useSelector((state) => state.getIn(['sitemap', 'initialData'], Map()));
   const toggleNotification = useNotification();
@@ -19,9 +19,10 @@ const Header = () => {
 
   const disabled = JSON.stringify(settings) === JSON.stringify(initialData);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch(submit(settings.toJS(), toggleNotification));
+    await dispatch(submit(settings.toJS(), toggleNotification));
+    getLocales();
   };
 
   const handleCancel = (e) => {

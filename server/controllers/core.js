@@ -59,7 +59,18 @@ module.exports = {
   },
 
   info: async (ctx) => {
-    const sitemap = await getService('query').getSitemap('default - en', 0, ['link_count', 'updated_at', 'type']);
+    const config = await getService('settings').getConfig()
+    const configLocaleKeys = Object.keys(config.contentTypes[Object.keys(config.contentTypes)]?.languages)
+
+    console.log("CONF",configLocaleKeys)
+    let sitemap = {}
+    let sitemapLinkCount = 0
+    for (const configLocaleKey of configLocaleKeys) {
+      sitemap = await getService('query').getSitemap(`default - ${configLocaleKey}`, 0, ['link_count', 'updated_at', 'type']);
+      sitemapLinkCount += sitemap.link_count
+    }
+    sitemap.link_count = sitemapLinkCount
+
     const sitemapInfo = {};
 
     if (sitemap) {

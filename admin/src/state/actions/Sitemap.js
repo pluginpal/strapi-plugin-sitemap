@@ -102,6 +102,7 @@ export function generateSitemap(toggleNotification) {
       dispatch(getSitemapInfo());
       toggleNotification({ type: 'success', message });
       dispatch(setLoading(false));
+      return { type: 'success', message }
     } catch (err) {
       toggleNotification({ type: 'warning', message: { id: 'notification.error' } });
     }

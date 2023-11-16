@@ -5,7 +5,7 @@
  *
  */
 
-import React, { useEffect } from 'react';
+import React, {useEffect, useState} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { useNotification } from '@strapi/helper-plugin';
@@ -16,6 +16,7 @@ import Info from '../../components/Info';
 
 import { getAllowedFields, getContentTypes, getSettings, getSitemapInfo, getLanguages } from '../../state/actions/Sitemap';
 import Loader from '../../components/Loader';
+import axios from "axios";
 
 const App = () => {
   const loading = useSelector((state) => state.getIn(['sitemap', 'loading'], false));
@@ -30,12 +31,24 @@ const App = () => {
     dispatch(getSitemapInfo(toggleNotification));
     dispatch(getAllowedFields(toggleNotification));
   }, [dispatch]);
+  const [locale, setLocale] = useState()
+  const [checkedLocale, setCheckedLocale] = useState()
 
+  const getLocales = async () => {
+    const result =
+        await axios.get('/api/sitemap/settings')
+
+    const localeKey = Object.keys(result.data.contentTypes)
+    const locales = Object.keys(result.data.contentTypes[localeKey].languages)
+
+    setLocale(locales)
+    setCheckedLocale(locales[0])
+  }
   return (
     <div style={{ position: 'relative' }}>
       {loading && <Loader fullPage />}
-      <Header />
-      <Info />
+      <Header getLocales={getLocales}/>
+      <Info getLocales={getLocales} locale={locale} checkedLocale={checkedLocale} setCheckedLocale={setCheckedLocale}/>
       <Tabs />
     </div>
   );

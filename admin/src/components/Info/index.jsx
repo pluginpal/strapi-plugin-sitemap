@@ -11,7 +11,7 @@ import { generateSitemap } from '../../state/actions/Sitemap';
 import { formatTime } from '../../helpers/timeFormat';
 import axios from "axios";
 
-const Info = () => {
+const Info = ({getLocales, locale, checkedLocale, setCheckedLocale}) => {
   const hasHostname = useSelector((state) => state.getIn(['sitemap', 'initialData', 'hostname'], Map()));
   const sitemapInfo = useSelector((state) => state.getIn(['sitemap', 'info'], Map()));
   const dispatch = useDispatch();
@@ -27,16 +27,8 @@ const Info = () => {
   const time = formatTime(updateDate, true);
 
   const content = () => {
-
-      const [locale, setLocale] = useState()
-      const [checkedLocale, setCheckedLocale] = useState()
-
       useEffect(async () => {
-          const result = await axios.get('http://localhost:1337/api/sitemap/settings')
-          const localeKey = Object.keys(result.data.contentTypes)
-          const locales = Object.keys(result.data.contentTypes[localeKey].languages)
-          setLocale(locales)
-          setCheckedLocale(locales[0])
+         getLocales();
       }, [])
 
     if (!hasHostname) {
@@ -117,7 +109,11 @@ const Info = () => {
           )}
           <div style={{ display: 'flex', flexDirection: 'row' }}>
             <Button
-              onClick={() => dispatch(generateSitemap(toggleNotification))}
+              onClick={async () => {
+                 const result = await dispatch(generateSitemap(toggleNotification))
+                  console.log("toggleNotification",toggleNotification.type)
+                  result?.type === "success" ? getLocales() : null
+              }}
               variant="secondary"
               style={{ marginRight: '10px' }}
             >
