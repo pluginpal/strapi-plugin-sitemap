@@ -39,7 +39,7 @@ const App = () => {
         await axios.get('/api/sitemap/settings')
 
     const localeKey = Object.keys(result.data.contentTypes)
-    const locales = Object.keys(result.data.contentTypes[localeKey].languages)
+    const locales = localeKey.length > 0  ? Object.keys(result.data.contentTypes[localeKey].languages) : []
 
     setLocale(locales)
     setCheckedLocale(locales[0])

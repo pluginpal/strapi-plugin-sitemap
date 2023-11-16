@@ -8,7 +8,7 @@ const { getConfigUrls } = require('@strapi/utils');
 const { SitemapStream, streamToPromise, SitemapAndIndexStream } = require('sitemap');
 const { isEmpty } = require('lodash');
 
-const { logMessage, getService, formatCache, mergeCache } = require('../utils');
+const { logMessage, getService, formatCache, mergeCache, getConfigLocales } = require('../utils');
 
 /**
  * Get a formatted array of different language URLs of a single page.
@@ -66,7 +66,6 @@ const getLanguageLinks = async (config, page, contentType, defaultURL) => {
  * @returns {object} The sitemap entry data.
  */
 const getSitemapPageData = async (config, page, contentType) => {
-  console.log("page",page)
   let locale = page.locale
 
   // Return when there is no pattern for the page.
@@ -74,17 +73,13 @@ const getSitemapPageData = async (config, page, contentType) => {
     !config.contentTypes[contentType]['languages'][locale]
     && config.contentTypes[contentType]['languages']['und']
   ) {
-    console.log("İF'E GİRDİ")
     locale = 'und';
   } else if (
     !config.contentTypes[contentType]['languages'][locale]
     && !config.contentTypes[contentType]['languages']['und']
   ) {
-    console.log("ELSE İF'E GİRDİ")
     return null;
   }
-
-  console.log("SEVICEpage",page)
 
   const { pattern } = config.contentTypes[contentType]['languages'][locale];
   const path = await strapi.plugins.sitemap.services.pattern.resolvePattern(pattern, page);
@@ -115,7 +110,6 @@ const getSitemapPageData = async (config, page, contentType) => {
  * @returns {object} The cache and regular entries.
  */
 const createSitemapEntries = async (invalidationObject,config, contentTypeLocale) => {
-  console.log("invalidationObject",invalidationObject)
   const sitemapEntries = [];
   const cacheEntries = [];
 
@@ -124,8 +118,6 @@ const createSitemapEntries = async (invalidationObject,config, contentTypeLocale
     if (invalidationObject && !Object.keys(invalidationObject).includes(contentType)) {
       return;
     }
-
-    console.log("contentTypes",config.contentTypes)
 
     // Query all the pages
     const pages = await getService('query').getPages(config, contentType, invalidationObject?.[contentType]?.ids, contentTypeLocale);
@@ -173,9 +165,6 @@ const createSitemapEntries = async (invalidationObject,config, contentTypeLocale
       });
     }
   }
-
-  console.log("GELDİ",sitemapEntries)
-  console.log("cacheEntries",cacheEntries)
 
   return { cacheEntries, sitemapEntries };
 };
@@ -229,8 +218,6 @@ const getSitemapStream = async (urlCount) => {
     xslObj.xslUrl = 'xsl/sitemap.xsl';
   }
 
-  console.log("LIMIT",LIMIT)
-  console.log("urlCount",urlCount)
 
   if (urlCount <= LIMIT) {
     return [new SitemapStream({
@@ -250,7 +237,6 @@ const getSitemapStream = async (urlCount) => {
         });
         const delta = i + 1;
         const path = `api/sitemap/index.xml?page=${delta}`;
-        console.log("PATH",path)
 
         streamToPromise(sitemapStream)
           .then((sm) => {
@@ -281,55 +267,59 @@ const createSitemap = async (cache, invalidationObject) => {
   const autoGenerationEnabled = strapi.config.get('plugin.sitemap.autoGenerate');
   const config = await getService('settings').getConfig();
 
-  // const contentTypeLocale = Object.keys(config.contentTypes[contentTypeKeys].languages)
-  const configLocaleKeys = Object.keys(config.contentTypes[Object.keys(config.contentTypes)]?.languages)
+  const configLocaleKeys = getConfigLocales(config)
 
-  for (const configLocaleKey of configLocaleKeys) {
-    try {
-      const {
-        sitemapEntries,
-        cacheEntries,
-      } = await createSitemapEntries(invalidationObject,config,configLocaleKey);
-      // Format cache to regular entries
-      const formattedCache = formatCache(cache, invalidationObject);
-      //console.log("CORESITEMAPE",sitemapEntries)
-      const allEntries = [
-        ...sitemapEntries,
-        ...formattedCache,
-      ];
+  if(configLocaleKeys.length > 0) {
+    for (const configLocaleKey of configLocaleKeys) {
+      try {
+        const {
+          sitemapEntries,
+          cacheEntries,
+        } = await createSitemapEntries(invalidationObject,config,configLocaleKey);
+        // Format cache to regular entries
+        const formattedCache = formatCache(cache, invalidationObject);
 
-      //console.log("allEntries",allEntries)
+        const allEntries = [
+          ...sitemapEntries,
+          ...formattedCache,
+        ];
 
 
-      if (isEmpty(allEntries)) {
-        strapi.log.info(logMessage('No sitemap XML was generated because there were 0 URLs configured.'));
-        return;
-      }
-
-      await getService('query').deleteSitemap(`default - ${configLocaleKey}`);
-
-      const [sitemap, isIndex] = await getSitemapStream(allEntries.length);
-
-      allEntries.map((sitemapEntry) => {
-        sitemap.write(sitemapEntry)
-      });
-      sitemap.end();
-
-      const sitemapId = await saveSitemap(`default - ${configLocaleKey}`, sitemap, isIndex);
-
-      if (cachingEnabled && autoGenerationEnabled) {
-        if (!cache) {
-          getService('query').createSitemapCache(cacheEntries, `default - ${configLocaleKey}`, sitemapId);
-        } else {
-          const newCache = mergeCache(cache, cacheEntries);
-          getService('query').updateSitemapCache(newCache, `default - ${configLocaleKey}`, sitemapId);
+        if (isEmpty(allEntries)) {
+          strapi.log.info(logMessage('No sitemap XML was generated because there were 0 URLs configured.'));
+          return;
         }
-      }
 
-      strapi.log.info(logMessage('The sitemap XML has been generated. It can be accessed on /api/sitemap/index.xml.'));
-    } catch (err) {
-      strapi.log.error(logMessage(`Something went wrong while trying to build the SitemapStream. ${err}`));
-      throw new Error();
+        await getService('query').deleteSitemap(`default - ${configLocaleKey}`);
+
+        const [sitemap, isIndex] = await getSitemapStream(allEntries.length);
+
+        allEntries.map((sitemapEntry) => {
+          sitemap.write(sitemapEntry)
+        });
+        sitemap.end();
+
+        const sitemapId = await saveSitemap(`default - ${configLocaleKey}`, sitemap, isIndex);
+
+        if (cachingEnabled && autoGenerationEnabled) {
+          if (!cache) {
+            getService('query').createSitemapCache(cacheEntries, `default - ${configLocaleKey}`, sitemapId);
+          } else {
+            const newCache = mergeCache(cache, cacheEntries);
+            getService('query').updateSitemapCache(newCache, `default - ${configLocaleKey}`, sitemapId);
+          }
+        }
+
+        strapi.log.info(logMessage('The sitemap XML has been generated. It can be accessed on /api/sitemap/index.xml.'));
+      } catch (err) {
+        strapi.log.error(logMessage(`Something went wrong while trying to build the SitemapStream. ${err}`));
+        throw new Error();
+      }
+    }
+  }else {
+    return {
+      type: "warning",
+      message: "Error while creating sitemap! Please enter 1 sitemap entry first..."
     }
   }
 };

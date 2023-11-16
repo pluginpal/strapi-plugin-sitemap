@@ -100,7 +100,9 @@ export function generateSitemap(toggleNotification) {
       dispatch(setLoading(true));
       const { message } = await request('/sitemap', { method: 'GET' });
       dispatch(getSitemapInfo());
-      toggleNotification({ type: 'success', message });
+      message?.type ?
+          toggleNotification({ type: message?.type, message: message?.message }) :
+          toggleNotification({ type: 'success', message });
       dispatch(setLoading(false));
       return { type: 'success', message }
     } catch (err) {

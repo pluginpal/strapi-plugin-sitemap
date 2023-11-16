@@ -121,6 +121,11 @@ const parseLocale = (route) => {
   return match ? match[1] : null;
 }
 
+const getConfigLocales = (config) => {
+  const localeKey = Object.keys(config.contentTypes)
+  return localeKey.length > 0  ? Object.keys(config.contentTypes[localeKey].languages) : []
+}
+
 module.exports = {
   getService,
   getCoreStore,
@@ -128,5 +133,6 @@ module.exports = {
   noLimit,
   formatCache,
   mergeCache,
-  parseLocale
+  parseLocale,
+  getConfigLocales
 };

@@ -4,7 +4,7 @@ const fs = require('fs');
 const _ = require('lodash');
 const path = require('path');
 
-const { getService, parseLocale } = require('../utils');
+const { getService, parseLocale,getConfigLocales } = require('../utils');
 
 /**
  * Sitemap.js controller
@@ -15,10 +15,9 @@ const { getService, parseLocale } = require('../utils');
 module.exports = {
   buildSitemap: async (ctx) => {
     try {
-      await getService('core').createSitemap();
-
+      const response = await getService('core').createSitemap();
       ctx.send({
-        message: 'The sitemap has been generated.',
+        message: response ? response : 'The sitemap has been generated.',
       });
     } catch (err) {
       ctx.status = err.status || 500;
@@ -60,33 +59,35 @@ module.exports = {
 
   info: async (ctx) => {
     const config = await getService('settings').getConfig()
-    const configLocaleKeys = Object.keys(config.contentTypes[Object.keys(config.contentTypes)]?.languages)
+
+    const configLocaleKeys = getConfigLocales(config)
 
     let sitemap = {}
     let sitemapLinkCount = 0
-    for (const configLocaleKey of configLocaleKeys) {
-      sitemap = await getService('query').getSitemap(`default - ${configLocaleKey}`, 0, ['link_count', 'updated_at', 'type']);
-      sitemapLinkCount += sitemap.link_count
-    }
-    sitemap.link_count = sitemapLinkCount
-
     const sitemapInfo = {};
 
-    if (sitemap) {
-      if (sitemap.type === 'index') {
-        sitemapInfo.sitemaps = sitemap.link_count;
-        sitemapInfo.urls = 0;
-      } else {
-        sitemapInfo.urls = sitemap.link_count;
-        sitemapInfo.sitemaps = 0;
+    if(configLocaleKeys.length > 0) {
+      for (const configLocaleKey of configLocaleKeys) {
+        sitemap = await getService('query').getSitemap(`default - ${configLocaleKey}`, 0, ['link_count', 'updated_at', 'type']);
+        sitemapLinkCount += sitemap.link_count
+      }
+      sitemap.link_count = sitemapLinkCount
+
+      if (sitemap) {
+        if (sitemap.type === 'index') {
+          sitemapInfo.sitemaps = sitemap.link_count;
+          sitemapInfo.urls = 0;
+        } else {
+          sitemapInfo.urls = sitemap.link_count;
+          sitemapInfo.sitemaps = 0;
+        }
+
+        sitemapInfo.updateTime = sitemap.updatedAt;
+        sitemapInfo.location = '/api/sitemap/index.xml';
       }
 
-      sitemapInfo.updateTime = sitemap.updatedAt;
-      sitemapInfo.location = '/api/sitemap/index.xml';
+      sitemapInfo.hasPro = !!strapi.plugin('sitemap-pro');
     }
-
-    sitemapInfo.hasPro = !!strapi.plugin('sitemap-pro');
-
     ctx.send(sitemapInfo);
   },
 

@@ -54,8 +54,8 @@ const Info = ({getLocales, locale, checkedLocale, setCheckedLocale}) => {
           </div>
         </div>
       );
-    } else if (sitemapInfo.size === 0) {
-      return (
+    } else if (sitemapInfo.size === 0 || locale.length === 0) {
+        return (
         <div>
           <Typography variant="delta" style={{ marginBottom: '10px' }}>
             {formatMessage({ id: 'sitemap.Info.NoSitemap.Title', defaultMessage: 'No sitemap XML present' })}
