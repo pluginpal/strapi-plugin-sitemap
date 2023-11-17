@@ -111,7 +111,6 @@ const Info = ({getLocales, locale, checkedLocale, setCheckedLocale}) => {
             <Button
               onClick={async () => {
                  const result = await dispatch(generateSitemap(toggleNotification))
-                  console.log("toggleNotification",toggleNotification.type)
                   result?.type === "success" ? getLocales() : null
               }}
               variant="secondary"

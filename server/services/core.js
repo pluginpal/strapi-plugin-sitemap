@@ -144,13 +144,13 @@ const createSitemapEntries = async (invalidationObject,config, contentTypeLocale
   }));
 
   // Custom entries.
-  await Promise.all(Object.keys(config.customEntries).map(async (customEntry) => {
-    sitemapEntries.push({
-      url: customEntry,
-      changefreq: config.customEntries[customEntry].changefreq,
-      priority: parseFloat(config.customEntries[customEntry].priority),
-    });
-  }));
+  // await Promise.all(Object.keys(config.customEntries).map(async (customEntry) => {
+  //   sitemapEntries.push({
+  //     url: customEntry,
+  //     changefreq: config.customEntries[customEntry].changefreq,
+  //     priority: parseFloat(config.customEntries[customEntry].priority),
+  //   });
+  // }));
 
   // Custom homepage entry.
   if (config.includeHomepage) {
@@ -283,7 +283,6 @@ const createSitemap = async (cache, invalidationObject) => {
           ...sitemapEntries,
           ...formattedCache,
         ];
-
 
         if (isEmpty(allEntries)) {
           strapi.log.info(logMessage('No sitemap XML was generated because there were 0 URLs configured.'));

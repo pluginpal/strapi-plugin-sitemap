@@ -3,6 +3,7 @@ import { Tabs, Tab, TabGroup, TabPanels, TabPanel, Box } from '@strapi/design-sy
 import { useIntl } from 'react-intl';
 
 import CollectionURLs from '../../tabs/CollectionURLs';
+// import CustomURLs from '../../tabs/CustomURLs';
 import Settings from '../../tabs/Settings';
 
 const SitemapTabs = () => {
@@ -16,12 +17,16 @@ const SitemapTabs = () => {
       >
         <Tabs>
           <Tab>{formatMessage({ id: 'sitemap.Settings.CollectionTitle', defaultMessage: 'URL bundles' })}</Tab>
+          {/*<Tab>{formatMessage({ id: 'sitemap.Settings.CustomTitle', defaultMessage: 'Custom URLs' })}</Tab>*/}
           <Tab>{formatMessage({ id: 'sitemap.Settings.SettingsTitle', defaultMessage: 'Settings' })}</Tab>
         </Tabs>
         <TabPanels>
           <TabPanel>
             <CollectionURLs />
           </TabPanel>
+          {/*<TabPanel>*/}
+          {/*  <CustomURLs />*/}
+          {/*</TabPanel>*/}
           <TabPanel>
             <Box padding={6} background="neutral0" shadow="filterShadow">
               <Settings />
