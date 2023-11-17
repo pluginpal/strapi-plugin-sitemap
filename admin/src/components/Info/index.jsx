@@ -54,7 +54,7 @@ const Info = ({getLocales, locale, checkedLocale, setCheckedLocale}) => {
           </div>
         </div>
       );
-    } else if (sitemapInfo.size === 0 || locale.length === 0) {
+    } else if (sitemapInfo.size === 0 || locale?.length === 0) {
         return (
         <div>
           <Typography variant="delta" style={{ marginBottom: '10px' }}>
