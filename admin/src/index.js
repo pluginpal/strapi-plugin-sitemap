@@ -59,20 +59,22 @@ export default {
   },
   async registerTrads({ locales }) {
     const importedTrads = await Promise.all(
-      locales.map((locale) => {
-        return Promise.resolve().then(() => require(`./translations/${locale}.json`))
-          .then((data) => {
-            return {
-              data: prefixPluginTranslations(data, pluginId),
-              locale,
-            };
-          })
-          .catch(() => {
-            return {
-              data: {},
-              locale,
-            };
-          });
+      locales.map(async (locale) => {
+        try {
+          await Promise.resolve();
+
+          // eslint-disable-next-line import/no-dynamic-require
+          const data = require(`./translations/${locale}.json`);
+          return {
+            data: prefixPluginTranslations(data, pluginId),
+            locale,
+          };
+        } catch {
+          return {
+            data: {},
+            locale,
+          };
+        }
       }),
     );
 
