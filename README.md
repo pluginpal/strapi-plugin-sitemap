@@ -295,6 +295,9 @@ This setting is just here for mere convenience. When adding a URL bundle to the 
 
 All types in this array will not be shown as an option when selecting the type of a URL bundle. 
 
+The format of the types should look something like `api::test.api`.
+To see all the types you can choose from, run `strapi content-types:list`.
+
 ###### Key: `excludedTypes `
 
 > `required:` NO | `type:` array
