@@ -61,8 +61,6 @@ export default {
     const importedTrads = await Promise.all(
       locales.map(async (locale) => {
         try {
-          await Promise.resolve();
-
           // eslint-disable-next-line import/no-dynamic-require
           const data = require(`./translations/${locale}.json`);
           return {
