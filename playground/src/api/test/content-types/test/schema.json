@@ -11,9 +11,6 @@
     "draftAndPublish": true
   },
   "pluginOptions": {
-    "webtools": {
-      "enabled": true
-    },
     "i18n": {
       "localized": true
     }
