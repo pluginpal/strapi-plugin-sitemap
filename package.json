@@ -58,10 +58,10 @@
     "@strapi/strapi": "^4.0.0"
   },
   "devDependencies": {
-    "@strapi/design-system": "^1.13.2",
-    "@strapi/helper-plugin": "^4.15.5",
-    "@strapi/icons": "^1.13.2",
-    "@strapi/utils": "^4.15.5",
+    "@strapi/design-system": "^1.14.1",
+    "@strapi/helper-plugin": "^4.19.0",
+    "@strapi/icons": "^1.14.1",
+    "@strapi/utils": "^4.19.0",
     "@uncinc/eslint-config": "^1.1.0",
     "copyfiles": "^2.4.1",
     "jest": "^29.5.0",
