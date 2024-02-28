@@ -44,7 +44,7 @@ async function setupStrapi() {
     /** the follwing code in copied from `./node_modules/strapi/lib/Strapi.js` */
     await Strapi({
       appDir: './playground',
-      distDir: './playground'
+      distDir: './playground/dist'
     }).load();
     await waitForServer();
 
