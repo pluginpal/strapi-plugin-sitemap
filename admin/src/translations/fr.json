@@ -1,1 +1,9 @@
-{}
+{
+  "Settings.Field.DefaultLanguageUrlType.Label": "Type d'URL de la langue par défaut.",
+  "Settings.Field.DefaultLanguageUrlType.Description": "Génère une balise link et attribut hreflang=x-default avec l'URL de votre choix.",
+  "Settings.Field.DefaultLanguageUrl.Label": "URL de la langue par défaut personnalisée.",
+  "Settings.Field.DefaultLanguageUrl.Description": "Ex. URL de la page de sélection de langue.",
+  "Settings.Field.DefaultLanguageUrlType.Option.Disabled": "Désactivé",
+  "Settings.Field.DefaultLanguageUrlType.Option.DefaultLocale": "URL par défaut des routes (généré à partir de l'URL de la locale par défaut)",
+  "Settings.Field.DefaultLanguageUrlType.Option.Other": "Autre"
+}
