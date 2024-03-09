@@ -11,6 +11,32 @@ const { isEmpty } = require('lodash');
 const { logMessage, getService, formatCache, mergeCache } = require('../utils');
 
 /**
+ * Add link x-default url to url bundles from strapi i18n plugin default locale.
+ *
+ * @param {object} config - The config object.
+ * @param {object} links - The language links.
+ *
+ * @returns {object | undefined} The default language link.
+ */
+const getDefaultLanguageLink = async (config, links) => {
+  let defaultLink;
+  const { getDefaultLocale } = strapi.plugin('i18n').service('locales');
+  const defaultLocale = await getDefaultLocale();
+
+  if (config.defaultLanguageUrlType === 'default-locale') {
+    // find url with default locale in generated bundle
+    const url = links.find((link) => link.lang === defaultLocale)?.url;
+    if (url) defaultLink = { lang: 'x-default', url };
+  }
+
+  if (config.defaultLanguageUrlType === 'other' && config.defaultLanguageUrl) {
+    defaultLink = { lang: 'x-default', url: config.defaultLanguageUrl };
+  }
+
+  return defaultLink;
+};
+
+/**
  * Get a formatted array of different language URLs of a single page.
  *
  * @param {object} config - The config object.
@@ -51,6 +77,12 @@ const getLanguageLinks = async (config, page, contentType, defaultURL) => {
       url: `${hostnameOverride}${translationUrl}`,
     });
   }));
+
+  // add optional x-default link url
+  if (config.defaultLanguageUrlType) {
+    const defaultLink = await getDefaultLanguageLink(config, links);
+    if (defaultLink) links.push(defaultLink);
+  }
 
   return links;
 };
