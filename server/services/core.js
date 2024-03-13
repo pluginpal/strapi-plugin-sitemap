@@ -151,8 +151,19 @@ const createSitemapEntries = async (invalidationObject) => {
 
     cacheEntries[contentType] = {};
 
+    const filters = config.contentTypes[contentType]['filters'];
+    const formattedFilters = {};
+    for (let i = 0; i <= Object.keys(filters).length; i++) {
+      let exists = filters[i]?.field && filters[i]?.operator && filters[i]?.value;
+      if (exists) {
+        formattedFilters[filters[i].field] = {
+          [filters[i].operator]: filters[i].value,
+        };
+      }
+    }
+
     // Query all the pages
-    const pages = await getService('query').getPages(config, contentType, invalidationObject?.[contentType]?.ids);
+    const pages = await getService('query').getPages(config, contentType, invalidationObject?.[contentType]?.ids, formattedFilters);
 
     // Add formatted sitemap page data to the array.
     await Promise.all(pages.map(async (page, i) => {

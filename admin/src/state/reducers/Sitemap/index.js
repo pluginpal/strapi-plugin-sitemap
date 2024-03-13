@@ -5,6 +5,7 @@
  */
 
 import { fromJS, Map } from 'immutable';
+import { isArray } from 'lodash';
 
 import {
   GET_SETTINGS_SUCCEEDED,
@@ -59,8 +60,9 @@ export default function sitemapReducer(state = initialState, action) {
         return state
           .updateIn(['modifiedContentTypes', action.contentType, 'languages', action.lang, action.key], () => action.value);
       } else {
+        const keys = isArray(action.key) ? action.key : Array(action.key);
         return state
-          .updateIn(['modifiedContentTypes', action.contentType, action.key], () => action.value);
+          .updateIn(['modifiedContentTypes', action.contentType, ...keys], () => action.value);
       }
     case ON_CHANGE_CUSTOM_ENTRY:
       return state

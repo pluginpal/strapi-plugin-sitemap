@@ -34,6 +34,14 @@ module.exports = {
       if (strapi.config.get('plugin.sitemap.excludedTypes').includes(contentType.uid)) return;
       contentTypes[contentType.uid] = {
         displayName: contentType.globalId,
+        attributes: Object.keys(contentType.attributes).filter((key) => {
+          if (key === 'id' || key === 'created_at' || key === 'updated_at') return false;
+          if (contentType.attributes[key].type === 'component') return false;
+          if (contentType.attributes[key].type === 'dynamiczone') return false;
+          if (contentType.attributes[key].type === 'relation') return false;
+          if (contentType.attributes[key].private === true) return false;
+          return true;
+        }) ?? [],
       };
 
       if (strapi.plugin('i18n') && _.get(contentType, 'pluginOptions.i18n.localized')) {

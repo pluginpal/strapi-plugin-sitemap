@@ -78,10 +78,11 @@ const getRelationsFromConfig = (contentType) => {
  * @param {obj} config - The config object
  * @param {string} contentType - Query only entities of this type.
  * @param {array} ids - Query only these ids.
+ * @param {object} filters - Custom filters
  *
  * @returns {object} The pages.
  */
-const getPages = async (config, contentType, ids) => {
+const getPages = async (config, contentType, ids, filters = {}) => {
   const excludeDrafts = config.excludeDrafts && strapi.contentTypes[contentType].options.draftAndPublish;
   const isLocalized = strapi.contentTypes[contentType].pluginOptions?.i18n?.localized;
 
@@ -105,6 +106,7 @@ const getPages = async (config, contentType, ids) => {
       id: ids ? {
         $in: ids,
       } : {},
+      ...filters,
     },
     locale: 'all',
     fields,
