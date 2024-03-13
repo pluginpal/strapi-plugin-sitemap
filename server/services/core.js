@@ -19,21 +19,18 @@ const { logMessage, getService, formatCache, mergeCache } = require('../utils');
  * @returns {object | undefined} The default language link.
  */
 const getDefaultLanguageLink = async (config, links) => {
-  let defaultLink;
-  const { getDefaultLocale } = strapi.plugin('i18n').service('locales');
-  const defaultLocale = await getDefaultLocale();
-
   if (config.defaultLanguageUrlType === 'default-locale') {
+    const { getDefaultLocale } = strapi.plugin('i18n').service('locales');
+    const defaultLocale = await getDefaultLocale();
+
     // find url with default locale in generated bundle
     const url = links.find((link) => link.lang === defaultLocale)?.url;
-    if (url) defaultLink = { lang: 'x-default', url };
+    if (url) return { lang: 'x-default', url };
   }
 
   if (config.defaultLanguageUrlType === 'other' && config.defaultLanguageUrl) {
-    defaultLink = { lang: 'x-default', url: config.defaultLanguageUrl };
+    return { lang: 'x-default', url: config.defaultLanguageUrl };
   }
-
-  return defaultLink;
 };
 
 /**
