@@ -25,9 +25,11 @@ const Filters = (props) => {
     contentTypes,
   } = props;
 
+  console.log(modifiedState);
+
   React.useEffect(() => {
     // get the initial condition count
-    const count = Object.keys(modifiedState.getIn([uid, 'filters'], []).toJS()).length;
+    const count = Object.keys(modifiedState.getIn([uid, 'filters'], [])).length;
     setConditionCount(count);
   }, [uid, langcode]);
 
