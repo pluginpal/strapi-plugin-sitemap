@@ -26,7 +26,7 @@
   "Settings.Field.IncludeHomepage.Description": "Include a '/' entry when none is present.",
   "Settings.Field.ExcludeDrafts.Label": "Exclude drafts",
   "Settings.Field.ExcludeDrafts.Description": "Remove all draft entries from the sitemap.",
-  "Settings.Field.DefaultLanguageUrlType.Label": "Default language URL type.",
+  "Settings.Field.DefaultLanguageUrlType.Label": "Default language URL type",
   "Settings.Field.DefaultLanguageUrlType.Description": "Generate a link tag and attribute hreflang=x-default with the URL of your choice.",
   "Settings.Field.DefaultLanguageUrlType.Option.Disabled": "Disabled",
   "Settings.Field.DefaultLanguageUrlType.Option.DefaultLocale": "Default language URL of bundles (generated from default locale URL)",
