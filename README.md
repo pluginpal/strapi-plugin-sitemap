@@ -125,6 +125,17 @@ For each localization of a page the `<url>` in the sitemap XML will get an extra
 
 This implementation is based on [Google's guidelines](https://developers.google.com/search/docs/advanced/crawling/localized-versions) on localized sitemaps.
 
+## 🔗 Sitemap index
+
+Large sitemaps (larger then 45.000 urls) will automatically be split up in to seperate sitemaps. <br />
+A sitemap index will be created that links to all the different sitemap chunks. <br />
+That sitemap index will be accessible on the default `/api/sitemap/index.xml` location.
+
+It is required to set the `url` in the `./config/server.js` file in your Strapi installation.
+That will be used to create the links to the different chunks.
+
+You can alter the 45.000 magic number through plugin config.
+
 ## 🤖 Robots.txt
 
 To make sure search engines are able to find the sitemap XML create a `robots.txt` file in the front-end of your website and add the following line:
@@ -198,6 +209,14 @@ This setting will add a default `/` entry to the sitemap XML when none is presen
 ###### Key: `includeHomepage`
 
 > `required:` NO | `type:` bool | `default:` true
+
+### Default language URL (x-default)
+
+This setting will add an additionnal `<link />` tag into each sitemap urls bundles with value `hreflang="x-default"` and the path of your choice. The hreflang x-default value is used to specify the language and region neutral URL for a piece of content when the site doesn't support the user's language and region. For example, if a page has hreflang annotations for English and Spanish versions of a page along with an x-default value pointing to the English version, French speaking users are sent to the English version of the page due to the x-default annotation. The x-default page can be a language and country selector page, the page where you redirect users when you have no content for their region, or just the version of the content that you consider default. 
+
+###### Key: `defaultLanguageUrlType`
+
+> `required:` NO | `type:` string | `default:` ''
 
 ## 🔧 Config
 Config can be changed in the `config/plugins.js` file in your Strapi project.
@@ -285,6 +304,9 @@ When defining a URL pattern you can populate it with dynamic fields. The fields 
 This setting is just here for mere convenience. When adding a URL bundle to the sitemap you can specify the type for the bundle. This will show all types in Strapi, however some types should never be it's own page in a website and are therefor excluded in this setting.
 
 All types in this array will not be shown as an option when selecting the type of a URL bundle. 
+
+The format of the types should look something like `api::test.api`.
+To see all the types you can choose from, run `strapi content-types:list`.
 
 ###### Key: `excludedTypes `
 

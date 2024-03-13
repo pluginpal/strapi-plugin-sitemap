@@ -1,6 +1,7 @@
 name: Tests
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - master
@@ -15,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node: [14, 16, 18]
+        node: [18, 20]
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
@@ -39,7 +40,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node: [14, 16, 18]
+        node: [18, 20]
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
@@ -59,6 +60,8 @@ jobs:
         run: yarn playground:install-plugin
       - name: Install testing libraries
         run: yarn test:install
+      - name: Build playground
+        run: NODE_ENV=ci yarn playground:build
       - name: Run unit tests
         run: NODE_ENV=ci yarn test:unit
       - name: Run integration tests

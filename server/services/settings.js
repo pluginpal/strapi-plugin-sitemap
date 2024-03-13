@@ -19,6 +19,8 @@ const createDefaultConfig = async () => {
     hostname: '',
     includeHomepage: true,
     excludeDrafts: true,
+    defaultLanguageUrlType: '',
+    defaultLanguageUrl: '',
     hostname_overrides: {},
     contentTypes: Map({}),
     customEntries: Map({}),

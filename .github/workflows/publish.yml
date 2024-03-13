@@ -1,0 +1,36 @@
+name: Publish to NPM
+on:
+  release:
+    types: [published]
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          always-auth: true
+          node-version: 18
+          cache: 'yarn'
+          registry-url: 'https://registry.npmjs.org/'
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+      - name: Get the release tag version
+        id: get_version
+        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+      - name: Set package version
+        run: yarn version --new-version "${{ steps.get_version.outputs.VERSION }}" --no-git-tag-version
+      - name: Build the plugin
+        run: yarn run build
+      - name: Publish package
+        run: cd build && yarn publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Push version bump
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: 'chore: Bump version to ${{ steps.get_version.outputs.VERSION }}'
+          file_pattern: 'package.json'
+          branch: master
