@@ -27,3 +27,5 @@ export const GET_SITEMAP_INFO_SUCCEEDED = 'Sitemap/ConfigPage/GET_SITEMAP_INFO_S
 export const ON_CHANGE_CUSTOM_ENTRY = 'Sitemap/ConfigPage/ON_CHANGE_CUSTOM_ENTRY';
 export const GET_ALLOWED_FIELDS_SUCCEEDED = 'Sitemap/ConfigPage/GET_ALLOWED_FIELDS_SUCCEEDED';
 export const SET_LOADING_STATE = 'Sitemap/ConfigPage/SET_LOADING_STATE';
+export const DEFAULT_LANGUAGE_URL_TYPE_DEFAULT_LOCALE = 'default-locale';
+export const DEFAULT_LANGUAGE_URL_TYPE_OTHER = 'other';
