@@ -17,6 +17,7 @@ import {
 
 import { onChangeSettings } from '../../state/actions/Sitemap';
 import HostnameModal from '../../components/HostnameModal';
+import { DEFAULT_LANGUAGE_URL_TYPE_DEFAULT_LOCALE, DEFAULT_LANGUAGE_URL_TYPE_OTHER } from '../../config/constants';
 
 const Settings = () => {
   const { formatMessage } = useIntl();
@@ -25,7 +26,7 @@ const Settings = () => {
   const languages = useSelector((store) => store.getIn(['sitemap', 'languages'], {}));
   const settings = useSelector((state) => state.getIn(['sitemap', 'settings'], Map()));
   const hostnameOverrides = useSelector((state) => state.getIn(['sitemap', 'settings', 'hostname_overrides'], {}));
-  const [inputVisible, setInputVisible] = useState(settings.get('defaultLanguageUrlType') === 'other');
+  const [inputVisible, setInputVisible] = useState(settings.get('defaultLanguageUrlType') === DEFAULT_LANGUAGE_URL_TYPE_OTHER);
   const theme = useTheme();
 
   const saveHostnameOverrides = (hostnames) => {
@@ -35,8 +36,8 @@ const Settings = () => {
 
   const handleDefaultLanguageUrlTypeChange = (value = '') => {
     dispatch(onChangeSettings('defaultLanguageUrlType', value));
-    if (value === 'other') dispatch(onChangeSettings('defaultLanguageUrl', undefined));
-    setInputVisible(value === 'other');
+    if (value === DEFAULT_LANGUAGE_URL_TYPE_OTHER) dispatch(onChangeSettings('defaultLanguageUrl', undefined));
+    setInputVisible(value === DEFAULT_LANGUAGE_URL_TYPE_OTHER);
   };
 
   return (
@@ -97,10 +98,10 @@ const Settings = () => {
           onChange={(e) => dispatch(onChangeSettings('excludeDrafts', e.target.checked))}
         />
       </GridItem>
-      <GridItem col={12} s={12}>
+      <GridItem col={6} s={12}>
         <SingleSelect
           hint={formatMessage({ id: 'sitemap.Settings.Field.DefaultLanguageUrlType.Description', defaultMessage: 'Generate a link tag and attribute hreflang=x-default with the URL of your choice.' })}
-          label={formatMessage({ id: 'sitemap.Settings.Field.DefaultLanguageUrlType.Label', defaultMessage: 'Default language URL type.' })}
+          label={formatMessage({ id: 'sitemap.Settings.Field.DefaultLanguageUrlType.Label', defaultMessage: 'Default language URL type' })}
           name="defaultLanguageUrlType"
           onLabel="on"
           offLabel="off"
@@ -111,10 +112,10 @@ const Settings = () => {
           <SingleSelectOption value="">
             {formatMessage({ id: 'sitemap.Settings.Field.DefaultLanguageUrlType.Option.Disabled', defaultMessage: 'Disabled' })}
           </SingleSelectOption>
-          <SingleSelectOption value="default-locale">
+          <SingleSelectOption value={DEFAULT_LANGUAGE_URL_TYPE_DEFAULT_LOCALE}>
             {formatMessage({ id: 'sitemap.Settings.Field.DefaultLanguageUrlType.Option.DefaultLocale', defaultMessage: 'Default language URL of bundles (generated from default locale URL)' })}
           </SingleSelectOption>
-          <SingleSelectOption value="other">
+          <SingleSelectOption value={DEFAULT_LANGUAGE_URL_TYPE_OTHER}>
             {formatMessage({ id: 'sitemap.Settings.Field.DefaultLanguageUrlType.Option.Other', defaultMessage: 'Other' })}
           </SingleSelectOption>
         </SingleSelect>
@@ -124,7 +125,7 @@ const Settings = () => {
           <TextInput
             placeholder="https://www.strapi.io/language-selector"
             hint={formatMessage({ id: 'sitemap.Settings.Field.DefaultLanguageUrl.Description', defaultMessage: 'E.g. URL of your website language selector.' })}
-            label={formatMessage({ id: 'sitemap.Settings.Field.DefaultLanguageUrl.Label', defaultMessage: 'Custom default language URL.' })}
+            label={formatMessage({ id: 'sitemap.Settings.Field.DefaultLanguageUrl.Label', defaultMessage: 'Custom default language URL' })}
             name="defaultLanguageUrl"
             required
             value={settings.get('defaultLanguageUrl')}
