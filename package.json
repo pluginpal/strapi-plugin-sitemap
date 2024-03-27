@@ -76,7 +76,7 @@
     "typescript": "^5.1.6"
   },
   "bugs": {
-    "url": "https://github.com/boazpoolman/strapi-plugin-sitemap/issues"
+    "url": "https://github.com/pluginpal/strapi-plugin-sitemap/issues"
   },
   "homepage": "https://www.pluginpal.io/plugin/sitemap",
   "engines": {
