@@ -77,7 +77,7 @@ const getLanguageLinks = async (config, page, contentType, defaultURL) => {
 
   // add optional x-default link url
   if (config.defaultLanguageUrlType) {
-    const defaultLink = await getDefaultLanguageLink(config, links);
+    const defaultLink = await getService('core').getDefaultLanguageLink(config, links);
     if (defaultLink) links.push(defaultLink);
   }
 
@@ -119,7 +119,7 @@ const getSitemapPageData = async (config, page, contentType) => {
   const pageData = {
     lastmod: page.updatedAt,
     url: url,
-    links: await getLanguageLinks(config, page, contentType, url),
+    links: await getService('core').getLanguageLinks(config, page, contentType, url),
     changefreq: config.contentTypes[contentType]['languages'][locale].changefreq || 'monthly',
     priority: parseFloat(config.contentTypes[contentType]['languages'][locale].priority) || 0.5,
   };
@@ -156,7 +156,7 @@ const createSitemapEntries = async (invalidationObject) => {
 
     // Add formatted sitemap page data to the array.
     await Promise.all(pages.map(async (page, i) => {
-      const pageData = await getSitemapPageData(config, page, contentType);
+      const pageData = await getService('core').getSitemapPageData(config, page, contentType);
       if (pageData) {
         sitemapEntries.push(pageData);
 
@@ -294,7 +294,7 @@ const createSitemap = async (cache, invalidationObject) => {
     const {
       sitemapEntries,
       cacheEntries,
-    } = await createSitemapEntries(invalidationObject);
+    } = await getService('core').createSitemapEntries(invalidationObject);
     // Format cache to regular entries
     const formattedCache = formatCache(cache, invalidationObject);
 
@@ -315,7 +315,7 @@ const createSitemap = async (cache, invalidationObject) => {
     allEntries.map((sitemapEntry) => sitemap.write(sitemapEntry));
     sitemap.end();
 
-    const sitemapId = await saveSitemap('default', sitemap, isIndex);
+    const sitemapId = await getService('core').saveSitemap('default', sitemap, isIndex);
 
     if (cachingEnabled && autoGenerationEnabled) {
       if (!cache) {
