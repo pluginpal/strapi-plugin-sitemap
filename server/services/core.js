@@ -334,6 +334,7 @@ const createSitemap = async (cache, invalidationObject) => {
 };
 
 module.exports = () => ({
+  getDefaultLanguageLink,
   getLanguageLinks,
   getSitemapPageData,
   createSitemapEntries,
