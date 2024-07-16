@@ -28,6 +28,13 @@ global.strapi = {
       },
     },
   },
+  config: {
+    plugin: {
+      sitemap: {
+        discardInvalidRelations: false
+      }
+    }
+  }
 };
 
 describe('Pattern service', () => {
