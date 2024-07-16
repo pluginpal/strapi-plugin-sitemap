@@ -310,6 +310,16 @@ To see all the types you can choose from, run `strapi content-types:list`.
 
 > `required:` NO | `type:` array
 
+### Exclude invalid relations relational objects
+This setting allow you to exclude invalid entries when the pattern is not valid for the entry
+
+Example : You have added a `slug` property to the configuration entry `allowedFields`.
+If a content doesn't have the field `slug` filled, no entry in the sitemap will be generated for this content (to avoid duplicate content)
+
+###### Key: `discardInvalidRelations `
+
+> `required:` NO | `type:` boolean
+
 ## 🤝 Contributing
 
 Feel free to fork and make a pull request of this plugin. All the input is welcome!
