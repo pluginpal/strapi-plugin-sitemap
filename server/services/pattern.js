@@ -41,7 +41,7 @@ const getAllowedFields = (contentType, allowedFields = []) => {
       } else if (
         field.type === 'relation' &&
         field.target &&
-        field.mappedBy &&
+        (field.mappedBy || field.inversedBy) &&
         field.relation.endsWith('ToMany') &&
         fieldName !== 'localizations' &&
         fieldName !== 'createdBy' &&
@@ -122,6 +122,8 @@ const getFieldsFromPattern = (pattern, topLevel = false, relation = null) => {
  * @returns {array} The relations.
  */
 const getRelationsFromPattern = (pattern) => {
+	console.log('getRelationsFromPattern pattern', pattern);
+
   let fields = getFieldsFromPattern(pattern);
 
   fields = fields.filter((field) => field.split('.').length > 1); // Filter on fields containing a dot (.)
