@@ -122,8 +122,6 @@ const getFieldsFromPattern = (pattern, topLevel = false, relation = null) => {
  * @returns {array} The relations.
  */
 const getRelationsFromPattern = (pattern) => {
-	console.log('getRelationsFromPattern pattern', pattern);
-
   let fields = getFieldsFromPattern(pattern);
 
   fields = fields.filter((field) => field.split('.').length > 1); // Filter on fields containing a dot (.)
