@@ -8,7 +8,7 @@ const { getConfigUrls } = require('@strapi/utils');
 const { SitemapStream, streamToPromise, SitemapAndIndexStream } = require('sitemap');
 const { isEmpty } = require('lodash');
 
-const { logMessage, getService, formatCache, mergeCache } = require('../utils');
+const { logMessage, getService, formatCache, mergeCache, isValidUrl } = require('../utils');
 
 /**
  * Add link x-default url to url bundles from strapi i18n plugin default locale.
@@ -241,6 +241,16 @@ const getSitemapStream = async (urlCount) => {
 
   if (enableXsl) {
     xslObj.xslUrl = 'xsl/sitemap.xsl';
+  }
+
+  if (!config.hostname) {
+    strapi.log.info(logMessage('No sitemap XML was generated because there was no hostname configured.'));
+    return;
+  }
+
+  if (!isValidUrl(config.hostname)) {
+    strapi.log.info(logMessage('No sitemap XML was generated because the hostname was invalid'));
+    return;
   }
 
   if (urlCount <= LIMIT) {
