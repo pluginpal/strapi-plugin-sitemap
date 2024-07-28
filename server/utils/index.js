@@ -75,7 +75,7 @@ const mergeCache = (oldCache, newCache) => {
 const isValidUrl = (url) => {
   try {
     // eslint-disable-next-line no-new
-    new URL(!url);
+    new URL(url);
     return true;
   } catch (err) {
     return false;
