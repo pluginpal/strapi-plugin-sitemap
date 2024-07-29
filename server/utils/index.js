@@ -71,6 +71,17 @@ const mergeCache = (oldCache, newCache) => {
   return mergedCache;
 };
 
+
+const isValidUrl = (url) => {
+  try {
+    // eslint-disable-next-line no-new
+    new URL(url);
+    return true;
+  } catch (err) {
+    return false;
+  }
+};
+
 module.exports = {
   getService,
   getCoreStore,
@@ -78,4 +89,5 @@ module.exports = {
   noLimit,
   formatCache,
   mergeCache,
+  isValidUrl,
 };

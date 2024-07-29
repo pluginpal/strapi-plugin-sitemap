@@ -8,7 +8,7 @@ const { getConfigUrls } = require('@strapi/utils');
 const { SitemapStream, streamToPromise, SitemapAndIndexStream } = require('sitemap');
 const { isEmpty } = require('lodash');
 
-const { logMessage, getService, formatCache, mergeCache } = require('../utils');
+const { logMessage, getService, formatCache, mergeCache, isValidUrl } = require('../utils');
 
 /**
  * Add link x-default url to url bundles from strapi i18n plugin default locale.
@@ -287,6 +287,7 @@ const getSitemapStream = async (urlCount) => {
  * @returns {void}
  */
 const createSitemap = async (cache, invalidationObject) => {
+  const config = await getService('settings').getConfig();
   const cachingEnabled = strapi.config.get('plugin.sitemap.caching');
   const autoGenerationEnabled = strapi.config.get('plugin.sitemap.autoGenerate');
 
@@ -304,7 +305,17 @@ const createSitemap = async (cache, invalidationObject) => {
     ];
 
     if (isEmpty(allEntries)) {
-      strapi.log.info(logMessage('No sitemap XML was generated because there were 0 URLs configured.'));
+      strapi.log.warn(logMessage('No sitemap XML was generated because there were 0 URLs configured.'));
+      return;
+    }
+
+    if (!config.hostname) {
+      strapi.log.warn(logMessage('No sitemap XML was generated because there was no hostname configured.'));
+      return;
+    }
+
+    if (!isValidUrl(config.hostname)) {
+      strapi.log.warn(logMessage('No sitemap XML was generated because the hostname was invalid'));
       return;
     }
 
