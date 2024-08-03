@@ -124,18 +124,32 @@ const getRelationsFromPattern = (pattern) => {
 
 const resolvePattern = async (pattern, entity) => {
   const fields = getFieldsFromPattern(pattern);
+  let errorInPattern = false;
 
   fields.map((field) => {
     const relationalField = field.split('.').length > 1 ? field.split('.') : null;
 
     if (!relationalField) {
-      pattern = pattern.replace(`[${field}]`, entity[field] || '');
+      const replacement = entity[field] || '';
+      if (strapi.config.get('plugin.sitemap.discardInvalidRelations') && !replacement) {
+        errorInPattern = true;
+        return;
+      }
+      pattern = pattern.replace(`[${field}]`, replacement);
     } else if (Array.isArray(entity[relationalField[0]])) {
       strapi.log.error(logMessage('Something went wrong whilst resolving the pattern.'));
     } else if (typeof entity[relationalField[0]] === 'object') {
-      pattern = pattern.replace(`[${field}]`, entity[relationalField[0]] && entity[relationalField[0]][relationalField[1]] ? entity[relationalField[0]][relationalField[1]] : '');
+      const replacement = entity[relationalField[0]] && entity[relationalField[0]][relationalField[1]] ? entity[relationalField[0]][relationalField[1]] : '';
+      if (strapi.config.get('plugin.sitemap.discardInvalidRelations') && !replacement) {
+        errorInPattern = true;
+        return;
+      }
+
+      pattern = pattern.replace(`[${field}]`, replacement);
     }
   });
+
+  if (errorInPattern) return null; // Return null if there was an error in the pattern due to invalid relation and avoid duplicate content
 
   pattern = pattern.replace(/\/+/g, '/'); // Remove duplicate forward slashes.
   pattern = pattern.startsWith('/') ? pattern : `/${pattern}`; // Make sure we only have on forward slash.

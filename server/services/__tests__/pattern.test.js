@@ -3,6 +3,18 @@
 
 const patternService = require('../pattern');
 
+const get = function baseGet(object, path) {
+  let index = 0;
+  path = path.split('.');
+  const length = path.length;
+
+  while (object != null && index < length) {
+    const newKey = path[index++];
+    object = object[newKey];
+  }
+  return (index && index === length) ? object : undefined;
+};
+
 global.strapi = {
   contentTypes: {
     'another-test-relation:target:api': {
@@ -28,6 +40,14 @@ global.strapi = {
       },
     },
   },
+  config: {
+    plugin: {
+      sitemap: {
+        discardInvalidRelations: false
+      }
+    },
+    get: ((key) => get(global.strapi.config, key)),
+  }
 };
 
 describe('Pattern service', () => {
@@ -150,6 +170,22 @@ describe('Pattern service', () => {
       const result = await patternService().resolvePattern(pattern, entity);
 
       expect(result).toMatch('/en/my-page-slug');
+    });
+
+    test('Resolve pattern with missing relation', async () => {
+      const pattern = '/en/[slug]';
+      const entity = {
+        title: "my-page-title",
+      };
+
+      global.strapi.config.plugin.sitemap.discardInvalidRelations = true;
+
+      const result = await patternService().resolvePattern(pattern, entity);
+
+      expect(result).toBe(null);
+
+      // Restore 
+      global.strapi.config.plugin.sitemap.discardInvalidRelations = false;
     });
   });
   describe('Validate pattern', () => {

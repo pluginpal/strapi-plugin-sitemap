@@ -8,6 +8,7 @@ module.exports = {
     autoGenerate: false,
     caching: true,
     allowedFields: ['id', 'uid'],
+    discardInvalidRelations: false,
     excludedTypes: [
       'admin::permission',
       'admin::role',
