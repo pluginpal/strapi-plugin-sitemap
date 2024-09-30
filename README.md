@@ -19,6 +19,13 @@
 </p>
 </div>
 
+> [!IMPORTANT]  
+> This plugin is currently being migrated to the <a href="https://github.com/pluginpal/strapi-webtools">Strapi Webtools</a> plugin suite.
+> 
+> During it's migration, this standalone version of the plugin will only recieve bug fixes. All new features will be added to Webtools.
+> 
+> From Strapi 5 and onwards, the Sitemap plugin will only be supported as an addon of Webtools, deprecating it's predecessor.
+
 ## ✨ Features
 
 - **Multilingual** (Implements `rel="alternate"` with `@strapi/plugin-i18n`)
