@@ -2,11 +2,41 @@
 
 const { Command } = require('commander');
 const chalk = require('chalk');
+const fs = require('fs');
 const strapi = require('@strapi/strapi'); // eslint-disable-line
 
 const packageJSON = require('../package.json');
 
 const program = new Command();
+
+const getStrapiApp = async () => {
+  try {
+    const tsUtils = require('@strapi/typescript-utils'); // eslint-disable-line
+
+    const appDir = process.cwd();
+    const isTSProject = await tsUtils.isUsingTypeScript(appDir);
+    const outDir = await tsUtils.resolveOutDir(appDir);
+    const alreadyCompiled = await fs.existsSync(outDir);
+
+    if (isTSProject && !alreadyCompiled) {
+      await tsUtils.compile(appDir, {
+        watch: false,
+        configOptions: { options: { incremental: true } },
+      });
+    }
+
+    const distDir = isTSProject ? outDir : appDir;
+
+    const app = await strapi({ appDir, distDir }).load();
+
+    return app;
+  } catch (e) {
+    // Fallback for pre Strapi 4.2.
+    const app = await strapi().load();
+    return app;
+  }
+};
+
 
 // Initial program setup
 program.storeOptionsAsProperties(false).allowUnknownOption(true);
@@ -29,7 +59,7 @@ program
   .command('generate')
   .description('Generate the sitemap XML')
   .action(async () => {
-    const app = await strapi().load();
+    const app = await getStrapiApp();
 
     try {
       app.plugin('sitemap').service('core').createSitemap();
