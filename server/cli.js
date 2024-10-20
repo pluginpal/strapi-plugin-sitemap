@@ -2,7 +2,7 @@
 
 const { Command } = require('commander');
 const chalk = require('chalk');
-const fs = require('fs')
+const fs = require('fs');
 const strapi = require('@strapi/strapi'); // eslint-disable-line
 
 const packageJSON = require('../package.json');
