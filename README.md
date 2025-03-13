@@ -20,11 +20,11 @@
 </div>
 
 > [!IMPORTANT]  
-> This plugin is currently being migrated to the <a href="https://github.com/pluginpal/strapi-webtools">Strapi Webtools</a> plugin suite.
+> For Strapi v5, please use the Webtools plugin and it's Sitemap addon.
 > 
-> During it's migration, this standalone version of the plugin will only recieve bug fixes. All new features will be added to Webtools.
+> Read more about this here: https://docs.pluginpal.io/webtools/addons
 > 
-> From Strapi 5 and onwards, the Sitemap plugin will only be supported as an addon of Webtools, deprecating it's predecessor.
+> If you're looking for a Sitemap plugin for Strapi v4, you can read on below.
 
 ## ✨ Features
 
