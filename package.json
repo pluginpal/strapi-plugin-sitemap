@@ -36,7 +36,7 @@
   "dependencies": {
     "chalk": "^4.1.2",
     "commander": "^8.3.0",
-    "immutable": "^3.8.2",
+    "immutable": "^4.3.8",
     "redux-immutable": "^4.0.0",
     "redux-thunk": "^2.3.0",
     "sitemap": "^7.1.0",
